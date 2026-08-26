@@ -103,7 +103,7 @@ export default function POSModule({
   const [showPosScanner, setShowPosScanner] = useState(false);
   const [selectedClient, setSelectedClient] = useState('Consumidor final');
   const [documentType, setDocumentType] = useState<'factura' | 'nota_entrega'>('factura');
-  const [paymentMethod, setPaymentMethod] = useState('Efectivo');
+  const [paymentMethod, setPaymentMethod] = useState('Efectivo VES');
   const [categories, setCategories] = useState<Category[]>([]);
   const [brands, setBrands] = useState<Brand[]>([]);
   const [loadedImages, setLoadedImages] = useState<ProductImage[]>(productImages || []);
@@ -220,7 +220,7 @@ export default function POSModule({
   const [numberOfPayments, setNumberOfPayments] = useState<number>(1);
   const [paymentCount, setPaymentCount] = useState<number>(1);
   const [splitPayments, setSplitPayments] = useState<{ method: string; amount: number }[]>([
-    { method: 'Efectivo USD', amount: 0 }
+    { method: 'Efectivo VES', amount: 0 }
   ]);
   const [selectedSeller, setSelectedSeller] = useState<string>('Cajero Principal');
 
@@ -361,9 +361,18 @@ export default function POSModule({
   const getActiveMethods = () => {
     // 1. If custom configured payment methods exist in Settings > Facturación
     if (configuredPaymentMethods && configuredPaymentMethods.length > 0) {
-      const activeFromConfig = configuredPaymentMethods
+      const activeFromConfig = [...configuredPaymentMethods]
         .filter(m => m.is_active !== false)
-        .sort((a, b) => (a.sort_order ?? 99) - (b.sort_order ?? 99))
+        .sort((a, b) => {
+          // Prioritize Efectivo VES or any method containing "bolívares" or "ves" to the top
+          const nameA = (a.name || '').toLowerCase();
+          const nameB = (b.name || '').toLowerCase();
+          const isA_VES = nameA.includes('ves') || nameA.includes('bolívares') || nameA.includes('bolivares');
+          const isB_VES = nameB.includes('ves') || nameB.includes('bolívares') || nameB.includes('bolivares');
+          if (isA_VES && !isB_VES) return -1;
+          if (!isA_VES && isB_VES) return 1;
+          return (a.sort_order ?? 99) - (b.sort_order ?? 99);
+        })
         .map(m => {
           let icon = '💳';
           if (m.type === 'efectivo') icon = '💵';
@@ -388,8 +397,8 @@ export default function POSModule({
     // 2. Fallback to default catalog filtered by disabledSettings
     const list: { id: string; label: string; icon: string; rawConfig?: PaymentMethodConfig }[] = [];
     if (!disabledSettings.pay_efectivo) {
-      list.push({ id: 'Efectivo USD', label: 'Efectivo USD ($)', icon: '💵' });
       list.push({ id: 'Efectivo VES', label: 'Efectivo VES (Bs.)', icon: '💵' });
+      list.push({ id: 'Efectivo USD', label: 'Efectivo USD ($)', icon: '💵' });
     }
     if (!disabledSettings.pay_pagomovil) {
       list.push({ id: 'Pago Móvil', label: 'Pago Móvil (VES)', icon: '📱' });
@@ -1517,7 +1526,7 @@ export default function POSModule({
         amount: t.amount
       }));
 
-      await dbService.createDraftInvoice({
+      const savedDraft = await dbService.createDraftInvoice({
         reference: calculatedDraftRef,
         customer_name: selectedClient,
         payment_method: finalPaymentMethod,
@@ -1528,15 +1537,13 @@ export default function POSModule({
         taxes_detail: taxesDetail
       });
 
-      // Clear current sale y regresar al paso carrito
-      setCart([]);
-      setSelectedClient('Consumidor final');
-      setPaymentMethod('Efectivo');
-      setActiveDraftId(null);
-      setPosStep('cart');
-      
       // Reload lists
       await loadInvoiceData();
+
+      // No limpiamos la pantalla por solicitud del usuario (se limpia al generar factura, nota de entrega o pedido)
+      if (savedDraft && savedDraft.id) {
+        setActiveDraftId(savedDraft.id);
+      }
       
       showToast('success', `Venta postergada en espera con código: ${calculatedDraftRef}`);
     } catch (err: any) {
@@ -1667,7 +1674,7 @@ export default function POSModule({
   const resetVentaFlash = () => {
     setCart([]);
     setSelectedClient('Consumidor final');
-    setPaymentMethod('Efectivo');
+    setPaymentMethod('Efectivo VES');
     setSaleConcept('');
     setSaleNote('');
     setDiscountPercent('0');
@@ -1965,6 +1972,21 @@ export default function POSModule({
         console.error("Failed to register POS sale in cash register:", cajaErr);
       }
 
+      // 3.3 Register income into Bank Accounts & Bank Transfers
+      try {
+        await dbService.recordSaleIncomeToBankAccounts({
+          invoice: created,
+          splitPayments: detailedSplitPayments,
+          singlePaymentMethod: finalPaymentMethod,
+          totalUsd: total,
+          totalVes: total * rateForThisInvoice,
+          bcvRate: rateForThisInvoice,
+          createdBy: currentUser?.name || currentUser?.email || 'Cajero POS'
+        });
+      } catch (bankErr) {
+        console.error("Failed to record POS sale in bank accounts:", bankErr);
+      }
+
       // 3.5 Delete the draft from the wait list if active
       if (activeDraftId) {
         try {
@@ -2202,10 +2224,10 @@ export default function POSModule({
                 setShowHistoryModal(true);
                 loadInvoiceData();
               }}
-              className="px-3.5 py-2 bg-sky-50 hover:bg-sky-100 text-sky-900 border border-sky-200 text-xs font-black rounded-xl transition flex items-center gap-1.5 cursor-pointer shadow-2xs"
+              className="px-3.5 py-2 bg-white hover:bg-gray-50 text-[#005da9] border border-gray-200 text-xs font-bold rounded-xl transition flex items-center gap-1.5 cursor-pointer shadow-2xs"
               title="Buscar y revisar historial de facturas y notas de entrega emitidas"
             >
-              <FileText className="w-3.5 h-3.5 text-sky-700" />
+              <FileText className="w-3.5 h-3.5 text-[#005da9]" />
               <span>Últimas Facturas</span>
             </button>
 
@@ -2218,10 +2240,10 @@ export default function POSModule({
                 setManualObservations('');
                 setShowManualModal(true);
               }}
-              className="px-3.5 py-2 bg-emerald-50 hover:bg-emerald-100 text-emerald-900 border border-emerald-200 text-xs font-black rounded-xl transition flex items-center gap-1.5 cursor-pointer shadow-2xs"
+              className="px-3.5 py-2 bg-white hover:bg-gray-50 text-[#005da9] border border-gray-200 text-xs font-bold rounded-xl transition flex items-center gap-1.5 cursor-pointer shadow-2xs"
               title="Registrar Ingreso u Egreso Financiero"
             >
-              <DollarSign className="w-3.5 h-3.5 text-emerald-700" />
+              <DollarSign className="w-3.5 h-3.5 text-[#005da9]" />
               <span>ingreso/egreso</span>
             </button>
 
@@ -2234,10 +2256,10 @@ export default function POSModule({
                   setShowCreateProductModal(true);
                 }
               }}
-              className="px-3.5 py-2 bg-gray-100 hover:bg-gray-200 text-gray-800 border border-gray-200 text-xs font-black rounded-xl transition flex items-center gap-1.5 cursor-pointer shadow-2xs"
+              className="px-3.5 py-2 bg-white hover:bg-gray-50 text-[#005da9] border border-gray-200 text-xs font-bold rounded-xl transition flex items-center gap-1.5 cursor-pointer shadow-2xs"
               title="Crear un nuevo producto en el catálogo"
             >
-              <PackagePlus className="w-3.5 h-3.5 text-gray-700" />
+              <PackagePlus className="w-3.5 h-3.5 text-[#005da9]" />
               <span>+ Crear Producto</span>
             </button>
           </div>
@@ -2567,7 +2589,7 @@ export default function POSModule({
                   onClick={() => {
                     setCart([]);
                     setSelectedClient('Consumidor final');
-                    setPaymentMethod('Efectivo');
+                    setPaymentMethod('Efectivo VES');
                     setActiveDraftId(null);
                     showToast('success', 'Edición de factura cancelada.');
                   }}
@@ -3063,27 +3085,24 @@ export default function POSModule({
                   }
                 })()}
 
-                {/* Botones de Navegación: Anterior | Poner en Espera | Facturar */}
-                <div className="flex items-center justify-between gap-3 pt-4 border-t border-gray-100">
-                  <button
-                    type="button"
-                    onClick={() => setPosStep('cart')}
-                    className="px-6 py-2.5 bg-white hover:bg-gray-50 text-gray-700 border border-[#005da9]/30 font-bold text-xs rounded-xl transition cursor-pointer"
-                  >
-                    Anterior
-                  </button>
-
+                {/* Botones de Navegación: Poner en Espera | Facturar */}
+                <div className="flex items-center justify-end gap-3 pt-4 border-t border-gray-100">
                   <div className="flex items-center gap-2">
                     {/* ⏸ Botón Poner en Espera */}
                     <button
                       type="button"
                       onClick={handlePostponeSale}
                       disabled={isLoading || cart.length === 0}
-                      className="px-4 py-2.5 bg-amber-50 hover:bg-amber-100 disabled:opacity-50 text-amber-800 border border-amber-300 font-black text-xs rounded-xl transition flex items-center gap-1.5 cursor-pointer shadow-xs"
+                      className="px-5 py-2.5 bg-white hover:bg-gray-50 disabled:opacity-50 text-[#005da9] border border-gray-200 font-bold text-xs rounded-xl transition flex items-center gap-2 cursor-pointer shadow-xs"
                       title="Guardar esta venta en espera para retomar después"
                     >
-                      <Pause className="w-3.5 h-3.5 fill-amber-600 shrink-0" />
-                      <span>Poner en Espera</span>
+                      <div className="w-4 h-4 rounded-full border border-[#005da9] flex items-center justify-center shrink-0">
+                        <div className="flex gap-[2.5px]">
+                          <div className="w-[1.5px] h-1.5 bg-[#005da9] rounded-xs"></div>
+                          <div className="w-[1.5px] h-1.5 bg-[#005da9] rounded-xs"></div>
+                        </div>
+                      </div>
+                      <span>Poner en espera</span>
                     </button>
 
                     {/* ✅ Botón Facturar */}

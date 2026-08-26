@@ -3,7 +3,7 @@ import {
   SlidersHorizontal, Calendar, Search, ArrowUpRight, ArrowDownLeft, 
   TrendingUp, TrendingDown, Wallet, DollarSign, Plus, Trash2, 
   Download, Unlock, Lock, FileText, Check, Loader2, RefreshCw, X, Tag, AlertTriangle, Sparkles, User, Printer, Eye, Share2,
-  ChevronLeft, ChevronRight
+  ChevronLeft, ChevronRight, Package
 } from 'lucide-react';
 import { dbService } from '../lib/supabase';
 import { GASTO_CATEGORIES, GASTO_PAYMENT_METHODS } from './GastoAssistant';
@@ -120,7 +120,7 @@ export default function BalancePage({
   const [showAdvancedFilters, setShowAdvancedFilters] = useState(false);
 
   // Sub-tabs in transacciones
-  const [subTab, setSubTab] = useState<'ingresos' | 'egresos' | 'cobrar' | 'pagar'>('ingresos');
+  const [subTab, setSubTab] = useState<'ingresos' | 'egresos' | 'inventario' | 'cobrar' | 'pagar'>('ingresos');
 
   // Gasto Assistant Modal State
   const [showGastoModal, setShowGastoModal] = useState(false);
@@ -572,7 +572,11 @@ export default function BalancePage({
       const opDate = getOpDate(op);
       const concept = op.concept || '';
       
-      const facMatch = concept.match(/(?:FAC|NE)-[A-Za-z0-9\-_]+/i);
+      const facMatch = concept.match(/(?:FAC|NE|ORD|ord|fac|ne)-[A-Za-z0-9\-_]+/i);
+      let docNumber = op.doc_number || op.document_number || op.reference_number || '';
+      if (!docNumber && facMatch) {
+        docNumber = facMatch[0].toUpperCase();
+      }
       if (facMatch) {
         processedInvoiceKeys.add(facMatch[0].toUpperCase());
       }
@@ -584,6 +588,7 @@ export default function BalancePage({
         id: op.id || `op-${Math.random()}`,
         type: op.type, // 'ingreso' | 'egreso'
         source: 'caja',
+        doc_number: docNumber || (op.type === 'ingreso' ? 'OP-ING' : 'OP-EGR'),
         concept: op.concept,
         amount: Number(op.amount) || 0,
         amount_bs: Number(op.amount_bs) || ((Number(op.amount) || 0) * (bcvRate || 36.5)),
@@ -597,6 +602,7 @@ export default function BalancePage({
         created_at: op.created_at || new Date().toISOString(),
         date_obj: opDate,
         time: op.time || opDate.toLocaleTimeString('es-VE', { hour: '2-digit', minute: '2-digit', hour12: true }),
+        items: op.items || [],
         raw: op
       });
     });
@@ -614,14 +620,24 @@ export default function BalancePage({
       if (invTotal <= 0 && (!inv.items || inv.items.length === 0)) return;
 
       const invDate = getOpDate(inv);
-      const docLabel = (inv.document_type === 'nota_entrega' || controlNum.startsWith('NE-')) ? 'Nota de Entrega' : 'Factura';
+      const isNotaEntrega = inv.document_type === 'nota_entrega' || controlNum.startsWith('NE-');
+      const docLabel = isNotaEntrega ? 'Nota de Entrega' : 'Factura';
+      
+      let formattedDocNumber = controlNum;
+      if (isNotaEntrega) {
+        formattedDocNumber = controlNum.startsWith('NE-') ? controlNum : `NE-${controlNum.padStart(6, '0')}`;
+      } else {
+        formattedDocNumber = controlNum.startsWith('FAC-') ? controlNum : `FAC-${controlNum.padStart(6, '0')}`;
+      }
+
       const clientName = (inv.customer_name || inv.cliente || '').trim() || 'Consumidor final';
       
       list.push({
         id: inv.id || `inv-${controlNum}`,
         type: 'ingreso',
         source: 'pos_factura',
-        concept: `Venta Flash - ${docLabel} ${controlNum} (${clientName})`,
+        doc_number: formattedDocNumber,
+        concept: `Venta Flash - ${docLabel} ${formattedDocNumber} (${clientName})`,
         amount: invTotal,
         amount_bs: invTotal * (bcvRate || 36.5),
         payment_method: inv.payment_method || 'Efectivo USD',
@@ -631,6 +647,7 @@ export default function BalancePage({
         created_at: inv.created_at || invDate.toISOString(),
         date_obj: invDate,
         time: invDate.toLocaleTimeString('es-VE', { hour: '2-digit', minute: '2-digit', hour12: true }),
+        items: inv.items || [],
         raw: inv
       });
     });
@@ -641,8 +658,10 @@ export default function BalancePage({
       if (['cancelado', 'anulado', 'rechazado', 'pendiente', 'en_espera'].includes(status)) {
         return;
       }
-      const orderNum = `ORD-${order.order_number || order.id}`.toUpperCase();
-      if (processedInvoiceKeys.has(orderNum) || processedInvoiceKeys.has(String(order.id).toUpperCase())) {
+      const rawNum = String(order.order_number || order.id || '').replace(/^ORD-/i, '');
+      const formattedDocNumber = `ORD-${rawNum.padStart(6, '0')}`.toUpperCase();
+      
+      if (processedInvoiceKeys.has(formattedDocNumber) || processedInvoiceKeys.has(String(order.id).toUpperCase())) {
         return;
       }
 
@@ -659,7 +678,8 @@ export default function BalancePage({
         id: order.id || `ord-${Math.random()}`,
         type: 'ingreso',
         source: 'pedido_online',
-        concept: `Pedido #${String(order.order_number || '').padStart(6, '0')} (${clientName})`,
+        doc_number: formattedDocNumber,
+        concept: `Pedido #${formattedDocNumber} (${clientName})`,
         amount: orderTotal,
         amount_bs: orderTotal * (bcvRate || 36.5),
         payment_method: order.payment_method || 'Pago Móvil',
@@ -669,6 +689,7 @@ export default function BalancePage({
         created_at: order.created_at || orderDate.toISOString(),
         date_obj: orderDate,
         time: orderDate.toLocaleTimeString('es-VE', { hour: '2-digit', minute: '2-digit', hour12: true }),
+        items: order.items || [],
         raw: order
       });
     });
@@ -1066,10 +1087,11 @@ export default function BalancePage({
       if (searchQuery.trim() !== '') {
         const query = searchQuery.toLowerCase();
         const conceptMatch = (op.concept || '').toLowerCase().includes(query);
+        const docMatch = (op.doc_number || '').toLowerCase().includes(query);
         const idMatch = String(op.id || '').toLowerCase().includes(query);
         const methodMatch = (op.payment_method || '').toLowerCase().includes(query);
         const clientMatch = (op.raw?.customer_name || op.raw?.cliente || '').toLowerCase().includes(query);
-        if (!conceptMatch && !idMatch && !methodMatch && !clientMatch) return false;
+        if (!conceptMatch && !docMatch && !idMatch && !methodMatch && !clientMatch) return false;
       }
 
       // Payment Method Filter
@@ -1158,6 +1180,134 @@ export default function BalancePage({
       return isPending;
     });
   }, [localOrders, timeRange, selectedDate, searchQuery]);
+
+  // Aggregated sold products for "Inventario Vendido" tab based on filtered date range
+  const soldProductsList = useMemo(() => {
+    const productMap = new Map<string, {
+      sku: string;
+      name: string;
+      totalQty: number;
+      totalUsd: number;
+      totalBs: number;
+      docNumbers: Set<string>;
+      salesCount: number;
+    }>();
+
+    const selDate = parseUniversalDate(selectedDate) || new Date();
+    const selYear = selDate.getFullYear();
+    const selMonth = selDate.getMonth();
+    const startWk = getStartOfWeek(selDate);
+    const endWk = getEndOfWeek(selDate);
+
+    // 1. Process localInvoices (Ventas Flash POS)
+    localInvoices.forEach(inv => {
+      const invDate = getOpDate(inv);
+      const invDateStr = getLocalDateString(invDate);
+
+      if (timeRange === 'diario' && invDateStr !== selectedDate) return;
+      if (timeRange === 'semanal' && (invDate < startWk || invDate > endWk)) return;
+      if (timeRange === 'mensual' && (invDate.getMonth() !== selMonth || invDate.getFullYear() !== selYear)) return;
+
+      const controlNum = (inv.control_number || inv.numero || inv.id || '').toString().trim().toUpperCase();
+      const isNE = inv.document_type === 'nota_entrega' || controlNum.startsWith('NE-');
+      const docNum = isNE ? (controlNum.startsWith('NE-') ? controlNum : `NE-${controlNum.padStart(6, '0')}`)
+                          : (controlNum.startsWith('FAC-') ? controlNum : `FAC-${controlNum.padStart(6, '0')}`);
+
+      const items = Array.isArray(inv.items) ? inv.items : [];
+      items.forEach((item: any) => {
+        const sku = (item.sku || item.product_id || item.id || 'S/N').toString().trim();
+        const name = (item.name || item.title || item.product_name || 'Producto General').toString().trim();
+        const key = `${sku.toLowerCase()}_${name.toLowerCase()}`;
+
+        const qty = Number(item.qty || item.quantity || 1);
+        const price = Number(item.price || item.unit_price || 0);
+        const itemTotalUsd = Number(item.total || (qty * price));
+        const itemTotalBs = itemTotalUsd * (bcvRate || 36.5);
+
+        if (!productMap.has(key)) {
+          productMap.set(key, {
+            sku,
+            name,
+            totalQty: 0,
+            totalUsd: 0,
+            totalBs: 0,
+            docNumbers: new Set<string>(),
+            salesCount: 0
+          });
+        }
+
+        const entry = productMap.get(key)!;
+        entry.totalQty += qty;
+        entry.totalUsd += itemTotalUsd;
+        entry.totalBs += itemTotalBs;
+        entry.docNumbers.add(docNum);
+        entry.salesCount += 1;
+      });
+    });
+
+    // 2. Process localOrders (Pedidos Tienda / Online)
+    localOrders.forEach(order => {
+      const statusLower = (order.status || '').toLowerCase();
+      if (['cancelado', 'anulado', 'rechazado'].includes(statusLower)) return;
+
+      const orderDate = getOpDate(order);
+      const orderDateStr = getLocalDateString(orderDate);
+
+      if (timeRange === 'diario' && orderDateStr !== selectedDate) return;
+      if (timeRange === 'semanal' && (orderDate < startWk || orderDate > endWk)) return;
+      if (timeRange === 'mensual' && (orderDate.getMonth() !== selMonth || orderDate.getFullYear() !== selYear)) return;
+
+      const rawNum = String(order.order_number || order.id || '').replace(/^ORD-/i, '');
+      const docNum = `ORD-${rawNum.padStart(6, '0')}`.toUpperCase();
+
+      const items = Array.isArray(order.items) ? order.items : [];
+      items.forEach((item: any) => {
+        const sku = (item.sku || item.product_id || item.id || 'S/N').toString().trim();
+        const name = (item.name || item.title || item.product_title || 'Producto Web').toString().trim();
+        const key = `${sku.toLowerCase()}_${name.toLowerCase()}`;
+
+        const qty = Number(item.qty || item.quantity || 1);
+        const price = Number(item.price || 0);
+        const itemTotalUsd = Number(item.total || (qty * price));
+        const itemTotalBs = itemTotalUsd * (bcvRate || 36.5);
+
+        if (!productMap.has(key)) {
+          productMap.set(key, {
+            sku,
+            name,
+            totalQty: 0,
+            totalUsd: 0,
+            totalBs: 0,
+            docNumbers: new Set<string>(),
+            salesCount: 0
+          });
+        }
+
+        const entry = productMap.get(key)!;
+        entry.totalQty += qty;
+        entry.totalUsd += itemTotalUsd;
+        entry.totalBs += itemTotalBs;
+        entry.docNumbers.add(docNum);
+        entry.salesCount += 1;
+      });
+    });
+
+    const result = Array.from(productMap.values()).map(p => ({
+      ...p,
+      docNumbersList: Array.from(p.docNumbers)
+    }));
+
+    if (searchQuery.trim() !== '') {
+      const q = searchQuery.toLowerCase();
+      return result.filter(p => 
+        p.name.toLowerCase().includes(q) || 
+        p.sku.toLowerCase().includes(q) ||
+        p.docNumbersList.some(d => d.toLowerCase().includes(q))
+      ).sort((a, b) => b.totalQty - a.totalQty);
+    }
+
+    return result.sort((a, b) => b.totalQty - a.totalQty);
+  }, [localInvoices, localOrders, timeRange, selectedDate, searchQuery, bcvRate]);
 
   // Metrics calculations
   const metrics = useMemo(() => {
@@ -1259,6 +1409,7 @@ export default function BalancePage({
     try {
       const dataToExport = filteredOps.map(op => ({
         'ID Operación': op.id,
+        'Documento / Orden N°': op.doc_number || 'N/A',
         'Tipo': op.type === 'ingreso' ? 'Ingreso 🟢' : 'Egreso 🔴',
         'Origen': op.source === 'pos_factura' ? 'Venta POS Flash' : op.source === 'pedido_online' ? 'Tienda Online' : 'Caja Registradora',
         'Concepto / Detalle': op.concept,
@@ -1273,6 +1424,19 @@ export default function BalancePage({
       const ws = XLSX.utils.json_to_sheet(dataToExport);
       const wb = XLSX.utils.book_new();
       XLSX.utils.book_append_sheet(wb, ws, 'Movimientos Financieros');
+
+      if (soldProductsList.length > 0) {
+        const inventoryExportData = soldProductsList.map(p => ({
+          'SKU / Código': p.sku,
+          'Producto': p.name,
+          'Unidades Vendidas': p.totalQty,
+          'Documentos Asociados': p.docNumbersList.join(', '),
+          'Total ($ USD)': p.totalUsd.toFixed(2),
+          'Total (Bs)': p.totalBs.toFixed(2)
+        }));
+        const wsInv = XLSX.utils.json_to_sheet(inventoryExportData);
+        XLSX.utils.book_append_sheet(wb, wsInv, 'Inventario Vendido');
+      }
 
       const summaryData = [
         { 'Métrica': 'Total Ventas / Ingresos ($)', 'Valor': metrics.incomes.toFixed(2) },
@@ -1717,13 +1881,15 @@ export default function BalancePage({
           {/* SUB-TABS NAVIGATION BAR */}
           <div className="border-b border-gray-200">
             <div className="flex gap-6 overflow-x-auto pb-0.5">
-              {(['ingresos', 'egresos', 'cobrar', 'pagar'] as const).map((tabId) => {
+              {(['ingresos', 'egresos', 'inventario', 'cobrar', 'pagar'] as const).map((tabId) => {
                 const label = tabId === 'ingresos' ? 'Ingresos' :
                               tabId === 'egresos' ? 'Egresos' :
+                              tabId === 'inventario' ? '📦 Inventario Vendido' :
                               tabId === 'cobrar' ? 'Por cobrar' : 'Por pagar';
                 
                 const count = tabId === 'ingresos' ? filteredOps.filter(o => o.type === 'ingreso').length :
                               tabId === 'egresos' ? filteredOps.filter(o => o.type === 'egreso').length :
+                              tabId === 'inventario' ? soldProductsList.length :
                               tabId === 'cobrar' ? pendingIncomes.length : 0;
 
                 const isActive = subTab === tabId;
@@ -1757,7 +1923,108 @@ export default function BalancePage({
           {/* TRANSACTION CONTENT LISTS */}
           <div className="bg-white border border-gray-150 rounded-3xl overflow-hidden shadow-xs">
             
-            {subTab === 'cobrar' ? (
+            {subTab === 'inventario' ? (
+              <div>
+                {/* Inventario Header Metrics Bar */}
+                <div className="bg-slate-900 p-5 text-white grid grid-cols-2 md:grid-cols-4 gap-4 border-b border-slate-800">
+                  <div className="bg-slate-800/60 p-3 rounded-2xl border border-slate-700/60">
+                    <p className="text-[10px] text-gray-400 font-extrabold uppercase tracking-wider">Productos Distintos</p>
+                    <p className="text-xl font-black text-white mt-0.5">{soldProductsList.length}</p>
+                  </div>
+                  <div className="bg-slate-800/60 p-3 rounded-2xl border border-slate-700/60">
+                    <p className="text-[10px] text-gray-400 font-extrabold uppercase tracking-wider">Unidades Vendidas</p>
+                    <p className="text-xl font-black text-[#ffb700] mt-0.5">
+                      {soldProductsList.reduce((acc, p) => acc + p.totalQty, 0)} <span className="text-xs font-bold text-gray-300">ud.</span>
+                    </p>
+                  </div>
+                  <div className="bg-slate-800/60 p-3 rounded-2xl border border-slate-700/60">
+                    <p className="text-[10px] text-gray-400 font-extrabold uppercase tracking-wider">Monto Total USD</p>
+                    <p className="text-xl font-black text-emerald-400 mt-0.5">
+                      ${soldProductsList.reduce((acc, p) => acc + p.totalUsd, 0).toFixed(2)}
+                    </p>
+                  </div>
+                  <div className="bg-slate-800/60 p-3 rounded-2xl border border-slate-700/60">
+                    <p className="text-[10px] text-gray-400 font-extrabold uppercase tracking-wider">Monto Total Bs</p>
+                    <p className="text-xl font-black text-sky-300 mt-0.5">
+                      Bs. {soldProductsList.reduce((acc, p) => acc + p.totalBs, 0).toFixed(2)}
+                    </p>
+                  </div>
+                </div>
+
+                {soldProductsList.length === 0 ? (
+                  <div className="p-12 text-center text-gray-400">
+                    <Package className="w-10 h-10 mx-auto mb-2 text-gray-300" />
+                    <p className="text-xs font-extrabold text-gray-600">No hay registro de productos vendidos en el rango de fechas seleccionado.</p>
+                    <p className="text-[11px] text-gray-400 mt-1">Sugerencia: Cambie el filtro de rango (diario, semanal, mensual o todos) o ajuste el texto de búsqueda.</p>
+                  </div>
+                ) : (
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-left border-collapse">
+                      <thead>
+                        <tr className="bg-gray-50 border-b border-gray-100 text-gray-400 text-[10px] uppercase font-black tracking-wider">
+                          <th className="px-5 py-3">SKU / Código</th>
+                          <th className="px-5 py-3">Producto / Descripción</th>
+                          <th className="px-5 py-3 text-center">Unidades Vendidas</th>
+                          <th className="px-5 py-3">Documento(s) N° (Ventas)</th>
+                          <th className="px-5 py-3 text-right">Total Ventas ($ / Bs)</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-gray-100 text-xs text-gray-800">
+                        {soldProductsList.map((product, idx) => (
+                          <tr key={`${product.sku}_${idx}`} className="hover:bg-gray-50/50 transition">
+                            <td className="px-5 py-3.5 whitespace-nowrap">
+                              <span className="font-mono font-extrabold bg-slate-100 text-slate-700 px-2 py-1 rounded-lg text-[11px] border border-slate-200">
+                                {product.sku || 'S/N'}
+                              </span>
+                            </td>
+                            <td className="px-5 py-3.5">
+                              <p className="font-extrabold text-gray-900 leading-tight">{product.name}</p>
+                              <p className="text-[10px] text-gray-400 font-medium">Registrado en {product.salesCount} transacción(es)</p>
+                            </td>
+                            <td className="px-5 py-3.5 text-center">
+                              <span className="inline-flex items-center justify-center px-3 py-1 rounded-full text-xs font-black bg-emerald-50 text-emerald-800 border border-emerald-200">
+                                {product.totalQty} {product.totalQty === 1 ? 'unidad' : 'unidades'}
+                              </span>
+                            </td>
+                            <td className="px-5 py-3.5">
+                              <div className="flex items-center gap-1.5 flex-wrap max-w-md">
+                                {product.docNumbersList.slice(0, 5).map((docNum) => {
+                                  const isNE = docNum.startsWith('NE-');
+                                  const isORD = docNum.startsWith('ORD-');
+                                  return (
+                                    <span
+                                      key={docNum}
+                                      className={`px-2 py-0.5 rounded-full text-[10px] font-black border ${
+                                        isNE
+                                          ? 'bg-purple-50 text-purple-800 border-purple-200'
+                                          : isORD
+                                            ? 'bg-amber-50 text-amber-800 border-amber-200'
+                                            : 'bg-sky-50 text-sky-800 border-sky-200'
+                                      }`}
+                                    >
+                                      {docNum}
+                                    </span>
+                                  );
+                                })}
+                                {product.docNumbersList.length > 5 && (
+                                  <span className="text-[10px] font-bold text-gray-400 bg-gray-100 px-1.5 py-0.5 rounded-full">
+                                    +{product.docNumbersList.length - 5} más
+                                  </span>
+                                )}
+                              </div>
+                            </td>
+                            <td className="px-5 py-3.5 text-right whitespace-nowrap">
+                              <p className="font-mono font-black text-sm text-gray-900">${product.totalUsd.toFixed(2)} USD</p>
+                              <p className="text-[10px] text-gray-400 font-extrabold font-mono">Bs. {product.totalBs.toFixed(2)}</p>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
+              </div>
+            ) : subTab === 'cobrar' ? (
               pendingIncomes.length === 0 ? (
                 <div className="p-12 text-center text-gray-400">
                   <FileText className="w-9 h-9 mx-auto mb-2 text-gray-300" />
@@ -2034,6 +2301,7 @@ export default function BalancePage({
                   <table className="w-full text-left border-collapse">
                     <thead>
                       <tr className="bg-gray-50 border-b border-gray-100 text-gray-400 text-[10px] uppercase font-black tracking-wider">
+                        <th className="px-5 py-3">Doc / Orden N°</th>
                         <th className="px-5 py-3">Concepto</th>
                         <th className="px-5 py-3 text-right">Valor</th>
                         <th className="px-5 py-3">Medio de pago</th>
@@ -2063,8 +2331,26 @@ export default function BalancePage({
                           }
                         }
 
+                        const docNum = op.doc_number || 'N/A';
+                        const isNE = docNum.startsWith('NE-');
+                        const isORD = docNum.startsWith('ORD-');
+                        const isFAC = docNum.startsWith('FAC-');
+
                         return (
                           <tr key={op.id} className="hover:bg-gray-50/50 transition">
+                            <td className="px-5 py-3.5 whitespace-nowrap">
+                              <span className={`inline-flex items-center px-2.5 py-1 rounded-lg text-[11px] font-mono font-black border ${
+                                isFAC
+                                  ? 'bg-sky-50 text-sky-800 border-sky-200'
+                                  : isNE
+                                    ? 'bg-purple-50 text-purple-800 border-purple-200'
+                                    : isORD
+                                      ? 'bg-amber-50 text-amber-800 border-amber-200'
+                                      : 'bg-slate-100 text-slate-700 border-slate-200'
+                              }`}>
+                                {docNum}
+                              </span>
+                            </td>
                             <td className="px-5 py-3.5">
                               <div className="flex items-center gap-3">
                                 <div className={`p-2 rounded-xl shrink-0 ${
@@ -2940,6 +3226,20 @@ export default function BalancePage({
                 {selectedViewType === 'ingreso' || selectedViewType === 'egreso' ? (
                   <>
                     <div className="flex justify-between items-center border-b border-gray-200/60 pb-2">
+                      <span className="text-gray-400 font-bold">Documento / Orden N°:</span>
+                      <span className={`font-mono font-black uppercase px-2 py-0.5 rounded-lg text-xs ${
+                        String(selectedViewItem.doc_number || '').startsWith('FAC-')
+                          ? 'bg-sky-50 text-sky-800 border border-sky-200'
+                          : String(selectedViewItem.doc_number || '').startsWith('NE-')
+                            ? 'bg-purple-50 text-purple-800 border border-purple-200'
+                            : String(selectedViewItem.doc_number || '').startsWith('ORD-')
+                              ? 'bg-amber-50 text-amber-800 border border-amber-200'
+                              : 'bg-slate-100 text-slate-700 border border-slate-200'
+                      }`}>
+                        {selectedViewItem.doc_number || 'N/A'}
+                      </span>
+                    </div>
+                    <div className="flex justify-between items-center border-b border-gray-200/60 pb-2">
                       <span className="text-gray-400 font-bold">Tipo Movimiento:</span>
                       <span className={`font-black uppercase px-2 py-0.5 rounded-full text-[10px] ${
                         selectedViewType === 'ingreso' ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' : 'bg-rose-50 text-rose-700 border border-rose-200'
@@ -2971,6 +3271,19 @@ export default function BalancePage({
                       <span className="text-gray-400 font-bold">Operador Responsable:</span>
                       <span className="font-extrabold text-gray-800">{selectedViewItem.empleado_nombre || 'Administrador'}</span>
                     </div>
+                    {Array.isArray(selectedViewItem.items) && selectedViewItem.items.length > 0 && (
+                      <div className="pt-2 border-t border-gray-200/60">
+                        <p className="text-gray-400 font-bold mb-1.5">Productos incluidos ({selectedViewItem.items.length}):</p>
+                        <div className="bg-white rounded-xl border border-gray-150 p-2 divide-y divide-gray-100 max-h-36 overflow-y-auto text-[11px]">
+                          {selectedViewItem.items.map((it: any, i: number) => (
+                            <div key={i} className="py-1 flex justify-between items-center">
+                              <span className="font-extrabold text-gray-800">{it.qty || it.quantity || 1}x {it.name || it.title || 'Producto'}</span>
+                              <span className="font-mono font-bold text-gray-600">${Number(it.total || ((it.qty || 1) * (it.price || 0))).toFixed(2)} USD</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
                     {selectedViewItem.observation && (
                       <div className="pt-2 border-t border-gray-200/60">
                         <p className="text-gray-400 font-bold mb-1">Observaciones:</p>

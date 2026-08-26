@@ -11,7 +11,7 @@ import {
   LayoutDashboard, ShieldCheck, Settings, Activity, ArrowRight, ArrowUp, ArrowDown, Sparkles, TrendingUp, TrendingDown, Users, UserCheck,
   Lock, Unlock, LogOut, Megaphone, ShoppingCart, Barcode, Save, Code, Copy, CheckCircle, User, DollarSign, Menu, ShoppingBag, Crown, FileCheck,
   LayoutGrid, Kanban, Volume2, VolumeX, SlidersHorizontal, ArrowLeftRight, MapPin,
-  ChevronDown, ChevronRight, PieChart, Wallet, CreditCard, Scale, Zap
+  ChevronDown, ChevronRight, PieChart, Wallet, CreditCard, Scale, Zap, Receipt
 } from 'lucide-react';
 import { Product, Category, Brand, ProductImage, Order, Provider, StoreUser, BannerSlide, LandingConfig, HomeCarouselCardItem, Tax, BusinessBranch, BusinessTerminal, AdminMenuType } from '../types.ts';
 import { dbService, supabase } from '../lib/supabase.ts';
@@ -30,7 +30,11 @@ const OpenCashSessionModal = lazy(() => import('./OpenCashSessionModal.tsx'));
 const BarcodeScannerModal = lazy(() => import('./BarcodeScannerModal.tsx'));
 const SystemConfigPanel = lazy(() => import('./SystemConfigPanel.tsx'));
 const ReportesDashboard = lazy(() => import('./ReportesDashboard.tsx'));
+const ReportesDiariosPage = lazy(() => import('./ReportesDiariosPage.tsx'));
 const ComprasModule = lazy(() => import('./ComprasModule.tsx'));
+const CuentasBancariasPage = lazy(() => import('./CuentasBancariasPage.tsx'));
+const GastosPage = lazy(() => import('./GastosPage.tsx'));
+const CuentasPendientesPage = lazy(() => import('./CuentasPendientesPage.tsx'));
 
 const AdminSubmoduleLoader = ({ name = 'Módulo' }: { name?: string }) => (
   <div className="flex flex-col items-center justify-center p-16 min-h-[380px] bg-white rounded-2xl border border-gray-150 text-center select-none animate-fadeIn my-2">
@@ -116,7 +120,7 @@ export default function AdminPanel({
     if (['products', 'compras'].includes(menu)) return 'inventarios';
     if (['caja', 'cuentas_bancarias', 'balance'].includes(menu)) return 'cuentas';
     if (menu === 'marketing') return 'marketing';
-    if (['reportes_balance', 'reportes_gastos', 'reportes_ganancias'].includes(menu)) return 'reportes';
+    if (['reportes_balance', 'reportes_gastos', 'reportes_ganancias', 'reportes', 'gastos'].includes(menu)) return 'reportes';
     if (['clientes', 'proveedores', 'clientes_proveedores'].includes(menu)) return 'contactos';
     if (['settings', 'users'].includes(menu)) return 'configuracion';
     return '';
@@ -1121,7 +1125,7 @@ export default function AdminPanel({
     { id: 'clientes', name: 'Clientes (Directorio RIF/Cédula)', desc: 'Directorio de clientes, cuentas corrientes y datos de contacto' },
     { id: 'proveedores', name: 'Proveedores', desc: 'Gestión de proveedores y recepción de mercancía' },
     { id: 'compras', name: 'Compras', desc: 'Creación de órdenes de compra y control de adquisiciones' },
-    { id: 'reportes', name: 'Reportes Financieros', desc: 'Métricas de ingresos, estadísticas de ventas y reportes' },
+    { id: 'reportes', name: 'Finanzas', desc: 'Métricas de ingresos, balance, gastos fijos y ganancias' },
     { id: 'settings', name: 'Configuración del Sistema', desc: 'Tasa BCV, landing page y ajustes generales de la empresa' },
     { id: 'marketing', name: 'Marketing & Banners', desc: 'Campañas promocionales y banners publicitarios' }
   ];
@@ -2971,20 +2975,20 @@ export default function AdminPanel({
             ]
           },
           {
+            groupId: "reportes",
+            title: "Finanzas",
+            icon: TrendingUp,
+            subItems: [
+              { id: 'reportes_balance', label: 'Balance', icon: BarChart },
+              { id: 'reportes_gastos', label: 'Gastos fijos', icon: Receipt },
+              { id: 'reportes_ganancias', label: 'Ganancias y pérdidas', icon: PieChart }
+            ]
+          },
+          {
             groupId: "marketing",
             title: "Marketing",
             icon: Megaphone,
             directId: 'marketing'
-          },
-          {
-            groupId: "reportes",
-            title: "Reportes",
-            icon: FileText,
-            subItems: [
-              { id: 'reportes_balance', label: 'Balance', icon: BarChart },
-              { id: 'reportes_gastos', label: 'Gastos fijos', icon: TrendingDown },
-              { id: 'reportes_ganancias', label: 'Ganancias y pérdidas', icon: PieChart }
-            ]
           }
         ]
       },
@@ -3026,7 +3030,7 @@ export default function AdminPanel({
       if (roleLower === 'gerente' || roleLower === 'admin' || roleLower === 'administrador') {
         return true;
       }
-      if (itemId === 'users' || itemId === 'settings' || itemId === 'reportes_ganancias' || itemId === 'reportes_balance' || itemId === 'balance' || itemId === 'compras') {
+      if (itemId === 'users' || itemId === 'settings' || itemId === 'reportes_ganancias' || itemId === 'reportes_balance' || itemId === 'reportes_gastos' || itemId === 'gastos' || itemId === 'balance' || itemId === 'compras') {
         return roleLower === 'gerente' || roleLower === 'admin' || roleLower === 'administrador';
       }
       if (roleLower === 'cajero' || roleLower === 'vendedor') {
@@ -3291,7 +3295,11 @@ export default function AdminPanel({
                currentMenu === 'sales' ? 'Venta Flash' :
                currentMenu === 'products' ? 'Productos' :
                currentMenu === 'caja' ? 'Caja' :
-               currentMenu === 'balance' ? 'Balance' :
+               currentMenu === 'balance' ? 'Cuentas Pendientes' :
+               (currentMenu === 'gastos' || currentMenu === 'reportes_gastos') ? 'Gastos fijos' :
+               currentMenu === 'reportes_balance' ? 'Balance' :
+               currentMenu === 'reportes_ganancias' ? 'Ganancias y pérdidas' :
+               currentMenu === 'reportes' ? 'Reportes' :
                currentMenu === 'cotizaciones' ? 'Cotizaciones' :
                currentMenu === 'settings' ? 'Configuración' : 'Administración'}
             </h1>
@@ -3419,18 +3427,35 @@ export default function AdminPanel({
             </Suspense>
           )}
 
-          {/* VIEW: BALANCE DE OPERACIONES / CUENTAS */}
-          {(currentMenu === 'balance' || currentMenu === 'cuentas_bancarias') && (
-            <Suspense fallback={<AdminSubmoduleLoader name="Balance de Operaciones y Cuentas" />}>
-              <BalancePage 
-                cashOps={cashOps}
-                cashSessions={cashSessions}
-                activeSession={activeSession}
+          {/* VIEW: BALANCE / CUENTAS PENDIENTES (CxP & CxC) */}
+          {currentMenu === 'balance' && (
+            <Suspense fallback={<AdminSubmoduleLoader name="Cuentas Pendientes (CxP y CxC)" />}>
+              <CuentasPendientesPage 
                 bcvRate={bcvRate}
                 currentUser={currentUser}
-                storeUsers={storeUsers}
                 onRefreshData={fetchCajaData}
-                orders={orders}
+              />
+            </Suspense>
+          )}
+
+          {/* VIEW: CUENTAS BANCARIAS */}
+          {currentMenu === 'cuentas_bancarias' && (
+            <Suspense fallback={<AdminSubmoduleLoader name="Cuentas Bancarias" />}>
+              <CuentasBancariasPage 
+                bcvRate={bcvRate}
+                currentUser={currentUser}
+                onRefreshData={fetchCajaData}
+              />
+            </Suspense>
+          )}
+
+          {/* VIEW: GASTOS FIJOS/VARIABLES */}
+          {(currentMenu === 'gastos' || currentMenu === 'reportes_gastos') && (
+            <Suspense fallback={<AdminSubmoduleLoader name="Gastos Fijos/Variables" />}>
+              <GastosPage 
+                bcvRate={bcvRate}
+                currentUser={currentUser}
+                onRefreshData={fetchCajaData}
               />
             </Suspense>
           )}
@@ -4300,8 +4325,23 @@ export default function AdminPanel({
             </div>
           )}
 
-          {/* VIEW: LIBROS Y REPORTES */}
-          {(currentMenu === 'reportes' || currentMenu === 'reportes_balance' || currentMenu === 'reportes_gastos' || currentMenu === 'reportes_ganancias') && (
+          {/* VIEW: FINANZAS > BALANCE (REPORTES DIARIOS: VENTAS, CUENTAS, INVENTARIO) */}
+          {currentMenu === 'reportes_balance' && (
+            <Suspense fallback={<AdminSubmoduleLoader name="Reportes Diarios de Balance" />}>
+              <ReportesDiariosPage
+                products={products}
+                orders={orders}
+                cashOps={cashOps}
+                bcvRate={bcvRate}
+                currentUser={currentUser}
+                storeUsers={storeUsers}
+                onRefreshData={onRefreshData}
+              />
+            </Suspense>
+          )}
+
+          {/* VIEW: LIBROS Y REPORTES / GANANCIAS Y PÉRDIDAS */}
+          {(currentMenu === 'reportes' || currentMenu === 'reportes_ganancias') && (
             <Suspense fallback={<AdminSubmoduleLoader name="Reportes y Estadísticas" />}>
               <ReportesDashboard
                 products={products}
