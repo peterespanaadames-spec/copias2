@@ -216,6 +216,8 @@ export interface AccountPayable {
   id: string;
   purchase_id?: string;
   invoice_number?: string;
+  subject?: string;
+  entity_name?: string;
   provider_id?: string;
   provider_name: string;
   provider_rif?: string;
@@ -258,6 +260,8 @@ export interface AccountReceivable {
   quote_id?: string;
   invoice_id?: string;
   invoice_number?: string;
+  subject?: string;
+  entity_name?: string;
   client_id?: string;
   client_name?: string;
   client_phone?: string;
@@ -459,6 +463,10 @@ export interface PaymentMethodConfig {
   description?: string;
   instructions?: string;
   account_details?: string;
+  bank_account_id?: string;
+  bank_account_name?: string;
+  incoming_commission?: number;
+  outgoing_commission?: number;
   is_active: boolean;
   requires_reference?: boolean;
   allow_pos?: boolean;
@@ -528,6 +536,8 @@ export interface Invoice {
   currency_rates_snapshot?: Record<string, number>;
   totals_by_currency?: Record<string, number>;
   split_payments?: SplitPaymentDetail[];
+  bank_account_id?: string;
+  bank_account_name?: string;
   created_at?: string;
   created_by?: string;
   status?: string;
@@ -654,6 +664,10 @@ export interface PaymentMethodConfig {
   description?: string;
   instructions?: string;
   account_details?: string;
+  bank_account_id?: string;
+  bank_account_name?: string;
+  incoming_commission?: number;
+  outgoing_commission?: number;
   is_active: boolean;
   requires_reference?: boolean;
   allow_pos?: boolean;
@@ -848,6 +862,7 @@ export type AdminMenuType =
   | 'caja' 
   | 'cuentas_bancarias' 
   | 'balance' 
+  | 'gastos' 
   | 'marketing' 
   | 'reportes' 
   | 'reportes_balance' 
