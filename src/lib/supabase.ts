@@ -10,10 +10,28 @@ import {
   BankAccount, BankTransfer, GastoFijo, GastoFijoPayment,
   DiscountCode, LoyaltySettings, LoyaltyReward, StoreUser, WishlistItem, 
   BannerSlide, LandingConfig, HomeCarouselCardItem, Quote, QuoteItem, Tax, 
-  PaymentMethodConfig,
+  PaymentMethodConfig, Invoice,
   ReportModuleConfig, BusinessProfile, BusinessBranch, BusinessTerminal 
 } from '../types';
 import { sortProductsByPriority } from './searchUtils';
+
+// Helper to robustly parse items that may be stringified or double-stringified
+const parseInvoiceItems = (itemsVal: any): any[] => {
+  if (Array.isArray(itemsVal)) return itemsVal;
+  if (!itemsVal) return [];
+  try {
+    let parsed = typeof itemsVal === 'string' ? JSON.parse(itemsVal) : itemsVal;
+    let limit = 5; // Prevent infinite loop in case of weird cycles
+    while (typeof parsed === 'string' && limit > 0) {
+      parsed = JSON.parse(parsed);
+      limit--;
+    }
+    return Array.isArray(parsed) ? parsed : [];
+  } catch (e) {
+    console.error("Error parsing invoice items:", e);
+    return [];
+  }
+};
 
 // Read configuration from localStorage or initial environment
 const getInitialSettings = (): SystemSettings => {
@@ -1181,7 +1199,7 @@ export const dbService = {
             subtotal: parseFloat(String(inv.subtotal ?? inv.total ?? 0)) || 0,
             iva: parseFloat(String(inv.iva ?? 0)) || 0,
             total: parseFloat(String(inv.total ?? inv.subtotal ?? 0)) || 0,
-            items: Array.isArray(inv.items) ? inv.items : (typeof inv.items === 'string' ? JSON.parse(inv.items || '[]') : []),
+            items: parseInvoiceItems(inv.items),
             notes: inv.notes || inv.notas || '',
             created_at: inv.created_at || inv.fecha || new Date().toISOString()
           }));
@@ -1249,7 +1267,10 @@ export const dbService = {
       console.warn("Notice recovering invoices from cash ops:", recoverErr);
     }
 
-    const resultList = Array.from(mergedMap.values()).sort((a, b) => {
+    const resultList = Array.from(mergedMap.values()).map(inv => ({
+      ...inv,
+      items: parseInvoiceItems(inv.items)
+    })).sort((a, b) => {
       const dateA = new Date(a.created_at || 0).getTime();
       const dateB = new Date(b.created_at || 0).getTime();
       return dateB - dateA;
@@ -1427,7 +1448,10 @@ export const dbService = {
     });
 
     // Filter out blacklisted/deleted drafts
-    let allDrafts = Array.from(mergedMap.values());
+    let allDrafts = Array.from(mergedMap.values()).map(d => ({
+      ...d,
+      items: parseInvoiceItems(d.items)
+    }));
     try {
       const deletedSaved = localStorage.getItem('copias_bellavista_deleted_drafts');
       if (deletedSaved) {
@@ -4293,6 +4317,10 @@ export const dbService = {
               description: pm.description || '',
               instructions: pm.instructions || '',
               account_details: pm.account_details || '',
+              bank_account_id: pm.bank_account_id || undefined,
+              bank_account_name: pm.bank_account_name || undefined,
+              incoming_commission: pm.incoming_commission !== undefined ? Number(pm.incoming_commission) : 0,
+              outgoing_commission: pm.outgoing_commission !== undefined ? Number(pm.outgoing_commission) : 0,
               is_active: pm.is_active !== false,
               requires_reference: pm.requires_reference === true,
               allow_pos: pm.allow_pos !== false,
@@ -4333,6 +4361,10 @@ export const dbService = {
       description: method.description || '',
       instructions: method.instructions || '',
       account_details: method.account_details || '',
+      bank_account_id: method.bank_account_id || undefined,
+      bank_account_name: method.bank_account_name || undefined,
+      incoming_commission: method.incoming_commission !== undefined ? Number(method.incoming_commission) : 0,
+      outgoing_commission: method.outgoing_commission !== undefined ? Number(method.outgoing_commission) : 0,
       is_active: method.is_active !== undefined ? method.is_active : true,
       requires_reference: method.requires_reference !== undefined ? method.requires_reference : false,
       allow_pos: method.allow_pos !== undefined ? method.allow_pos : true,
@@ -4987,16 +5019,75 @@ export const dbService = {
   },
 
   async getBankTransfers(): Promise<BankTransfer[]> {
-    if (!supabase) return this._getLocalFallback('bank_transfers', [] as BankTransfer[]);
+    let transfers: BankTransfer[] = [];
+    if (supabase) {
+      try {
+        const { data, error } = await supabase.from('bank_transfers').select('*').order('created_at', { ascending: false });
+        if (!error && data) {
+          transfers = data as BankTransfer[];
+          localStorage.setItem('copias_bellavista_bank_transfers', JSON.stringify(transfers));
+        }
+      } catch (e) {}
+    }
+    if (transfers.length === 0) {
+      transfers = this._getLocalFallback('bank_transfers', [] as BankTransfer[]);
+    }
+
+    // Auto-sanitize records: for VES records where amount was stored in USD (e.g. 0.50) while exchange_rate was 785.07
+    transfers = transfers.map(t => {
+      if (t.currency === 'VES' && t.exchange_rate && t.exchange_rate > 50 && Number(t.amount) > 0 && Number(t.amount) < 50) {
+        const fullBs = Number(t.amount) * Number(t.exchange_rate);
+        return {
+          ...t,
+          amount: fullBs,
+          converted_amount: fullBs
+        };
+      }
+      return t;
+    });
+
+    // Auto-reconciliation for mistargeted Banesco transactions
     try {
-      const { data, error } = await supabase.from('bank_transfers').select('*').order('created_at', { ascending: false });
-      if (error) throw error;
-      if (data) {
-        localStorage.setItem('copias_bellavista_bank_transfers', JSON.stringify(data));
-        return data as BankTransfer[];
+      const savedAccountsRaw = localStorage.getItem('copias_bellavista_bank_accounts');
+      if (savedAccountsRaw) {
+        const accounts: BankAccount[] = JSON.parse(savedAccountsRaw);
+        const banescoAcc = accounts.find(a => `${a.name} ${a.bank_name || ''}`.toLowerCase().includes('banesco'));
+        const vzlaAcc = accounts.find(a => {
+          const text = `${a.name} ${a.bank_name || ''}`.toLowerCase();
+          return text.includes('venezuela') || text.includes('bdv') || text.includes('vzla');
+        });
+
+        if (banescoAcc && vzlaAcc) {
+          let hasFix = false;
+          transfers.forEach(t => {
+            const note = (t.notes || '').toLowerCase();
+            if (
+              (note.includes('banesco') || note.includes('pago movil banesco')) &&
+              (t.to_account_id === vzlaAcc.id || (t.to_account_name || '').toLowerCase().includes('venezuela') || (t.to_account_name || '').toLowerCase().includes('bdv'))
+            ) {
+              t.to_account_id = banescoAcc.id;
+              t.to_account_name = banescoAcc.name || banescoAcc.bank_name;
+              vzlaAcc.balance = Math.max(0, Number(vzlaAcc.balance || 0) - Number(t.amount || 0));
+              banescoAcc.balance = Number(banescoAcc.balance || 0) + Number(t.amount || 0);
+              hasFix = true;
+            }
+          });
+
+          if (hasFix) {
+            localStorage.setItem('copias_bellavista_bank_transfers', JSON.stringify(transfers));
+            localStorage.setItem('copias_bellavista_bank_accounts', JSON.stringify(accounts));
+            if (supabase) {
+              try {
+                supabase.from('bank_accounts').upsert([banescoAcc, vzlaAcc]);
+                supabase.from('bank_transfers').upsert(transfers);
+              } catch (err) {}
+            }
+          }
+        }
       }
     } catch (e) {}
-    return this._getLocalFallback('bank_transfers', [] as BankTransfer[]);
+
+    return transfers;
   },
 
   async transferBetweenAccounts(transfer: BankTransfer): Promise<BankTransfer> {
@@ -5022,6 +5113,279 @@ export const dbService = {
 
     window.dispatchEvent(new CustomEvent('bellavista_bank_transfers_updated', { detail: updated }));
     return transfer;
+  },
+
+  async recordSaleIncomeToBankAccounts(params: {
+    invoice: Invoice;
+    splitPayments?: Array<{
+      method: string;
+      currency?: string;
+      amount: number;
+      amount_usd: number;
+      amount_ves: number;
+      rate?: number;
+    }>;
+    singlePaymentMethod?: string;
+    totalUsd: number;
+    totalVes: number;
+    bcvRate: number;
+    createdBy?: string;
+  }): Promise<void> {
+    try {
+      let bankAccounts = await this.getBankAccounts();
+      const paymentMethods = await this.getPaymentMethods();
+      const bcvRate = params.bcvRate || 45.5;
+
+      // If no bank accounts exist in DB, create initial seed accounts so money gets tracked
+      if (bankAccounts.length === 0) {
+        const seedAccounts: BankAccount[] = [
+          {
+            id: crypto.randomUUID(),
+            name: 'Cuenta Dólares',
+            bank_name: 'Cuenta Dólares',
+            currency: 'USD',
+            balance: 0,
+            is_active: true,
+            created_at: new Date().toISOString()
+          },
+          {
+            id: crypto.randomUUID(),
+            name: 'Cuenta Bolívares',
+            bank_name: 'Cuenta Bolívares',
+            currency: 'VES',
+            balance: 0,
+            is_active: true,
+            created_at: new Date().toISOString()
+          }
+        ];
+        for (const sa of seedAccounts) {
+          await this.saveBankAccount(sa);
+        }
+        bankAccounts = await this.getBankAccounts();
+      }
+
+      // Helper function for normalisation
+      const clean = (s: string) => (s || '')
+        .toLowerCase()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .replace(/[^a-z0-9]/g, ' ')
+        .replace(/\s+/g, ' ')
+        .trim();
+
+      // Build payment items list
+      const paymentEntries: Array<{
+        method: string;
+        amountUsd: number;
+        amountVes: number;
+        currency: string;
+        rate: number;
+      }> = [];
+
+      if (params.splitPayments && params.splitPayments.length > 0) {
+        params.splitPayments.forEach(sp => {
+          paymentEntries.push({
+            method: sp.method,
+            amountUsd: Number(sp.amount_usd || 0),
+            amountVes: Number(sp.amount_ves || (sp.amount_usd * bcvRate)),
+            currency: sp.currency || (sp.amount_ves > 0 ? 'VES' : 'USD'),
+            rate: sp.rate || bcvRate
+          });
+        });
+      } else {
+        const methodStr = params.singlePaymentMethod || params.invoice.payment_method || 'Efectivo';
+        const isVes = methodStr.toLowerCase().includes('bs') || 
+                      methodStr.toLowerCase().includes('bolivar') || 
+                      methodStr.toLowerCase().includes('pago movil') || 
+                      methodStr.toLowerCase().includes('punto') || 
+                      methodStr.toLowerCase().includes('transferencia');
+        paymentEntries.push({
+          method: methodStr,
+          amountUsd: Number(params.totalUsd || 0),
+          amountVes: Number(params.totalVes || (params.totalUsd * bcvRate)),
+          currency: isVes ? 'VES' : 'USD',
+          rate: bcvRate
+        });
+      }
+
+      const transfersToInsert: BankTransfer[] = [];
+
+      for (const entry of paymentEntries) {
+        if (entry.amountUsd <= 0 && entry.amountVes <= 0) continue;
+
+        const rawMethod = entry.method || '';
+        const normMethod = clean(rawMethod);
+        
+        // Find configured payment method
+        const pmConfig = paymentMethods.find(p => {
+          const normPName = clean(p.name);
+          return normPName === normMethod || p.id === rawMethod || (normPName.length > 3 && normMethod.includes(normPName));
+        });
+
+        // 🏦 STEP 1: Detect explicit bank institution keywords in the payment method name
+        // (This guarantees "Pago Movil Banesco" ALWAYS routes to Banesco, not Venezuela or other accounts)
+        let targetBank: BankAccount | undefined;
+
+        const isBanesco = normMethod.includes('banesco');
+        const isVenezuela = normMethod.includes('venezuela') || normMethod.includes('bdv') || normMethod.includes('vzla');
+        const isBNC = normMethod.includes('bnc') || normMethod.includes('nacional de credito') || (normMethod.includes('credito') && !normMethod.includes('tarjeta'));
+        const isMercantil = normMethod.includes('mercantil');
+        const isProvincial = normMethod.includes('provincial') || normMethod.includes('bbva');
+        const isBofA = normMethod.includes('bofa') || normMethod.includes('bank of america') || normMethod.includes('america');
+        const isZelle = normMethod.includes('zelle');
+        const isBinance = normMethod.includes('binance') || normMethod.includes('usdt');
+        
+        const isEfectivoVES = (normMethod.includes('efectivo') || normMethod.includes('cash')) && 
+                             (normMethod.includes('ves') || normMethod.includes('bs') || normMethod.includes('bolivar') || normMethod.includes('bolivares'));
+        
+        const isEfectivoUSD = normMethod === 'efectivo' || 
+                             normMethod === 'efectivo usd' || 
+                             normMethod === 'efectivo dolares' || 
+                             normMethod === 'efectivo dólares' || 
+                             normMethod === 'dolares' || 
+                             normMethod === 'usd' || 
+                             ((normMethod.includes('efectivo') || normMethod.includes('cash')) && !isEfectivoVES);
+
+        if (isBanesco) {
+          targetBank = bankAccounts.find(a => clean(`${a.name} ${a.bank_name || ''}`).includes('3750')) ||
+                       bankAccounts.find(a => clean(`${a.name} ${a.bank_name || ''}`).includes('banesco'));
+        } else if (isVenezuela) {
+          targetBank = bankAccounts.find(a => {
+            const aText = clean(`${a.name} ${a.bank_name || ''}`);
+            return aText.includes('ahorro') && (aText.includes('venezuela') || aText.includes('bdv') || aText.includes('vzla'));
+          }) || bankAccounts.find(a => {
+            const aText = clean(`${a.name} ${a.bank_name || ''}`);
+            return aText.includes('venezuela') || aText.includes('bdv') || aText.includes('vzla');
+          });
+        } else if (isBNC) {
+          targetBank = bankAccounts.find(a => {
+            const aText = clean(`${a.name} ${a.bank_name || ''}`);
+            return aText.includes('bnc') || aText.includes('nacional de credito') || aText.includes('credito');
+          });
+        } else if (isMercantil) {
+          targetBank = bankAccounts.find(a => clean(`${a.name} ${a.bank_name || ''}`).includes('mercantil'));
+        } else if (isProvincial) {
+          targetBank = bankAccounts.find(a => {
+            const aText = clean(`${a.name} ${a.bank_name || ''}`);
+            return aText.includes('provincial') || aText.includes('bbva');
+          });
+        } else if (isBofA) {
+          targetBank = bankAccounts.find(a => {
+            const aText = clean(`${a.name} ${a.bank_name || ''}`);
+            return aText.includes('bofa') || aText.includes('america');
+          });
+        } else if (isZelle) {
+          targetBank = bankAccounts.find(a => {
+            const aText = clean(`${a.name} ${a.bank_name || ''}`);
+            return aText.includes('zelle') || (a.currency === 'USD' && aText.includes('dolar'));
+          });
+        } else if (isBinance) {
+          targetBank = bankAccounts.find(a => {
+            const aText = clean(`${a.name} ${a.bank_name || ''}`);
+            return aText.includes('binance') || (a.currency === 'USD' && aText.includes('dolar'));
+          });
+        } else if (isEfectivoUSD) {
+          targetBank = bankAccounts.find(a => {
+            const aText = clean(`${a.name} ${a.bank_name || ''}`);
+            return (aText.includes('efectivo') && (aText.includes('dolar') || aText.includes('dolares'))) || aText === 'efectivo dolares';
+          }) || bankAccounts.find(a => {
+            const aText = clean(`${a.name} ${a.bank_name || ''}`);
+            return a.currency === 'USD' && (aText.includes('efectivo') || aText.includes('caja') || aText.includes('dolar'));
+          }) || bankAccounts.find(a => a.currency === 'USD');
+        } else if (isEfectivoVES) {
+          targetBank = bankAccounts.find(a => {
+            const aText = clean(`${a.name} ${a.bank_name || ''}`);
+            return a.currency === 'VES' && (aText.includes('efectivo') || aText.includes('caja') || aText.includes('bolivar'));
+          }) || bankAccounts.find(a => a.currency === 'VES' && clean(a.name).includes('efectivo'));
+        }
+
+        // 🏦 STEP 2: Explicit bank_account_id in PaymentMethodConfig if not already matched
+        if (!targetBank && pmConfig && pmConfig.bank_account_id) {
+          targetBank = bankAccounts.find(a => a.id === pmConfig.bank_account_id);
+        }
+
+        // 🏦 STEP 3: Associated methods JSON in bankAccount.notes
+        if (!targetBank) {
+          targetBank = bankAccounts.find(a => {
+            if (!a.notes) return false;
+            try {
+              const parsed = JSON.parse(a.notes);
+              if (Array.isArray(parsed)) {
+                return parsed.some(m => {
+                  const mNorm = clean(m.name);
+                  return mNorm === normMethod || (mNorm.length > 4 && normMethod.includes(mNorm));
+                });
+              }
+            } catch (e) {}
+            return false;
+          });
+        }
+
+        // 🏦 STEP 4: Default fallback by currency
+        if (!targetBank) {
+          const isUsdMethod = entry.currency === 'USD' || normMethod.includes('usd') || normMethod.includes('dolar') || normMethod.includes('zelle');
+          targetBank = bankAccounts.find(a => isUsdMethod ? a.currency === 'USD' : a.currency === 'VES') || bankAccounts[0];
+        }
+
+        if (targetBank) {
+          const isBankVES = targetBank.currency === 'VES';
+          let creditAmount = isBankVES ? entry.amountVes : entry.amountUsd;
+
+          // Deduct incoming commission if configured
+          const commissionPercent = pmConfig?.incoming_commission || 0;
+          if (commissionPercent > 0) {
+            creditAmount = creditAmount - (creditAmount * (commissionPercent / 100));
+          }
+
+          creditAmount = parseFloat(creditAmount.toFixed(2));
+
+          // 1. Update bank account balance
+          targetBank.balance = Number(targetBank.balance || 0) + creditAmount;
+          targetBank.updated_at = new Date().toISOString();
+          await this.saveBankAccount(targetBank);
+
+          // 2. Prepare movement record for bank_transfers
+          const docTypeLabel = params.invoice.document_type === 'nota_entrega' ? 'Nota de Entrega' : 'Factura';
+          const docNum = params.invoice.control_number || params.invoice.invoice_number || '';
+          const clientName = params.invoice.customer_name || 'Consumidor Final';
+
+          const transferItem: BankTransfer = {
+            id: crypto.randomUUID(),
+            to_account_id: targetBank.id,
+            to_account_name: targetBank.name || targetBank.bank_name,
+            amount: creditAmount,
+            currency: targetBank.currency,
+            exchange_rate: isBankVES ? entry.rate : undefined,
+            converted_amount: creditAmount,
+            reference: docNum ? `POS-${docNum}` : `VENTA-${Date.now().toString().slice(-6)}`,
+            notes: `Ingreso Venta Flash (${entry.method}) - ${docTypeLabel} #${docNum} (${clientName})`,
+            created_by: params.createdBy || params.invoice.created_by || 'Cajero POS',
+            created_at: params.invoice.created_at || new Date().toISOString()
+          };
+
+          transfersToInsert.push(transferItem);
+        }
+      }
+
+      if (transfersToInsert.length > 0) {
+        const currentTransfers = await this.getBankTransfers();
+        const updatedTransfers = [...transfersToInsert, ...currentTransfers];
+        localStorage.setItem('copias_bellavista_bank_transfers', JSON.stringify(updatedTransfers));
+
+        if (supabase) {
+          try {
+            await supabase.from('bank_transfers').insert(transfersToInsert);
+          } catch (e) {
+            console.warn("Error inserting bank transfers in Supabase:", e);
+          }
+        }
+
+        window.dispatchEvent(new CustomEvent('bellavista_bank_accounts_updated'));
+        window.dispatchEvent(new CustomEvent('bellavista_bank_transfers_updated', { detail: updatedTransfers }));
+      }
+    } catch (err) {
+      console.error("Error in recordSaleIncomeToBankAccounts:", err);
+    }
   },
 
   // ============================================================================
@@ -5096,9 +5460,43 @@ export const dbService = {
     const updated = [payment, ...current];
     localStorage.setItem('copias_bellavista_gastos_fijos_payments', JSON.stringify(updated));
 
-    // Deduct from bank if applicable
+    // Deduct from bank if applicable with correct currency conversion & movement record
     if (payment.bank_account_id) {
-      await this.updateBankAccountBalance(payment.bank_account_id, -payment.amount);
+      const bankAccounts = await this.getBankAccounts();
+      const bank = bankAccounts.find(a => a.id === payment.bank_account_id);
+      if (bank) {
+        const isVES = bank.currency === 'VES';
+        const amountToDeduct = isVES ? (Number(payment.amount_bs) || (Number(payment.amount) * 45)) : Number(payment.amount);
+        
+        bank.balance = Number(bank.balance) - amountToDeduct;
+        bank.updated_at = new Date().toISOString();
+        await this.saveBankAccount(bank);
+
+        // Record movement in bank_transfers
+        const bankMovement: BankTransfer = {
+          id: crypto.randomUUID(),
+          from_account_id: bank.id,
+          from_account_name: bank.name || bank.bank_name,
+          amount: amountToDeduct,
+          currency: bank.currency,
+          exchange_rate: isVES ? (amountToDeduct / (Number(payment.amount) || 1)) : undefined,
+          converted_amount: amountToDeduct,
+          reference: payment.reference || 'PAGO-GASTO',
+          notes: payment.notes || `Pago de gasto fijo (${payment.payment_method})`,
+          created_by: payment.created_by || 'Administrador',
+          created_at: payment.payment_date || new Date().toISOString()
+        };
+
+        const currentTransfers = await this.getBankTransfers();
+        const updatedTransfers = [bankMovement, ...currentTransfers];
+        localStorage.setItem('copias_bellavista_bank_transfers', JSON.stringify(updatedTransfers));
+        if (supabase) {
+          try {
+            await supabase.from('bank_transfers').insert(bankMovement);
+          } catch (e) {}
+        }
+        window.dispatchEvent(new CustomEvent('bellavista_bank_transfers_updated', { detail: updatedTransfers }));
+      }
     }
 
     // Update the gasto status
@@ -5194,8 +5592,43 @@ export const dbService = {
     const updated = [payment, ...current];
     localStorage.setItem('copias_bellavista_accounts_payable_payments', JSON.stringify(updated));
 
+    // Deduct from bank account with currency conversion & bank movement registration
     if (payment.bank_account_id) {
-      await this.updateBankAccountBalance(payment.bank_account_id, -payment.amount);
+      const bankAccounts = await this.getBankAccounts();
+      const bank = bankAccounts.find(a => a.id === payment.bank_account_id);
+      if (bank) {
+        const isVES = bank.currency === 'VES';
+        const amountToDeduct = isVES ? (Number(payment.amount_bs) || (Number(payment.amount) * 45)) : Number(payment.amount);
+        
+        bank.balance = Number(bank.balance) - amountToDeduct;
+        bank.updated_at = new Date().toISOString();
+        await this.saveBankAccount(bank);
+
+        // Record movement in bank_transfers for audit and history in Cuentas Bancarias
+        const bankMovement: BankTransfer = {
+          id: crypto.randomUUID(),
+          from_account_id: bank.id,
+          from_account_name: bank.name || bank.bank_name,
+          amount: amountToDeduct,
+          currency: bank.currency,
+          exchange_rate: isVES ? (amountToDeduct / (Number(payment.amount) || 1)) : undefined,
+          converted_amount: amountToDeduct,
+          reference: payment.reference || 'PAGO-CXP',
+          notes: payment.notes || `Pago de cuenta por pagar (${payment.payment_method})`,
+          created_by: payment.created_by || 'Administrador',
+          created_at: payment.payment_date || new Date().toISOString()
+        };
+
+        const currentTransfers = await this.getBankTransfers();
+        const updatedTransfers = [bankMovement, ...currentTransfers];
+        localStorage.setItem('copias_bellavista_bank_transfers', JSON.stringify(updatedTransfers));
+        if (supabase) {
+          try {
+            await supabase.from('bank_transfers').insert(bankMovement);
+          } catch (e) {}
+        }
+        window.dispatchEvent(new CustomEvent('bellavista_bank_transfers_updated', { detail: updatedTransfers }));
+      }
     }
 
     const cxps = await this.getAccountsPayable();
@@ -5216,6 +5649,41 @@ export const dbService = {
 
     window.dispatchEvent(new CustomEvent('bellavista_accounts_payable_payments_updated', { detail: updated }));
     return payment;
+  },
+
+  async payBatchAccountsPayable(entityName: string, totalPaymentAmount: number, basePaymentData: Omit<AccountPayablePayment, 'id' | 'amount' | 'account_payable_id'>): Promise<AccountPayablePayment[]> {
+    const allCxP = await this.getAccountsPayable();
+    const entityCxPs = allCxP
+      .filter(c => ((c.entity_name || c.provider_name || '').toLowerCase() === entityName.toLowerCase()) && (Number(c.remaining_amount) > 0 || c.status === 'pendiente' || c.status === 'parcial'))
+      .sort((a, b) => new Date(a.issue_date || a.created_at || 0).getTime() - new Date(b.issue_date || b.created_at || 0).getTime());
+
+    let remainingToPay = totalPaymentAmount;
+    const generatedPayments: AccountPayablePayment[] = [];
+
+    for (const cxp of entityCxPs) {
+      if (remainingToPay <= 0.001) break;
+      const amountForThis = Math.min(remainingToPay, Number(cxp.remaining_amount));
+      if (amountForThis > 0) {
+        const payment: AccountPayablePayment = {
+          id: crypto.randomUUID(),
+          account_payable_id: cxp.id,
+          cxp_id: cxp.id,
+          amount: amountForThis,
+          amount_bs: basePaymentData.amount_bs ? (basePaymentData.amount_bs * (amountForThis / totalPaymentAmount)) : undefined,
+          payment_method: basePaymentData.payment_method,
+          bank_account_id: basePaymentData.bank_account_id,
+          payment_date: basePaymentData.payment_date || new Date().toISOString(),
+          reference: basePaymentData.reference,
+          notes: basePaymentData.notes || `Pago agrupado a ${entityName}`,
+          created_by: basePaymentData.created_by,
+          created_at: new Date().toISOString()
+        };
+        await this.payAccountPayable(payment);
+        generatedPayments.push(payment);
+        remainingToPay -= amountForThis;
+      }
+    }
+    return generatedPayments;
   },
 
   // ============================================================================
@@ -5289,8 +5757,43 @@ export const dbService = {
     const updated = [payment, ...current];
     localStorage.setItem('copias_bellavista_accounts_receivable_payments', JSON.stringify(updated));
 
+    // Credit to bank account with currency conversion & bank movement registration
     if (payment.bank_account_id) {
-      await this.updateBankAccountBalance(payment.bank_account_id, payment.amount);
+      const bankAccounts = await this.getBankAccounts();
+      const bank = bankAccounts.find(a => a.id === payment.bank_account_id);
+      if (bank) {
+        const isVES = bank.currency === 'VES';
+        const amountToCredit = isVES ? (Number(payment.amount_bs) || (Number(payment.amount) * 45)) : Number(payment.amount);
+        
+        bank.balance = Number(bank.balance) + amountToCredit;
+        bank.updated_at = new Date().toISOString();
+        await this.saveBankAccount(bank);
+
+        // Record movement in bank_transfers for audit and history in Cuentas Bancarias
+        const bankMovement: BankTransfer = {
+          id: crypto.randomUUID(),
+          to_account_id: bank.id,
+          to_account_name: bank.name || bank.bank_name,
+          amount: amountToCredit,
+          currency: bank.currency,
+          exchange_rate: isVES ? (amountToCredit / (Number(payment.amount) || 1)) : undefined,
+          converted_amount: amountToCredit,
+          reference: payment.reference || 'COBRO-CXC',
+          notes: payment.notes || `Cobro de cuenta por cobrar (${payment.payment_method})`,
+          created_by: payment.created_by || 'Administrador',
+          created_at: payment.payment_date || new Date().toISOString()
+        };
+
+        const currentTransfers = await this.getBankTransfers();
+        const updatedTransfers = [bankMovement, ...currentTransfers];
+        localStorage.setItem('copias_bellavista_bank_transfers', JSON.stringify(updatedTransfers));
+        if (supabase) {
+          try {
+            await supabase.from('bank_transfers').insert(bankMovement);
+          } catch (e) {}
+        }
+        window.dispatchEvent(new CustomEvent('bellavista_bank_transfers_updated', { detail: updatedTransfers }));
+      }
     }
 
     const cxcs = await this.getAccountsReceivable();
@@ -5311,5 +5814,40 @@ export const dbService = {
 
     window.dispatchEvent(new CustomEvent('bellavista_accounts_receivable_payments_updated', { detail: updated }));
     return payment;
+  },
+
+  async payBatchAccountsReceivable(entityName: string, totalPaymentAmount: number, basePaymentData: Omit<AccountReceivablePayment, 'id' | 'amount' | 'account_receivable_id'>): Promise<AccountReceivablePayment[]> {
+    const allCxC = await this.getAccountsReceivable();
+    const entityCxCs = allCxC
+      .filter(c => ((c.entity_name || c.client_name || c.customer_name || '').toLowerCase() === entityName.toLowerCase()) && (Number(c.remaining_amount) > 0 || c.status === 'pendiente' || c.status === 'parcial'))
+      .sort((a, b) => new Date(a.issue_date || a.created_at || 0).getTime() - new Date(b.issue_date || b.created_at || 0).getTime());
+
+    let remainingToCollect = totalPaymentAmount;
+    const generatedPayments: AccountReceivablePayment[] = [];
+
+    for (const cxc of entityCxCs) {
+      if (remainingToCollect <= 0.001) break;
+      const amountForThis = Math.min(remainingToCollect, Number(cxc.remaining_amount));
+      if (amountForThis > 0) {
+        const payment: AccountReceivablePayment = {
+          id: crypto.randomUUID(),
+          account_receivable_id: cxc.id,
+          cxc_id: cxc.id,
+          amount: amountForThis,
+          amount_bs: basePaymentData.amount_bs ? (basePaymentData.amount_bs * (amountForThis / totalPaymentAmount)) : undefined,
+          payment_method: basePaymentData.payment_method,
+          bank_account_id: basePaymentData.bank_account_id,
+          payment_date: basePaymentData.payment_date || new Date().toISOString(),
+          reference: basePaymentData.reference,
+          notes: basePaymentData.notes || `Cobro agrupado a ${entityName}`,
+          created_by: basePaymentData.created_by,
+          created_at: new Date().toISOString()
+        };
+        await this.payAccountReceivable(payment);
+        generatedPayments.push(payment);
+        remainingToCollect -= amountForThis;
+      }
+    }
+    return generatedPayments;
   }
 };
