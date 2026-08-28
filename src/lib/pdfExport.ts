@@ -116,9 +116,9 @@ export function exportBalanceToPdf(data: BalancePdfData) {
   const pageHeight = doc.internal.pageSize.getHeight();
 
   // Colors
-  const primaryColor: [number, number, number] = [0, 93, 169]; // #005da9 Bella Vista Blue
-  const secondaryColor: [number, number, number] = [255, 183, 0]; // #ffb700 Bella Vista Gold
-  const darkColor: [number, number, number] = [19, 25, 33];
+  const primaryColor: [number, number, number] = [29, 53, 87]; // #1D3557 Trust Navy
+  const secondaryColor: [number, number, number] = [64, 224, 208]; // #40E0D0 Agile Cyan
+  const darkColor: [number, number, number] = [43, 45, 66]; // #2B2D42 Slate Gray
   const grayColor: [number, number, number] = [100, 116, 139];
   const successColor: [number, number, number] = [16, 149, 106];
   const dangerColor: [number, number, number] = [225, 29, 72];
@@ -354,9 +354,9 @@ export function exportReportsToPdf(data: ReportsPdfData) {
   const pageHeight = doc.internal.pageSize.getHeight();
 
   // Corporate palette
-  const primaryColor: [number, number, number] = [0, 93, 169]; // #005da9 Bella Vista Blue
-  const secondaryColor: [number, number, number] = [255, 183, 0]; // #ffb700 Bella Vista Gold
-  const darkColor: [number, number, number] = [15, 23, 42]; // Slate 900
+  const primaryColor: [number, number, number] = [29, 53, 87]; // #1D3557 Trust Navy
+  const secondaryColor: [number, number, number] = [64, 224, 208]; // #40E0D0 Agile Cyan
+  const darkColor: [number, number, number] = [43, 45, 66]; // #2B2D42 Slate Gray
   const slateColor: [number, number, number] = [51, 65, 85]; // Slate 700
   const grayColor: [number, number, number] = [100, 116, 139]; // Slate 500
   const successColor: [number, number, number] = [16, 149, 106]; // Emerald 600

@@ -42,23 +42,23 @@ export const printInvoiceDocument = (
     @page { size: letter portrait; margin: 12mm; }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif; color: #1e293b; line-height: 1.4; padding: 15px; font-size: 12px; }
-    .header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px; border-bottom: 2px solid #005da9; padding-bottom: 12px; }
-    .company-title { font-size: 18px; font-weight: 900; color: #003764; text-transform: uppercase; letter-spacing: -0.5px; }
-    .company-info { font-size: 11px; color: #64748b; text-align: right; }
-    .meta-box { border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px 14px; margin-bottom: 16px; background: #f8fafc; }
+    .header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 16px; border-bottom: 2px solid #1D3557; padding-bottom: 12px; }
+    .company-title { font-size: 18px; font-weight: 900; color: #1D3557; text-transform: uppercase; letter-spacing: -0.5px; }
+    .company-info { font-size: 11px; color: #2B2D42; text-align: right; }
+    .meta-box { border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px 14px; margin-bottom: 16px; background: #F8F9FA; }
     .meta-grid { display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 8px; font-size: 11px; }
-    .meta-item strong { color: #64748b; text-transform: uppercase; font-size: 9px; display: block; }
+    .meta-item strong { color: #2B2D42; text-transform: uppercase; font-size: 9px; display: block; }
     table { width: 100%; border-collapse: collapse; margin-bottom: 16px; }
-    th { background: #f1f5f9; color: #334155; font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; padding: 6px 8px; text-align: left; border-bottom: 2px solid #cbd5e1; }
+    th { background: #1D3557; color: #ffffff; font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; padding: 6px 8px; text-align: left; }
     th.num, td.num { text-align: right; }
     th.center, td.center { text-align: center; }
-    td { padding: 6px 8px; border-bottom: 1px solid #f1f5f9; font-size: 11px; }
+    td { padding: 6px 8px; border-bottom: 1px solid #f1f5f9; font-size: 11px; color: #2B2D42; }
     tr:nth-child(even) { background: #fafafa; }
     .totals-wrapper { display: flex; justify-content: flex-end; margin-top: 8px; }
     .totals-table { width: 340px; }
     .totals-table td { padding: 3px 6px; font-size: 11px; }
-    .total-row { font-size: 13px; font-weight: 900; color: #003764; border-top: 2px solid #cbd5e1; }
-    .rate-badge { background: #e0f2fe; color: #005da9; padding: 4px 8px; border-radius: 6px; font-size: 10px; font-weight: bold; margin-top: 6px; text-align: right; }
+    .total-row { font-size: 13px; font-weight: 900; color: #1D3557; border-top: 2px solid #1D3557; }
+    .rate-badge { background: #F8F9FA; color: #1D3557; border: 1px solid #40E0D0; padding: 4px 8px; border-radius: 6px; font-size: 10px; font-weight: bold; margin-top: 6px; text-align: right; }
     .footer { margin-top: 24px; text-align: center; font-size: 9px; color: #94a3b8; border-top: 1px dashed #cbd5e1; padding-top: 8px; }
     @media print { body { padding: 0; } }
   </style>
@@ -67,7 +67,7 @@ export const printInvoiceDocument = (
   <div class="header">
     <div>
       <div class="company-title">${businessInfo.name || 'COPIAS BELLA VISTA, C.A.'}</div>
-      <div style="font-size: 11px; font-weight: bold; color: #005da9; margin-top: 2px;">${docTitle}: ${docNumber}</div>
+      <div style="font-size: 11px; font-weight: bold; color: #1D3557; margin-top: 2px;">${docTitle}: ${docNumber}</div>
     </div>
     <div class="company-info">
       <div><strong>RIF:</strong> ${businessInfo.rif || 'J-12345678-9'}</div>
@@ -149,8 +149,8 @@ export const printInvoiceDocument = (
       </tr>` : ''}
       <tr class="total-row">
         <td style="padding-top: 6px;">TOTAL A PAGAR:</td>
-        <td class="num font-mono" style="padding-top: 6px; color: #005da9;">$${totalUsd.toFixed(2)}</td>
-        <td class="num font-mono" style="padding-top: 6px; color: #005da9;">Bs. ${totalBs.toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
+        <td class="num font-mono" style="padding-top: 6px; color: #1D3557;">$${totalUsd.toFixed(2)}</td>
+        <td class="num font-mono" style="padding-top: 6px; color: #1D3557;">Bs. ${totalBs.toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</td>
       </tr>
     </table>
   </div>

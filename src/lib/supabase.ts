@@ -5046,42 +5046,61 @@ export const dbService = {
       return t;
     });
 
-    // Auto-reconciliation for mistargeted Banesco transactions
+    // Auto-reconciliation for mistargeted Banesco/Bank transactions
     try {
       const savedAccountsRaw = localStorage.getItem('copias_bellavista_bank_accounts');
-      if (savedAccountsRaw) {
-        const accounts: BankAccount[] = JSON.parse(savedAccountsRaw);
-        const banescoAcc = accounts.find(a => `${a.name} ${a.bank_name || ''}`.toLowerCase().includes('banesco'));
-        const vzlaAcc = accounts.find(a => {
-          const text = `${a.name} ${a.bank_name || ''}`.toLowerCase();
-          return text.includes('venezuela') || text.includes('bdv') || text.includes('vzla');
+      let accounts: BankAccount[] = savedAccountsRaw ? JSON.parse(savedAccountsRaw) : [];
+
+      let banescoAcc = accounts.find(a => `${a.name} ${a.bank_name || ''}`.toLowerCase().includes('banesco'));
+      if (!banescoAcc && accounts.length > 0) {
+        banescoAcc = {
+          id: 'acc-banesco-auto',
+          name: 'Banesco',
+          bank_name: 'Banco Banesco',
+          account_number: '0134-0000-00-0000000000',
+          currency: 'VES',
+          balance: 0,
+          is_active: true,
+          notes: JSON.stringify([
+            { id: 'pm-banesco-pm', name: 'Pago Móvil Banesco (Bs.)', incomingCommission: 0, outgoingCommission: 0, currency: 'VES', type: 'movil' },
+            { id: 'pm-banesco-transf', name: 'Transferencia Banesco (Bs.)', incomingCommission: 0, outgoingCommission: 0, currency: 'VES', type: 'transferencia' }
+          ]),
+          created_at: new Date().toISOString()
+        };
+        accounts.push(banescoAcc);
+      }
+
+      if (banescoAcc) {
+        let hasFix = false;
+        transfers.forEach(t => {
+          const note = (t.notes || '').toLowerCase();
+          const ref = (t.reference || '').toLowerCase();
+          const isBanescoPayment = note.includes('banesco') || note.includes('pago movil banesco') || ref.includes('banesco');
+
+          if (isBanescoPayment && t.to_account_id !== banescoAcc!.id) {
+            const oldAcc = accounts.find(a => a.id === t.to_account_id);
+            if (oldAcc) {
+              oldAcc.balance = Math.max(0, Number(oldAcc.balance || 0) - Number(t.amount || 0));
+            }
+            t.to_account_id = banescoAcc!.id;
+            t.to_account_name = banescoAcc!.name || banescoAcc!.bank_name;
+            banescoAcc!.balance = Number(banescoAcc!.balance || 0) + Number(t.amount || 0);
+
+            if (t.notes && t.notes.includes('(Efectivo VES)')) {
+              t.notes = t.notes.replace('(Efectivo VES)', '(Pago Móvil Banesco (Bs.))');
+            }
+            hasFix = true;
+          }
         });
 
-        if (banescoAcc && vzlaAcc) {
-          let hasFix = false;
-          transfers.forEach(t => {
-            const note = (t.notes || '').toLowerCase();
-            if (
-              (note.includes('banesco') || note.includes('pago movil banesco')) &&
-              (t.to_account_id === vzlaAcc.id || (t.to_account_name || '').toLowerCase().includes('venezuela') || (t.to_account_name || '').toLowerCase().includes('bdv'))
-            ) {
-              t.to_account_id = banescoAcc.id;
-              t.to_account_name = banescoAcc.name || banescoAcc.bank_name;
-              vzlaAcc.balance = Math.max(0, Number(vzlaAcc.balance || 0) - Number(t.amount || 0));
-              banescoAcc.balance = Number(banescoAcc.balance || 0) + Number(t.amount || 0);
-              hasFix = true;
-            }
-          });
-
-          if (hasFix) {
-            localStorage.setItem('copias_bellavista_bank_transfers', JSON.stringify(transfers));
-            localStorage.setItem('copias_bellavista_bank_accounts', JSON.stringify(accounts));
-            if (supabase) {
-              try {
-                supabase.from('bank_accounts').upsert([banescoAcc, vzlaAcc]);
-                supabase.from('bank_transfers').upsert(transfers);
-              } catch (err) {}
-            }
+        if (hasFix) {
+          localStorage.setItem('copias_bellavista_bank_transfers', JSON.stringify(transfers));
+          localStorage.setItem('copias_bellavista_bank_accounts', JSON.stringify(accounts));
+          if (supabase) {
+            try {
+              supabase.from('bank_accounts').upsert(accounts);
+              supabase.from('bank_transfers').upsert(transfers);
+            } catch (err) {}
           }
         }
       }
@@ -5222,89 +5241,14 @@ export const dbService = {
           return normPName === normMethod || p.id === rawMethod || (normPName.length > 3 && normMethod.includes(normPName));
         });
 
-        // 🏦 STEP 1: Detect explicit bank institution keywords in the payment method name
-        // (This guarantees "Pago Movil Banesco" ALWAYS routes to Banesco, not Venezuela or other accounts)
         let targetBank: BankAccount | undefined;
 
-        const isBanesco = normMethod.includes('banesco');
-        const isVenezuela = normMethod.includes('venezuela') || normMethod.includes('bdv') || normMethod.includes('vzla');
-        const isBNC = normMethod.includes('bnc') || normMethod.includes('nacional de credito') || (normMethod.includes('credito') && !normMethod.includes('tarjeta'));
-        const isMercantil = normMethod.includes('mercantil');
-        const isProvincial = normMethod.includes('provincial') || normMethod.includes('bbva');
-        const isBofA = normMethod.includes('bofa') || normMethod.includes('bank of america') || normMethod.includes('america');
-        const isZelle = normMethod.includes('zelle');
-        const isBinance = normMethod.includes('binance') || normMethod.includes('usdt');
-        
-        const isEfectivoVES = (normMethod.includes('efectivo') || normMethod.includes('cash')) && 
-                             (normMethod.includes('ves') || normMethod.includes('bs') || normMethod.includes('bolivar') || normMethod.includes('bolivares'));
-        
-        const isEfectivoUSD = normMethod === 'efectivo' || 
-                             normMethod === 'efectivo usd' || 
-                             normMethod === 'efectivo dolares' || 
-                             normMethod === 'efectivo dólares' || 
-                             normMethod === 'dolares' || 
-                             normMethod === 'usd' || 
-                             ((normMethod.includes('efectivo') || normMethod.includes('cash')) && !isEfectivoVES);
-
-        if (isBanesco) {
-          targetBank = bankAccounts.find(a => clean(`${a.name} ${a.bank_name || ''}`).includes('3750')) ||
-                       bankAccounts.find(a => clean(`${a.name} ${a.bank_name || ''}`).includes('banesco'));
-        } else if (isVenezuela) {
-          targetBank = bankAccounts.find(a => {
-            const aText = clean(`${a.name} ${a.bank_name || ''}`);
-            return aText.includes('ahorro') && (aText.includes('venezuela') || aText.includes('bdv') || aText.includes('vzla'));
-          }) || bankAccounts.find(a => {
-            const aText = clean(`${a.name} ${a.bank_name || ''}`);
-            return aText.includes('venezuela') || aText.includes('bdv') || aText.includes('vzla');
-          });
-        } else if (isBNC) {
-          targetBank = bankAccounts.find(a => {
-            const aText = clean(`${a.name} ${a.bank_name || ''}`);
-            return aText.includes('bnc') || aText.includes('nacional de credito') || aText.includes('credito');
-          });
-        } else if (isMercantil) {
-          targetBank = bankAccounts.find(a => clean(`${a.name} ${a.bank_name || ''}`).includes('mercantil'));
-        } else if (isProvincial) {
-          targetBank = bankAccounts.find(a => {
-            const aText = clean(`${a.name} ${a.bank_name || ''}`);
-            return aText.includes('provincial') || aText.includes('bbva');
-          });
-        } else if (isBofA) {
-          targetBank = bankAccounts.find(a => {
-            const aText = clean(`${a.name} ${a.bank_name || ''}`);
-            return aText.includes('bofa') || aText.includes('america');
-          });
-        } else if (isZelle) {
-          targetBank = bankAccounts.find(a => {
-            const aText = clean(`${a.name} ${a.bank_name || ''}`);
-            return aText.includes('zelle') || (a.currency === 'USD' && aText.includes('dolar'));
-          });
-        } else if (isBinance) {
-          targetBank = bankAccounts.find(a => {
-            const aText = clean(`${a.name} ${a.bank_name || ''}`);
-            return aText.includes('binance') || (a.currency === 'USD' && aText.includes('dolar'));
-          });
-        } else if (isEfectivoUSD) {
-          targetBank = bankAccounts.find(a => {
-            const aText = clean(`${a.name} ${a.bank_name || ''}`);
-            return (aText.includes('efectivo') && (aText.includes('dolar') || aText.includes('dolares'))) || aText === 'efectivo dolares';
-          }) || bankAccounts.find(a => {
-            const aText = clean(`${a.name} ${a.bank_name || ''}`);
-            return a.currency === 'USD' && (aText.includes('efectivo') || aText.includes('caja') || aText.includes('dolar'));
-          }) || bankAccounts.find(a => a.currency === 'USD');
-        } else if (isEfectivoVES) {
-          targetBank = bankAccounts.find(a => {
-            const aText = clean(`${a.name} ${a.bank_name || ''}`);
-            return a.currency === 'VES' && (aText.includes('efectivo') || aText.includes('caja') || aText.includes('bolivar'));
-          }) || bankAccounts.find(a => a.currency === 'VES' && clean(a.name).includes('efectivo'));
-        }
-
-        // 🏦 STEP 2: Explicit bank_account_id in PaymentMethodConfig if not already matched
-        if (!targetBank && pmConfig && pmConfig.bank_account_id) {
+        // 🏦 STEP 1: Direct link in PaymentMethodConfig (bank_account_id takes top priority!)
+        if (pmConfig && pmConfig.bank_account_id) {
           targetBank = bankAccounts.find(a => a.id === pmConfig.bank_account_id);
         }
 
-        // 🏦 STEP 3: Associated methods JSON in bankAccount.notes
+        // 🏦 STEP 2: Associated methods JSON in bankAccount.notes
         if (!targetBank) {
           targetBank = bankAccounts.find(a => {
             if (!a.notes) return false;
@@ -5312,8 +5256,8 @@ export const dbService = {
               const parsed = JSON.parse(a.notes);
               if (Array.isArray(parsed)) {
                 return parsed.some(m => {
-                  const mNorm = clean(m.name);
-                  return mNorm === normMethod || (mNorm.length > 4 && normMethod.includes(mNorm));
+                  const mNorm = clean(m.name || '');
+                  return mNorm === normMethod || (mNorm.length > 3 && normMethod.includes(mNorm)) || m.id === pmConfig?.id;
                 });
               }
             } catch (e) {}
@@ -5321,10 +5265,108 @@ export const dbService = {
           });
         }
 
-        // 🏦 STEP 4: Default fallback by currency
+        // 🏦 STEP 3: Institution keyword search in method name
+        if (!targetBank) {
+          const isBanesco = normMethod.includes('banesco');
+          const isVenezuela = normMethod.includes('venezuela') || normMethod.includes('bdv') || normMethod.includes('vzla');
+          const isBNC = normMethod.includes('bnc') || normMethod.includes('nacional de credito') || (normMethod.includes('credito') && !normMethod.includes('tarjeta'));
+          const isMercantil = normMethod.includes('mercantil');
+          const isProvincial = normMethod.includes('provincial') || normMethod.includes('bbva');
+          const isBofA = normMethod.includes('bofa') || normMethod.includes('bank of america') || normMethod.includes('america');
+          const isZelle = normMethod.includes('zelle');
+          const isBinance = normMethod.includes('binance') || normMethod.includes('usdt');
+          
+          const isEfectivoVES = (normMethod.includes('efectivo') || normMethod.includes('cash')) && 
+                               (normMethod.includes('ves') || normMethod.includes('bs') || normMethod.includes('bolivar') || normMethod.includes('bolivares'));
+          
+          const isEfectivoUSD = normMethod === 'efectivo' || 
+                               normMethod === 'efectivo usd' || 
+                               normMethod === 'efectivo dolares' || 
+                               normMethod === 'efectivo dólares' || 
+                               normMethod === 'dolares' || 
+                               normMethod === 'usd' || 
+                               ((normMethod.includes('efectivo') || normMethod.includes('cash')) && !isEfectivoVES);
+
+          if (isBanesco) {
+            targetBank = bankAccounts.find(a => clean(`${a.name} ${a.bank_name || ''}`).includes('3750')) ||
+                         bankAccounts.find(a => clean(`${a.name} ${a.bank_name || ''}`).includes('banesco'));
+          } else if (isVenezuela) {
+            targetBank = bankAccounts.find(a => {
+              const aText = clean(`${a.name} ${a.bank_name || ''}`);
+              return aText.includes('ahorro') && (aText.includes('venezuela') || aText.includes('bdv') || aText.includes('vzla'));
+            }) || bankAccounts.find(a => {
+              const aText = clean(`${a.name} ${a.bank_name || ''}`);
+              return aText.includes('venezuela') || aText.includes('bdv') || aText.includes('vzla');
+            });
+          } else if (isBNC) {
+            targetBank = bankAccounts.find(a => {
+              const aText = clean(`${a.name} ${a.bank_name || ''}`);
+              return aText.includes('bnc') || aText.includes('nacional de credito') || aText.includes('credito');
+            });
+          } else if (isMercantil) {
+            targetBank = bankAccounts.find(a => clean(`${a.name} ${a.bank_name || ''}`).includes('mercantil'));
+          } else if (isProvincial) {
+            targetBank = bankAccounts.find(a => {
+              const aText = clean(`${a.name} ${a.bank_name || ''}`);
+              return aText.includes('provincial') || aText.includes('bbva');
+            });
+          } else if (isBofA) {
+            targetBank = bankAccounts.find(a => {
+              const aText = clean(`${a.name} ${a.bank_name || ''}`);
+              return aText.includes('bofa') || aText.includes('america');
+            });
+          } else if (isZelle) {
+            targetBank = bankAccounts.find(a => {
+              const aText = clean(`${a.name} ${a.bank_name || ''}`);
+              return aText.includes('zelle') || (a.currency === 'USD' && aText.includes('dolar'));
+            });
+          } else if (isBinance) {
+            targetBank = bankAccounts.find(a => {
+              const aText = clean(`${a.name} ${a.bank_name || ''}`);
+              return aText.includes('binance') || (a.currency === 'USD' && aText.includes('dolar'));
+            });
+          } else if (isEfectivoUSD) {
+            targetBank = bankAccounts.find(a => {
+              const aText = clean(`${a.name} ${a.bank_name || ''}`);
+              return (aText.includes('efectivo') && (aText.includes('dolar') || aText.includes('dolares'))) || aText === 'efectivo dolares';
+            }) || bankAccounts.find(a => {
+              const aText = clean(`${a.name} ${a.bank_name || ''}`);
+              return a.currency === 'USD' && (aText.includes('efectivo') || aText.includes('caja') || aText.includes('dolar'));
+            }) || bankAccounts.find(a => a.currency === 'USD');
+          } else if (isEfectivoVES) {
+            targetBank = bankAccounts.find(a => {
+              const aText = clean(`${a.name} ${a.bank_name || ''}`);
+              return a.currency === 'VES' && (aText.includes('efectivo') || aText.includes('caja') || aText.includes('bolivar'));
+            }) || bankAccounts.find(a => a.currency === 'VES' && clean(a.name).includes('efectivo'));
+          }
+        }
+
+        // 🏦 STEP 4: Substring matching with bank account names
+        if (!targetBank) {
+          targetBank = bankAccounts.find(a => {
+            const aNameNorm = clean(a.name);
+            const aBankNorm = clean(a.bank_name || '');
+            return normMethod.includes(aNameNorm) || (aNameNorm.length > 3 && normMethod.includes(aNameNorm)) ||
+                   (aBankNorm.length > 3 && normMethod.includes(aBankNorm));
+          });
+        }
+
+        // 🏦 STEP 5: Intelligent Fallback by currency (differentiating Cash vs Bank/Digital)
         if (!targetBank) {
           const isUsdMethod = entry.currency === 'USD' || normMethod.includes('usd') || normMethod.includes('dolar') || normMethod.includes('zelle');
-          targetBank = bankAccounts.find(a => isUsdMethod ? a.currency === 'USD' : a.currency === 'VES') || bankAccounts[0];
+          const isCashMethod = normMethod.includes('efectivo') || normMethod.includes('cash');
+
+          if (isCashMethod) {
+            targetBank = bankAccounts.find(a => a.currency === (isUsdMethod ? 'USD' : 'VES') && (clean(a.name).includes('efectivo') || clean(a.name).includes('caja')))
+                      || bankAccounts.find(a => a.currency === (isUsdMethod ? 'USD' : 'VES'));
+          } else {
+            // Non-cash digital/bank payment method: PREFER a non-cash bank account over cash/box!
+            targetBank = bankAccounts.find(a => a.currency === (isUsdMethod ? 'USD' : 'VES') && !clean(a.name).includes('efectivo') && !clean(a.name).includes('caja'))
+                      || bankAccounts.find(a => a.currency === (isUsdMethod ? 'USD' : 'VES'));
+          }
+          if (!targetBank) {
+            targetBank = bankAccounts[0];
+          }
         }
 
         if (targetBank) {
