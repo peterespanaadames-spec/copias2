@@ -238,6 +238,18 @@ export default function CuentasBancariasPage({
 
   useEffect(() => {
     loadData();
+
+    const handleBankUpdate = () => {
+      loadData();
+    };
+
+    window.addEventListener('bellavista_bank_accounts_updated', handleBankUpdate);
+    window.addEventListener('bellavista_bank_transfers_updated', handleBankUpdate);
+
+    return () => {
+      window.removeEventListener('bellavista_bank_accounts_updated', handleBankUpdate);
+      window.removeEventListener('bellavista_bank_transfers_updated', handleBankUpdate);
+    };
   }, []);
 
   // Sync selected account state with accounts array
@@ -253,10 +265,11 @@ export default function CuentasBancariasPage({
   // Total balance calculation across all accounts in USD
   const getTotalBalanceUSD = () => {
     return accounts.reduce((total, acc) => {
-      if (acc.currency === 'USD') {
-        return total + acc.balance;
+      const balance = Number(acc?.balance || 0);
+      if (acc?.currency === 'USD') {
+        return total + balance;
       } else {
-        return total + (acc.balance / (bcvRate || 1));
+        return total + (balance / (bcvRate || 1));
       }
     }, 0);
   };
@@ -601,8 +614,8 @@ export default function CuentasBancariasPage({
       debitFromSource = amt + commAmt;
     }
 
-    if (fromAcc.balance < debitFromSource) {
-      showNotification(`Saldo insuficiente incluyendo comisión. Disponible: ${fromAcc.currency === 'USD' ? '$' : ''}${fromAcc.balance.toFixed(2)} ${fromAcc.currency !== 'USD' ? 'Bs.' : ''}`, 'error');
+    if ((fromAcc.balance || 0) < debitFromSource) {
+      showNotification(`Saldo insuficiente incluyendo comisión. Disponible: ${fromAcc.currency === 'USD' ? '$' : ''}${Number(fromAcc.balance || 0).toFixed(2)} ${fromAcc.currency !== 'USD' ? 'Bs.' : ''}`, 'error');
       return;
     }
 
@@ -712,7 +725,7 @@ export default function CuentasBancariasPage({
       return;
     }
 
-    if (acc.balance < amt) {
+    if ((acc.balance || 0) < amt) {
       showNotification('Saldo insuficiente en la cuenta para realizar el retiro.', 'error');
       return;
     }
@@ -830,12 +843,12 @@ export default function CuentasBancariasPage({
     if (isInterbank) {
       if (isIncoming) {
         if (isAccountVES) {
-          return t.converted_amount || (t.currency === 'USD' ? t.amount * rate : t.amount);
+          return Number(t.converted_amount || (t.currency === 'USD' ? (t.amount || 0) * rate : (t.amount || 0)));
         } else {
-          return t.converted_amount || (t.currency === 'VES' ? t.amount / rate : t.amount);
+          return Number(t.converted_amount || (t.currency === 'VES' ? (t.amount || 0) / rate : (t.amount || 0)));
         }
       } else {
-        return t.amount;
+        return Number(t.amount || 0);
       }
     }
 
@@ -851,7 +864,7 @@ export default function CuentasBancariasPage({
       if (t.converted_amount && Number(t.converted_amount) > Number(t.amount) && Number(t.amount) < 50) {
         return Number(t.converted_amount);
       }
-      return Number(t.amount) || Number(t.converted_amount) || 0;
+      return Number(t.amount || t.converted_amount || 0);
     } else {
       // USD Account
       if (t.currency === 'VES' && rate > 0) {
@@ -860,7 +873,7 @@ export default function CuentasBancariasPage({
       if (rate > 50 && Number(t.amount) > 500) {
         return Number(t.amount) / rate;
       }
-      return Number(t.amount) || Number(t.converted_amount) || 0;
+      return Number(t.amount || t.converted_amount || 0);
     }
   };
 
@@ -995,7 +1008,7 @@ export default function CuentasBancariasPage({
             <div className="bg-[#1D3557]/10 text-[#1D3557] px-4 py-2 rounded-xl font-bold text-xs border border-[#1D3557]/20 shadow-2xs flex items-center gap-2">
               <span>Total consolidado:</span>
               <strong className="text-sm font-black text-[#1D3557]">
-                ${getTotalBalanceUSD().toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                ${(getTotalBalanceUSD() || 0).toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
               </strong>
             </div>
           </div>
@@ -1006,7 +1019,7 @@ export default function CuentasBancariasPage({
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {accounts.map(acc => {
               const pms = parseAccountPaymentMethods(acc);
-              const equivalentUSD = acc.currency === 'VES' ? (acc.balance / (bcvRate || 1)) : acc.balance;
+              const equivalentUSD = acc.currency === 'VES' ? ((acc.balance || 0) / (bcvRate || 1)) : (acc.balance || 0);
               
               return (
                 <div 
@@ -1033,15 +1046,15 @@ export default function CuentasBancariasPage({
                     <div className="my-4">
                       {acc.currency === 'USD' ? (
                         <p className="text-2xl font-black font-mono text-[#1D3557]">
-                          ${acc.balance.toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                          ${(acc?.balance || 0).toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                         </p>
                       ) : (
                         <div>
                           <p className="text-2xl font-black font-mono text-[#1D3557]">
-                            Bs. {acc.balance.toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                            Bs. {(acc?.balance || 0).toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                           </p>
                           <p className="text-xs font-bold font-mono text-[#2B2D42]/60 mt-0.5">
-                            Ref: ${equivalentUSD.toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                            Ref: ${(equivalentUSD || 0).toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                           </p>
                         </div>
                       )}
@@ -1166,15 +1179,15 @@ export default function CuentasBancariasPage({
               <span className="text-[10px] font-montserrat font-extrabold text-[#2B2D42]/60 uppercase tracking-wider block mb-1">Saldo Actual</span>
               {selectedAccount.currency === 'USD' ? (
                 <p className="text-3xl font-black font-mono text-[#1D3557]">
-                  ${selectedAccount.balance.toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                    ${(selectedAccount?.balance || 0).toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                 </p>
               ) : (
                 <div>
                   <p className="text-3xl font-black font-mono text-[#1D3557]">
-                    Bs. {selectedAccount.balance.toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                    Bs. {(selectedAccount?.balance || 0).toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                   </p>
                   <p className="text-xs font-bold font-mono text-[#2B2D42]/60 mt-1">
-                    Equivalente: ${(selectedAccount.balance / (bcvRate || 1)).toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                    Equivalente: {((selectedAccount?.balance || 0) / (bcvRate || 1)).toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                   </p>
                 </div>
               )}
@@ -1257,7 +1270,7 @@ export default function CuentasBancariasPage({
                         <td className="py-3 px-4 text-[#2B2D42]/80 font-bold font-mono">{t.exchange_rate ? `${t.exchange_rate.toFixed(2)} Bs/$` : '-'}</td>
                         <td className="py-3 px-4 text-[#2B2D42]/80 font-semibold font-mono">Bs 0.00</td>
                         <td className={`py-3 px-4 text-right font-black font-mono ${isIncoming ? 'text-emerald-700' : 'text-rose-700'}`}>
-                          {isIncoming ? '+' : '-'}{amountVal.toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} {selectedAccount.currency}
+                          {isIncoming ? '+' : '-'}{(amountVal || 0).toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} {selectedAccount.currency}
                         </td>
                       </tr>
                     );
@@ -1502,7 +1515,7 @@ export default function CuentasBancariasPage({
                 >
                   <option value="">Seleccione...</option>
                   {accounts.map(acc => (
-                    <option key={acc.id} value={acc.id}>{acc.name} ({acc.currency} - Disp: {acc.balance.toFixed(2)})</option>
+                    <option key={acc.id} value={acc.id}>{acc.name} ({acc.currency} - Disp: {Number(acc.balance || 0).toFixed(2)})</option>
                   ))}
                 </select>
               </div>
@@ -1755,7 +1768,7 @@ export default function CuentasBancariasPage({
                 >
                   <option value="">Seleccione...</option>
                   {accounts.map(acc => (
-                    <option key={acc.id} value={acc.id}>{acc.name} ({acc.currency} - Disp: {acc.balance.toFixed(2)})</option>
+                    <option key={acc.id} value={acc.id}>{acc.name} ({acc.currency} - Disp: {Number(acc.balance || 0).toFixed(2)})</option>
                   ))}
                 </select>
               </div>

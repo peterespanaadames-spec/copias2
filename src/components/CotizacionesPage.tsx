@@ -650,7 +650,7 @@ ${quote.client_phone ? `📱 *Teléfono:* ${quote.client_phone}\n` : ''}${quote.
 ${itemsText}
 ----------------------------------
 ${quote.subtotal_price ? `*Subtotal:* $${quote.subtotal_price.toFixed(2)}\n` : ''}${quote.discount_amount ? `*Descuento:* -$${quote.discount_amount.toFixed(2)}\n` : ''}${quote.tax_amount ? `*IVA:* +$${quote.tax_amount.toFixed(2)}\n` : ''}💰 *TOTAL FINAL USD:* *$${quote.total_price.toFixed(2)} USD*
-🇻🇪 *TOTAL FINAL VES:* *Bs. ${(quote.total_price * bcvRate).toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}* (Tasa: ${bcvRate} Bs/USD)
+🇻🇪 *TOTAL FINAL VES:* *Bs. {((Number(quote.total_price) || 0) * (bcvRate || 1)).toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}* (Tasa: ${bcvRate} Bs/USD)
 
 ${quote.notes ? `📌 *Notas/Condiciones:* ${quote.notes}\n\n` : ''}Quedamos atentos a sus comentarios. ¡Gracias por preferirnos!`;
 
@@ -914,7 +914,7 @@ ${quote.notes ? `📌 *Notas/Condiciones:* ${quote.notes}\n\n` : ''}Quedamos ate
                           ${q.total_price.toFixed(2)} USD
                         </p>
                         <p className="text-[10px] text-gray-500 font-bold font-mono leading-none">
-                          Bs. {(q.total_price * bcvRate).toLocaleString('es-VE', { minimumFractionDigits: 2 })}
+                          Bs. {((Number(q.total_price) || 0) * (bcvRate || 1)).toLocaleString('es-VE', { minimumFractionDigits: 2 })}
                         </p>
                       </td>
 
@@ -1605,7 +1605,7 @@ ${quote.notes ? `📌 *Notas/Condiciones:* ${quote.notes}\n\n` : ''}Quedamos ate
                   <div>
                     <span className="text-xs font-montserrat font-extrabold uppercase text-[#1D3557] block">TOTAL ESTIMADO FINAL</span>
                     <span className="text-xs text-[#2B2D42]/70 font-bold">
-                      Bs. {(formTotalPrice * bcvRate).toLocaleString('es-VE', { minimumFractionDigits: 2 })} (Tasa {bcvRate})
+                      Bs. {((Number(formTotalPrice) || 0) * (bcvRate || 1)).toLocaleString('es-VE', { minimumFractionDigits: 2 })} (Tasa {bcvRate})
                     </span>
                   </div>
                   <div className="text-right">
@@ -1812,7 +1812,7 @@ ${quote.notes ? `📌 *Notas/Condiciones:* ${quote.notes}\n\n` : ''}Quedamos ate
                   <div>
                     <span className="text-[10px] font-montserrat font-extrabold uppercase text-[#1D3557] block">Total Cotización</span>
                     <span className="text-[11px] font-bold text-[#2B2D42]/70 block">
-                      Bs. {(selectedQuote.total_price * bcvRate).toLocaleString('es-VE', { minimumFractionDigits: 2 })}
+                      Bs. {((Number(selectedQuote?.total_price) || 0) * (bcvRate || 1)).toLocaleString('es-VE', { minimumFractionDigits: 2 })}
                     </span>
                   </div>
                   <div className="text-right">
@@ -1908,7 +1908,7 @@ ${quote.notes ? `📌 *Notas/Condiciones:* ${quote.notes}\n\n` : ''}Quedamos ate
 
               <div className="bg-[#40E0D0]/10 border border-[#40E0D0]/30 p-3.5 rounded-2xl text-center">
                 <p className="text-2xl font-montserrat font-extrabold text-[#1D3557]">${selectedQuote.total_price.toFixed(2)} USD</p>
-                <p className="text-xs text-emerald-700 font-bold">Bs. {(selectedQuote.total_price * bcvRate).toLocaleString('es-VE', { minimumFractionDigits: 2 })}</p>
+                <p className="text-xs text-emerald-700 font-bold">Bs. {((Number(selectedQuote?.total_price) || 0) * (bcvRate || 1)).toLocaleString('es-VE', { minimumFractionDigits: 2 })}</p>
               </div>
 
               {/* PAYMENT METHOD SELECT */}

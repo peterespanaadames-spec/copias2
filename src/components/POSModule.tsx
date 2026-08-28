@@ -104,6 +104,8 @@ export default function POSModule({
   const [selectedClient, setSelectedClient] = useState('Consumidor final');
   const [documentType, setDocumentType] = useState<'factura' | 'nota_entrega'>('factura');
   const [paymentMethod, setPaymentMethod] = useState('Efectivo VES');
+  const [bankAccounts, setBankAccounts] = useState<any[]>([]);
+  const [selectedBankId, setSelectedBankId] = useState<string>('');
   const [categories, setCategories] = useState<Category[]>([]);
   const [brands, setBrands] = useState<Brand[]>([]);
   const [loadedImages, setLoadedImages] = useState<ProductImage[]>(productImages || []);
@@ -174,6 +176,50 @@ export default function POSModule({
 
   // 💵 Tasa BCV Local Editable
   const [customBcvRate, setCustomBcvRate] = useState<number>(bcvRate || 36.5);
+  
+  const loadBankAccounts = async () => {
+    const accounts = await dbService.getBankAccounts();
+    setBankAccounts(accounts);
+    if (accounts.length > 0) {
+      if (!selectedBankId) {
+        setSelectedBankId(accounts[0].id);
+      }
+      setSplitPayments(prev => {
+        const current = prev[0];
+        const targetAcc = accounts.find(a => a.id === (current?.bankAccountId || selectedBankId)) || accounts[0];
+        const rate = customBcvRate > 0 ? customBcvRate : (currencyRates.VES || bcvRate || 45.5);
+        const isVES = targetAcc.currency === 'VES';
+        const initialAmt = isVES ? parseFloat((total * rate).toFixed(2)) : parseFloat(total.toFixed(2));
+        
+        if (!current || !current.bankAccountId || current.amount === 0) {
+          return [{
+            method: targetAcc.name,
+            amount: initialAmt,
+            bankAccountId: targetAcc.id,
+            currency: targetAcc.currency
+          }];
+        }
+        return prev.map(p => {
+          const found = accounts.find(a => a.id === p.bankAccountId) || accounts[0];
+          return {
+            ...p,
+            bankAccountId: found.id,
+            method: p.method || found.name,
+            currency: p.currency || found.currency
+          };
+        });
+      });
+    }
+  };
+
+  useEffect(() => {
+    loadBankAccounts();
+    window.addEventListener('bellavista_bank_accounts_updated', loadBankAccounts);
+    return () => {
+      window.removeEventListener('bellavista_bank_accounts_updated', loadBankAccounts);
+    };
+  }, []);
+
   useEffect(() => {
     if (bcvRate && bcvRate > 0) {
       setCustomBcvRate(bcvRate);
@@ -219,8 +265,13 @@ export default function POSModule({
   const [saleDate, setSaleDate] = useState<string>(new Date().toISOString().split('T')[0]);
   const [numberOfPayments, setNumberOfPayments] = useState<number>(1);
   const [paymentCount, setPaymentCount] = useState<number>(1);
-  const [splitPayments, setSplitPayments] = useState<{ method: string; amount: number }[]>([
-    { method: 'Efectivo VES', amount: 0 }
+  const [splitPayments, setSplitPayments] = useState<{
+    method: string;
+    amount: number;
+    bankAccountId?: string;
+    currency?: string;
+  }[]>([
+    { method: 'Cuenta Bancaria', amount: 0 }
   ]);
   const [selectedSeller, setSelectedSeller] = useState<string>('Cajero Principal');
 
@@ -469,8 +520,21 @@ export default function POSModule({
     return 'USD';
   };
 
-  const methodAmountToUsd = (amount: number, method: string): number => {
-    const curr = getMethodCurrency(method);
+  const getPaymentCurrency = (item?: { method?: string; bankAccountId?: string; currency?: string } | string): CurrencyCode => {
+    if (!item) return 'USD';
+    if (typeof item === 'object') {
+      if (item.currency) return item.currency as CurrencyCode;
+      if (item.bankAccountId) {
+        const bank = bankAccounts.find(a => a.id === item.bankAccountId);
+        if (bank && bank.currency) return bank.currency as CurrencyCode;
+      }
+      return getMethodCurrency(item.method || '');
+    }
+    return getMethodCurrency(typeof item === 'string' ? item : '');
+  };
+
+  const methodAmountToUsd = (amount: number, item: { method?: string; bankAccountId?: string; currency?: string } | string): number => {
+    const curr = getPaymentCurrency(item);
     if (curr === 'USD') return amount || 0;
     const rate = curr === 'VES'
       ? (customBcvRate > 0 ? customBcvRate : (currencyRates.VES || bcvRate || 45.5))
@@ -478,8 +542,8 @@ export default function POSModule({
     return rate > 0 ? (amount || 0) / rate : 0;
   };
 
-  const usdToMethodAmount = (usdAmount: number, method: string): number => {
-    const curr = getMethodCurrency(method);
+  const usdToMethodAmount = (usdAmount: number, item: { method?: string; bankAccountId?: string; currency?: string } | string): number => {
+    const curr = getPaymentCurrency(item);
     if (curr === 'USD') return usdAmount || 0;
     const rate = curr === 'VES'
       ? (customBcvRate > 0 ? customBcvRate : (currencyRates.VES || bcvRate || 45.5))
@@ -487,19 +551,66 @@ export default function POSModule({
     return (usdAmount || 0) * rate;
   };
 
+  const handleBankChange = (idx: number, newBankId: string) => {
+    const selectedAcc = bankAccounts.find(a => a.id === newBankId);
+    if (!selectedAcc) return;
+    
+    const rate = customBcvRate > 0 ? customBcvRate : (currencyRates.VES || bcvRate || 45.5);
+    setSplitPayments(prev => {
+      const updated = [...prev];
+      const prevItem = updated[idx];
+      const prevCurr = prevItem ? getPaymentCurrency(prevItem) : 'USD';
+      const newCurr = selectedAcc.currency;
+      let newAmount = prevItem?.amount || 0;
+
+      if (prevCurr === 'VES' && newCurr !== 'VES') {
+        newAmount = parseFloat((newAmount / (rate || 1)).toFixed(2));
+      } else if (prevCurr !== 'VES' && newCurr === 'VES') {
+        newAmount = parseFloat((newAmount * rate).toFixed(2));
+      }
+
+      if (prev.length === 1 && (newAmount <= 0 || isNaN(newAmount))) {
+        newAmount = newCurr === 'VES' ? parseFloat((total * rate).toFixed(2)) : parseFloat(total.toFixed(2));
+      }
+
+      updated[idx] = {
+        ...prevItem,
+        bankAccountId: selectedAcc.id,
+        method: selectedAcc.name,
+        currency: selectedAcc.currency,
+        amount: newAmount
+      };
+      return updated;
+    });
+
+    if (idx === 0) {
+      setSelectedBankId(selectedAcc.id);
+      setPaymentMethod(selectedAcc.name);
+    }
+  };
+
   const handleAddSplitMethod = () => {
-    const active = getActiveMethods();
-    const currentMethods = splitPayments.map(p => p.method);
-    const nextAvailable = active.find(m => !currentMethods.includes(m.id))?.id || active[0]?.id || 'Efectivo USD';
+    const currentBankIds = splitPayments.map(p => p.bankAccountId);
+    const nextAcc = bankAccounts.find(a => !currentBankIds.includes(a.id)) || bankAccounts[0];
+    const rate = customBcvRate > 0 ? customBcvRate : (currencyRates.VES || bcvRate || 45.5);
 
     let sumOtherUsd = 0;
     splitPayments.forEach(p => {
-      sumOtherUsd += methodAmountToUsd(p.amount || 0, p.method);
+      sumOtherUsd += methodAmountToUsd(p.amount || 0, p);
     });
     const remainingUsd = Math.max(0, total - sumOtherUsd);
-    const convertedAmount = parseFloat(usdToMethodAmount(remainingUsd, nextAvailable).toFixed(2));
+    const isVES = nextAcc ? nextAcc.currency === 'VES' : false;
+    const convertedAmount = isVES ? parseFloat((remainingUsd * rate).toFixed(2)) : parseFloat(remainingUsd.toFixed(2));
 
-    const updated = [...splitPayments, { method: nextAvailable, amount: convertedAmount }];
+    const updated = [
+      ...splitPayments,
+      {
+        method: nextAcc ? nextAcc.name : 'Cuenta Bancaria',
+        amount: convertedAmount,
+        bankAccountId: nextAcc?.id,
+        currency: nextAcc?.currency || (isVES ? 'VES' : 'USD')
+      }
+    ];
     setSplitPayments(updated);
     setPaymentCount(updated.length);
   };
@@ -529,41 +640,58 @@ export default function POSModule({
     }
   };
 
-    const handlePaymentCountChange = (count: number) => {
+  const handlePaymentCountChange = (count: number) => {
     setPaymentCount(count);
-    const active = getActiveMethods();
-    const defaultMethod = active[0]?.id || 'Efectivo USD';
+    const activeAccounts = bankAccounts.length > 0 ? bankAccounts : [];
+    const defaultAcc = activeAccounts[0];
+    const rate = customBcvRate > 0 ? customBcvRate : (currencyRates.VES || bcvRate || 45.5);
 
     if (count === 1) {
-      setPaymentMethod(splitPayments[0]?.method || defaultMethod);
+      const targetAcc = activeAccounts.find(a => a.id === (splitPayments[0]?.bankAccountId || selectedBankId)) || defaultAcc;
+      const isVES = targetAcc ? targetAcc.currency === 'VES' : true;
+      const newAmt = isVES ? parseFloat((total * rate).toFixed(2)) : parseFloat(total.toFixed(2));
+      
+      setSplitPayments([{
+        method: targetAcc ? targetAcc.name : 'Cuenta Bancaria',
+        amount: newAmt,
+        bankAccountId: targetAcc?.id,
+        currency: targetAcc?.currency || (isVES ? 'VES' : 'USD')
+      }]);
       return;
     }
 
     const equalShareUsd = count > 0 ? total / count : total;
     let accumulatedUsd = 0;
-    const newSplits: { method: string; amount: number }[] = [];
+    const newSplits: { method: string; amount: number; bankAccountId?: string; currency?: string }[] = [];
     for (let i = 0; i < count; i++) {
       const shareUsd = i === count - 1 ? Math.max(0, total - accumulatedUsd) : equalShareUsd;
       accumulatedUsd += shareUsd;
-      const slotMethod = splitPayments[i]?.method || active[i % active.length]?.id || defaultMethod;
-      const convertedAmt = parseFloat(usdToMethodAmount(shareUsd, slotMethod).toFixed(2));
+      const slotAcc = activeAccounts[i % activeAccounts.length] || defaultAcc;
+      const isVES = slotAcc ? slotAcc.currency === 'VES' : false;
+      const convertedAmt = isVES ? parseFloat((shareUsd * rate).toFixed(2)) : parseFloat(shareUsd.toFixed(2));
       newSplits.push({
-        method: slotMethod,
-        amount: convertedAmt
+        method: slotAcc ? slotAcc.name : `Pago ${i + 1}`,
+        amount: convertedAmt,
+        bankAccountId: slotAcc?.id,
+        currency: slotAcc?.currency || (isVES ? 'VES' : 'USD')
       });
     }
     setSplitPayments(newSplits);
   };
 
   const handleUpdateSplitMethod = (index: number, newMethodId: string) => {
+    if (index === 0) {
+      setPaymentMethod(newMethodId);
+    }
     setSplitPayments(prev => {
       const copy = [...prev];
       if (copy[index]) {
         const oldMethod = copy[index].method;
         const currentAmount = copy[index].amount || 0;
-        const inUsd = methodAmountToUsd(currentAmount, oldMethod);
+        const inUsd = methodAmountToUsd(currentAmount, copy[index]);
         const inNewMethod = parseFloat(usdToMethodAmount(inUsd, newMethodId).toFixed(2));
         copy[index] = {
+          ...copy[index],
           method: newMethodId,
           amount: inNewMethod
         };
@@ -586,19 +714,22 @@ export default function POSModule({
   };
 
   const handleFillRemaining = (index: number) => {
+    const rate = customBcvRate > 0 ? customBcvRate : (currencyRates.VES || bcvRate || 45.5);
     setSplitPayments(prev => {
       const copy = [...prev];
       let sumOtherUsd = 0;
       copy.forEach((item, idx) => {
         if (idx !== index) {
-          sumOtherUsd += methodAmountToUsd(item.amount || 0, item.method);
+          sumOtherUsd += methodAmountToUsd(item.amount || 0, item);
         }
       });
       const remainingUsd = Math.max(0, total - sumOtherUsd);
       if (copy[index]) {
+        const isVES = getPaymentCurrency(copy[index]) === 'VES';
+        const fillAmt = isVES ? parseFloat((remainingUsd * rate).toFixed(2)) : parseFloat(remainingUsd.toFixed(2));
         copy[index] = {
           ...copy[index],
-          amount: parseFloat(usdToMethodAmount(remainingUsd, copy[index].method).toFixed(2))
+          amount: fillAmt
         };
       }
       return copy;
@@ -1096,30 +1227,49 @@ export default function POSModule({
     ...(applyIgtf ? [{ id: 'igtf-3', name: 'IGTF (3%)', rate: 3, amount: calculatedIgtfUsd }] : [])
   ];
 
-    useEffect(() => {
-    if (paymentCount > 1) {
-      const active = getActiveMethods();
-      const defaultMethod = active[0]?.id || 'Efectivo USD';
-      
+  // 🔄 Auto-sync payments with cart total and selected bank accounts
+  useEffect(() => {
+    if (bankAccounts.length === 0) return;
+    const rate = customBcvRate > 0 ? customBcvRate : (currencyRates.VES || bcvRate || 45.5);
+
+    if (paymentCount === 1) {
+      setSplitPayments(prev => {
+        const current = prev[0];
+        const targetBankId = current?.bankAccountId || selectedBankId || bankAccounts[0]?.id;
+        const targetBank = bankAccounts.find(a => a.id === targetBankId) || bankAccounts[0];
+        const isVES = targetBank?.currency === 'VES';
+        const newAmt = isVES ? parseFloat((total * rate).toFixed(2)) : parseFloat(total.toFixed(2));
+        
+        return [{
+          method: targetBank?.name || current?.method || 'Cuenta Bancaria',
+          amount: newAmt,
+          bankAccountId: targetBank?.id,
+          currency: targetBank?.currency || (isVES ? 'VES' : 'USD')
+        }];
+      });
+    } else {
       const equalShareUsd = paymentCount > 0 ? total / paymentCount : total;
       let accumulatedUsd = 0;
       setSplitPayments(prev => {
         const copy = [...prev];
-        const updated: { method: string; amount: number }[] = [];
+        const updated: { method: string; amount: number; bankAccountId?: string; currency?: string }[] = [];
         for (let i = 0; i < paymentCount; i++) {
           const shareUsd = i === paymentCount - 1 ? Math.max(0, total - accumulatedUsd) : equalShareUsd;
           accumulatedUsd += shareUsd;
-          const slotMethod = copy[i]?.method || active[i % active.length]?.id || defaultMethod;
-          const convertedAmt = parseFloat(usdToMethodAmount(shareUsd, slotMethod).toFixed(2));
+          const targetBank = bankAccounts.find(a => a.id === copy[i]?.bankAccountId) || bankAccounts[i % bankAccounts.length] || bankAccounts[0];
+          const isVES = targetBank ? targetBank.currency === 'VES' : false;
+          const convertedAmt = isVES ? parseFloat((shareUsd * rate).toFixed(2)) : parseFloat(shareUsd.toFixed(2));
           updated.push({
-            method: slotMethod,
-            amount: convertedAmt
+            method: targetBank ? targetBank.name : (copy[i]?.method || `Pago ${i + 1}`),
+            amount: convertedAmt,
+            bankAccountId: targetBank?.id,
+            currency: targetBank?.currency || (isVES ? 'VES' : 'USD')
           });
         }
         return updated;
       });
     }
-  }, [total, paymentCount]);
+  }, [total, paymentCount, customBcvRate, bcvRate, bankAccounts]);
 
   // 🛍️ Venta Libre (Código 99999) Handlers
   const openVentaLibreModal = (_preset?: Partial<Product>) => {
@@ -1903,48 +2053,60 @@ export default function POSModule({
 
       const detailedSplitPayments = paymentCount > 1 
         ? splitPayments.map(sp => {
-            const paymentCurr: CurrencyCode = getMethodCurrency(sp.method);
-            const rateUsed = ratesSnapshot[paymentCurr] || 1;
+            const bank = bankAccounts.find(a => a.id === sp.bankAccountId) || bankAccounts[0];
+            const paymentCurr: CurrencyCode = (sp.currency as CurrencyCode) || (bank?.currency as CurrencyCode) || getPaymentCurrency(sp);
+            const rateUsed = ratesSnapshot[paymentCurr] || (paymentCurr === 'VES' ? rateForThisInvoice : 1);
             const normUsd = paymentCurr === 'USD' ? sp.amount : sp.amount / rateUsed;
             const normVes = paymentCurr === 'VES' ? sp.amount : normUsd * ratesSnapshot.VES;
             const normEur = paymentCurr === 'EUR' ? sp.amount : normUsd * (ratesSnapshot.EUR || 0.92);
             const normCop = paymentCurr === 'COP' ? sp.amount : normUsd * (ratesSnapshot.COP || 4100);
 
             return {
-              method: sp.method,
+              method: bank ? bank.name : sp.method,
               currency: paymentCurr,
               amount: sp.amount,
               amount_usd: parseFloat(normUsd.toFixed(2)),
               amount_ves: parseFloat(normVes.toFixed(2)),
               amount_eur: parseFloat(normEur.toFixed(2)),
               amount_cop: parseFloat(normCop.toFixed(0)),
-              rate: rateUsed
+              rate: rateUsed,
+              bankAccountId: sp.bankAccountId || bank?.id,
+              bank_account_id: sp.bankAccountId || bank?.id,
+              bank_account_name: bank?.name
             };
           })
         : (() => {
-            const paymentCurr: CurrencyCode = getMethodCurrency(paymentMethod);
+            const singleSp = splitPayments[0];
+            const targetBankId = singleSp?.bankAccountId || selectedBankId || bankAccounts[0]?.id;
+            const bank = bankAccounts.find(a => a.id === targetBankId) || bankAccounts[0];
+            const paymentCurr: CurrencyCode = (singleSp?.currency as CurrencyCode) || (bank?.currency as CurrencyCode) || getPaymentCurrency(singleSp || 'USD');
             const rateUsed = ratesSnapshot[paymentCurr] || rateForThisInvoice;
-            const normUsd = total;
-            const normVes = total * ratesSnapshot.VES;
-            const normEur = total * (ratesSnapshot.EUR || 0.92);
-            const normCop = total * (ratesSnapshot.COP || 4100);
-            const amtInMethodCurr = paymentCurr === 'USD' ? normUsd : paymentCurr === 'VES' ? normVes : paymentCurr === 'EUR' ? normEur : normCop;
+            const finalAmount = singleSp?.amount && singleSp.amount > 0 
+              ? singleSp.amount 
+              : (paymentCurr === 'VES' ? parseFloat((total * ratesSnapshot.VES).toFixed(2)) : parseFloat(total.toFixed(2)));
+            const normUsd = paymentCurr === 'USD' ? finalAmount : finalAmount / rateUsed;
+            const normVes = paymentCurr === 'VES' ? finalAmount : normUsd * ratesSnapshot.VES;
+            const normEur = paymentCurr === 'EUR' ? finalAmount : normUsd * (ratesSnapshot.EUR || 0.92);
+            const normCop = paymentCurr === 'COP' ? finalAmount : normUsd * (ratesSnapshot.COP || 4100);
 
             return [{
-              method: paymentMethod,
+              method: bank ? bank.name : (paymentMethod || 'Cuenta Bancaria'),
               currency: paymentCurr,
-              amount: parseFloat(amtInMethodCurr.toFixed(2)),
+              amount: parseFloat(finalAmount.toFixed(2)),
               amount_usd: parseFloat(normUsd.toFixed(2)),
               amount_ves: parseFloat(normVes.toFixed(2)),
               amount_eur: parseFloat(normEur.toFixed(2)),
               amount_cop: parseFloat(normCop.toFixed(0)),
-              rate: rateUsed
+              rate: rateUsed,
+              bankAccountId: bank?.id,
+              bank_account_id: bank?.id,
+              bank_account_name: bank?.name
             }];
           })();
 
       const finalPaymentMethod = paymentCount > 1 
-        ? `Multimétodo: ${splitPayments.map(p => `${p.method} (${p.amount} ${getMethodCurrency(p.method)})`).join(' + ')}`
-        : paymentMethod;
+        ? `Multimétodo: ${detailedSplitPayments.map(p => `${p.method} (${p.amount} ${p.currency})`).join(' + ')}`
+        : (detailedSplitPayments[0]?.method || paymentMethod || splitPayments[0]?.method || 'Efectivo VES');
 
       const taxesDetail = appliedTaxes.map(t => ({
         id: t.id,
@@ -1995,6 +2157,12 @@ export default function POSModule({
 
       // 3.3 Register income into Bank Accounts & Bank Transfers
       try {
+        // Mapear los métodos de pago con sus cuentas bancarias seleccionadas
+        const detailedSplitPayments = splitPayments.map(p => ({
+            ...p,
+            bankAccountId: p.bankAccountId || bankAccounts[0]?.id
+        }));
+
         await dbService.recordSaleIncomeToBankAccounts({
           invoice: created,
           splitPayments: detailedSplitPayments,
@@ -2002,7 +2170,8 @@ export default function POSModule({
           totalUsd: total,
           totalVes: total * rateForThisInvoice,
           bcvRate: rateForThisInvoice,
-          createdBy: currentUser?.name || currentUser?.email || 'Cajero POS'
+          createdBy: currentUser?.name || currentUser?.email || 'Cajero POS',
+          bankAccountId: detailedSplitPayments[0]?.bankAccountId // Fallback si no hay splitPayments
         });
       } catch (bankErr) {
         console.error("Failed to record POS sale in bank accounts:", bankErr);
@@ -2068,10 +2237,24 @@ export default function POSModule({
 
     // ✅ Validar que todos los métodos de pago estén conciliados
     const splitSumUsd = splitPayments.reduce(
-      (acc, sp) => acc + methodAmountToUsd(sp.amount || 0, sp.method),
+      (acc, sp) => acc + methodAmountToUsd(sp.amount || 0, sp),
       0
     );
     const diffUsd = parseFloat((total - splitSumUsd).toFixed(2));
+    
+    // Nueva validación: Asegurar que cada pago tenga una cuenta bancaria
+    if (bankAccounts.length > 0) {
+      const hasInvalidBank = splitPayments.some(p => {
+        const targetId = p.bankAccountId || bankAccounts[0]?.id;
+        return !targetId || !bankAccounts.find(a => a.id === targetId);
+      });
+      
+      if (hasInvalidBank) {
+        showToast('error', 'Por favor, seleccione una cuenta bancaria válida para cada método de pago.');
+        return;
+      }
+    }
+
     if (diffUsd > 0.02) {
       showToast(
         'error',
@@ -2894,7 +3077,7 @@ export default function POSModule({
                         ${total.toFixed(2)}
                       </div>
                       <div className="text-xs font-extrabold text-[#00BFFF] font-mono">
-                        Bs. {(total * (customBcvRate > 0 ? customBcvRate : (currencyRates.VES || bcvRate || 45.5))).toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                        Bs. {((Number(total) || 0) * (customBcvRate > 0 ? customBcvRate : (currencyRates.VES || bcvRate || 45.5))).toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                       </div>
                     </div>
                   </div>
@@ -2988,14 +3171,14 @@ export default function POSModule({
                   </div>
                 </div>
 
-                {/* Lista de Métodos de Pago Dinámicos */}
+                  {/* Lista de Métodos de Pago Dinámicos */}
                 <div className="space-y-3.5">
                   {splitPayments.map((p, idx) => {
-                    const methodCurr = getMethodCurrency(p.method);
-                    const currSymbol = methodCurr === 'VES' ? 'BS' : methodCurr === 'USD' ? '$' : methodCurr === 'EUR' ? '€' : 'COP';
+                    const methodCurr = getPaymentCurrency(p);
+                    const currSymbol = methodCurr === 'VES' ? 'Bs' : methodCurr === 'USD' ? '$' : methodCurr === 'EUR' ? '€' : 'COP';
                     
                     return (
-                      <div key={idx} className="relative p-4 bg-[#F8F9FA] border border-gray-200 rounded-2xl space-y-2.5">
+                      <div key={idx} className="relative p-4 bg-[#F8F9FA] border border-gray-200 rounded-2xl space-y-3.5">
                         {splitPayments.length > 1 && (
                           <button
                             type="button"
@@ -3008,47 +3191,46 @@ export default function POSModule({
                         )}
 
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 items-end pr-5">
-                          {/* Selector Método de pago */}
-                          <div className="space-y-1">
-                            <label className="block text-[11px] font-bold text-[#2B2D42]">Método de pago</label>
+                          {/* Selector Cuenta Bancaria (Principal) */}
+                          <div className="space-y-1 col-span-2">
+                            <label className="block text-[11px] font-bold text-[#2B2D42]">Cuenta Bancaria / Destino</label>
                             <select
-                              value={p.method}
-                              onChange={(e) => handleUpdateSplitMethod(idx, e.target.value)}
+                              value={p.bankAccountId || bankAccounts[0]?.id || ''}
+                              onChange={(e) => handleBankChange(idx, e.target.value)}
                               className="w-full bg-white border border-gray-200 text-[#2B2D42] font-bold text-xs rounded-xl px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#00BFFF] cursor-pointer shadow-2xs"
                             >
-                              {getActiveMethods().map((m) => (
-                                <option key={m.id} value={m.id}>
-                                  {m.label || m.id}
+                              {bankAccounts.map((a) => (
+                                <option key={a.id} value={a.id}>
+                                  {a.name} ({a.currency}) • Saldo: {a.currency} {(Number(a.balance) || 0).toLocaleString('es-VE', { minimumFractionDigits: 2 })}
                                 </option>
                               ))}
                             </select>
                           </div>
-
-                          {/* Input Monto a pagar */}
-                          <div className="space-y-1">
-                            <div className="flex justify-between items-center">
-                              <label className="block text-[11px] font-bold text-gray-600">Monto a pagar</label>
-                              <button
-                                type="button"
-                                onClick={() => handleFillRemaining(idx)}
-                                className="text-[10px] text-[#005da9] font-black hover:underline cursor-pointer"
-                              >
-                                Restante
-                              </button>
-                            </div>
-                            <div className="relative">
-                              <input
-                                type="number"
-                                step="0.01"
-                                value={p.amount || ''}
-                                onChange={(e) => handleUpdateSplitAmount(idx, parseFloat(e.target.value) || 0)}
-                                placeholder="0.00"
-                                className="w-full pl-3 pr-12 py-2 bg-white border border-gray-200 rounded-xl text-xs font-mono font-black text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#005da9] shadow-2xs"
-                              />
-                              <span className="absolute right-3 top-1/2 -translate-y-1/2 text-xs font-black font-mono text-gray-500">
-                                {currSymbol}
-                              </span>
-                            </div>
+                        </div>
+                        {/* Input de monto y labels */}
+                        <div className="flex flex-col gap-1">
+                          <div className="flex justify-between items-center">
+                            <label className="block text-[11px] font-bold text-[#2B2D42]">
+                              Monto a pagar ({currSymbol})
+                            </label>
+                            <button
+                              type="button"
+                              onClick={() => handleFillRemaining(idx)}
+                              className="text-[10px] text-[#005da9] font-black hover:underline cursor-pointer"
+                            >
+                              Restante
+                            </button>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <input
+                              type="number"
+                              step="0.01"
+                              value={p.amount !== undefined ? p.amount : ''}
+                              onChange={(e) => handleUpdateSplitAmount(idx, parseFloat(e.target.value))}
+                              className="w-full px-3 py-2 bg-white border border-[#40E0D0] rounded-xl text-xs font-mono font-black text-[#1D3557] text-center focus:outline-none focus:ring-2 focus:ring-[#00BFFF]"
+                              placeholder="0.00"
+                            />
+                            <span className="text-xs font-black text-gray-500 min-w-[24px]">{currSymbol}</span>
                           </div>
                         </div>
                       </div>
@@ -3070,7 +3252,7 @@ export default function POSModule({
 
                 {/* Validador de Pago en Vivo */}
                 {(() => {
-                  const splitSumUsd = splitPayments.reduce((acc, sp) => acc + methodAmountToUsd(sp.amount || 0, sp.method), 0);
+                  const splitSumUsd = splitPayments.reduce((acc, sp) => acc + methodAmountToUsd(sp.amount || 0, sp), 0);
                   const diffUsd = parseFloat((total - splitSumUsd).toFixed(2));
                   if (Math.abs(diffUsd) < 0.02) {
                     return (
@@ -3702,7 +3884,7 @@ export default function POSModule({
                   </div>
                   {vlPrice && !isNaN(parseFloat(vlPrice)) && parseFloat(vlPrice) > 0 && (
                     <span className="text-[10px] text-emerald-700 font-extrabold block mt-1">
-                      Bs. {(parseFloat(vlPrice) * bcvRate).toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                      Bs. {((parseFloat(vlPrice) || 0) * (bcvRate || 1)).toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                     </span>
                   )}
                 </div>
@@ -4087,7 +4269,7 @@ export default function POSModule({
                     <input
                       type="text"
                       disabled
-                      value={manualAmountBs.toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                      value={(Number(manualAmountBs) || 0).toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                       className="w-full pl-9 pr-3.5 py-2.5 bg-gray-100 border border-gray-200 rounded-xl text-xs font-black text-gray-500 focus:outline-none"
                     />
                   </div>
@@ -4213,7 +4395,7 @@ export default function POSModule({
                 </div>
                 {gastoAmount && !isNaN(parseFloat(gastoAmount)) && parseFloat(gastoAmount) > 0 && (
                   <span className="text-[10px] text-amber-700 font-extrabold block mt-1">
-                    Equivalente: Bs. {(parseFloat(gastoAmount) * bcvRate).toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                    Equivalente: Bs. {((parseFloat(gastoAmount) || 0) * (bcvRate || 1)).toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                   </span>
                 )}
               </div>

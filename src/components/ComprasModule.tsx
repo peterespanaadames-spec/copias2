@@ -607,11 +607,11 @@ export default function ComprasModule({
           <div>
             <span className="text-[10px] font-montserrat font-extrabold uppercase text-gray-400 tracking-wider block">Total Comprado (Histórico)</span>
             <span className="text-lg font-montserrat font-extrabold text-[#1D3557] block font-mono">
-              ${stats.totalPurchasedUsd.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} USD
+              ${(stats?.totalPurchasedUsd || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} USD
             </span>
             {bcvRate > 0 && (
               <span className="text-[10px] font-bold text-[#2B2D42]/70 block">
-                ≈ Bs. {stats.totalPurchasedBs.toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                ≈ Bs. {(stats?.totalPurchasedBs || 0).toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
               </span>
             )}
           </div>

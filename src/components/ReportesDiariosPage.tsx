@@ -1259,7 +1259,7 @@ ALTER PUBLICATION supabase_realtime ADD TABLE public.products;
                     Ingresos:
                   </span>
                   <span className="text-3xl font-black text-gray-900 tracking-tight">
-                    ${ventasMetrics.ingresos.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                    ${(Number(ventasMetrics?.ingresos) || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                   </span>
                 </div>
 
@@ -1269,7 +1269,7 @@ ALTER PUBLICATION supabase_realtime ADD TABLE public.products;
                     Utilidad:
                   </span>
                   <span className="text-3xl font-black text-gray-900 tracking-tight">
-                    ${ventasMetrics.utilidad.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                    ${(Number(ventasMetrics?.utilidad) || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                   </span>
                 </div>
               </div>
@@ -1313,7 +1313,7 @@ ALTER PUBLICATION supabase_realtime ADD TABLE public.products;
                             {sale.createdBy}
                           </td>
                           <td className="py-3.5 px-3 text-right font-bold text-gray-900">
-                            ${sale.total.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                            ${(Number(sale?.total) || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                           </td>
                         </tr>
                       ))

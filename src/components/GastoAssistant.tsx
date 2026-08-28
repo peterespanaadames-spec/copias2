@@ -480,7 +480,7 @@ export default function GastoAssistant({
             </div>
             <div className="text-right">
               <p className="text-[10px] uppercase font-black text-rose-500 tracking-wider">Equivalente (VES)</p>
-              <p className="text-sm font-black text-rose-600 font-mono">Bs. {totalBs.toLocaleString('es-VE', { minimumFractionDigits: 2 })}</p>
+              <p className="text-sm font-black text-rose-600 font-mono">Bs. {(totalBs || 0).toLocaleString('es-VE', { minimumFractionDigits: 2 })}</p>
             </div>
           </div>
         </div>

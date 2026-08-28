@@ -1554,16 +1554,16 @@ export default function BalancePage({
             <span className="text-xs font-bold text-gray-400 block uppercase tracking-wider">Balance</span>
             <div className="flex items-baseline gap-1.5">
               <span className="text-2xl font-black text-gray-900 tracking-tight">
-                ${metrics.balance.toFixed(2)}
+                ${(metrics?.balance || 0).toFixed(2)}
               </span>
               <span className="text-xs font-bold text-gray-500">USD</span>
             </div>
             <span className="text-[11px] font-bold text-gray-500 block leading-none">
-              Bs. {(metrics.balance * bcvRate).toLocaleString('es-VE', { minimumFractionDigits: 2 })} (BCV)
+              Bs. {((metrics?.balance || 0) * (bcvRate || 1)).toLocaleString('es-VE', { minimumFractionDigits: 2 })} (BCV)
             </span>
           </div>
-          <div className={`p-3 rounded-2xl ${metrics.balance >= 0 ? 'bg-emerald-50 text-emerald-600' : 'bg-rose-50 text-rose-600'}`}>
-            {metrics.balance >= 0 ? <TrendingUp className="w-5 h-5" /> : <TrendingDown className="w-5 h-5" />}
+          <div className={`p-3 rounded-2xl ${(metrics?.balance || 0) >= 0 ? 'bg-emerald-50 text-emerald-600' : 'bg-rose-50 text-rose-600'}`}>
+            {(metrics?.balance || 0) >= 0 ? <TrendingUp className="w-5 h-5" /> : <TrendingDown className="w-5 h-5" />}
           </div>
         </div>
 
@@ -1573,12 +1573,12 @@ export default function BalancePage({
             <span className="text-xs font-bold text-gray-400 block uppercase tracking-wider">Ventas totales</span>
             <div className="flex items-baseline gap-1.5">
               <span className="text-2xl font-black text-emerald-600 tracking-tight">
-                ${metrics.incomes.toFixed(2)}
+                ${(metrics?.incomes || 0).toFixed(2)}
               </span>
               <span className="text-xs font-bold text-emerald-600">USD</span>
             </div>
             <span className="text-[11px] font-bold text-gray-500 block leading-none">
-              Bs. {(metrics.incomes * bcvRate).toLocaleString('es-VE', { minimumFractionDigits: 2 })} (BCV)
+              Bs. {((metrics?.incomes || 0) * (bcvRate || 1)).toLocaleString('es-VE', { minimumFractionDigits: 2 })} (BCV)
             </span>
           </div>
           <div className="p-3 rounded-2xl bg-emerald-50 text-emerald-600">
@@ -1592,12 +1592,12 @@ export default function BalancePage({
             <span className="text-xs font-bold text-gray-400 block uppercase tracking-wider">Gastos totales</span>
             <div className="flex items-baseline gap-1.5">
               <span className="text-2xl font-black text-rose-600 tracking-tight">
-                ${metrics.egresses.toFixed(2)}
+                ${(metrics?.egresses || 0).toFixed(2)}
               </span>
               <span className="text-xs font-bold text-rose-600">USD</span>
             </div>
             <span className="text-[11px] font-bold text-gray-500 block leading-none">
-              Bs. {(metrics.egresses * bcvRate).toLocaleString('es-VE', { minimumFractionDigits: 2 })} (BCV)
+              Bs. {((metrics?.egresses || 0) * (bcvRate || 1)).toLocaleString('es-VE', { minimumFractionDigits: 2 })} (BCV)
             </span>
           </div>
           <div className="p-3 rounded-2xl bg-rose-50 text-rose-600">

@@ -1022,8 +1022,8 @@ export default function AdminPanel({
           </div>
           <div style="font-size: 11px; text-align: right; margin-top: 6px; padding: 6px 8px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px;">
             <span style="font-size: 9px; font-weight: bold; color: #64748b; text-transform: uppercase; display: block;">PAGO EN DIVISAS / BS. BCV</span>
-            <span style="font-size: 12px; font-weight: 900; color: #1e293b; display: block;">Bs. ${totalBs.toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
-            <span style="font-size: 10px; color: #64748b; display: block;">Tasa Oficial BCV: 1 USD = Bs. ${bcv.toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+            <span style="font-size: 12px; font-weight: 900; color: #1e293b; display: block;">Bs. ${(Number(totalBs) || 0).toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
+            <span style="font-size: 10px; color: #64748b; display: block;">Tasa Oficial BCV: 1 USD = Bs. ${(Number(bcv) || 0).toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}</span>
           </div>
           <div class="line"></div>
           <div class="center" style="font-size: 10px; margin-top: 15px;">

@@ -125,7 +125,7 @@ function generateExpensePieChartCanvas(expenses: Record<string, number>): string
     ctx.fillText('TOTAL', centerX, centerY - 9);
     ctx.font = 'bold 11px Calibri, sans-serif';
     ctx.fillStyle = '#16A085';
-    ctx.fillText('$' + total.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }), centerX, centerY + 9);
+    ctx.fillText('$' + (Number(total) || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }), centerX, centerY + 9);
 
     // Legend on Right
     let legendY = 75;
@@ -137,8 +137,8 @@ function generateExpensePieChartCanvas(expenses: Record<string, number>): string
     entries.forEach(([cat, val], idx) => {
       if (legendY > canvas.height - 25) return;
       const color = colors[idx % colors.length];
-      const pct = ((Number(val) / total) * 100).toFixed(1) + '%';
-      const amountStr = '$' + Number(val).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      const pct = (((Number(val) || 0) / (total || 1)) * 100).toFixed(1) + '%';
+      const amountStr = '$' + (Number(val) || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
       // Color box
       ctx.fillStyle = color;
@@ -388,7 +388,7 @@ function generatePaymentPieChartCanvas(payments: Record<string, { count: number;
     ctx.fillText('VENTAS', centerX, centerY - 9);
     ctx.font = 'bold 11px Calibri, sans-serif';
     ctx.fillStyle = '#16A085';
-    ctx.fillText('$' + totalSales.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }), centerX, centerY + 9);
+    ctx.fillText('$' + (Number(totalSales) || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }), centerX, centerY + 9);
 
     // Legend on Right
     let legendY = 75;
@@ -400,8 +400,8 @@ function generatePaymentPieChartCanvas(payments: Record<string, { count: number;
     entries.forEach(([method, data], idx) => {
       if (legendY > canvas.height - 25) return;
       const color = colors[idx % colors.length];
-      const pct = ((data.total / totalSales) * 100).toFixed(1) + '%';
-      const amountStr = '$' + data.total.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      const pct = ((((Number(data?.total)) || 0) / (totalSales || 1)) * 100).toFixed(1) + '%';
+      const amountStr = '$' + (Number(data?.total) || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
       // Color box
       ctx.fillStyle = color;
@@ -4270,7 +4270,7 @@ export default function ReportesDashboard({
                                         </span>
                                       </td>
                                       <td className="py-2.5 px-3 text-right font-mono font-bold text-gray-900">
-                                        {symbol} {Number(pm.nativeTotal).toLocaleString(pm.currency === 'VES' ? 'es-VE' : 'en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                                        {symbol} {(Number(pm?.nativeTotal) || 0).toLocaleString(pm?.currency === 'VES' ? 'es-VE' : 'en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                                       </td>
                                       <td className="py-2.5 px-3 text-right font-mono font-bold text-[#005da9]">
                                         {formatCurrency(pm.inReportCurrencyTotal, reportCurrency, currencyRates)}
