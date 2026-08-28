@@ -674,13 +674,13 @@ ${quote.notes ? `📌 *Notas/Condiciones:* ${quote.notes}\n\n` : ''}Quedamos ate
     <div id="cotizaciones-panel" className="bg-[#fcfdfd] min-h-screen p-6 text-gray-900">
       
       {/* HEADER BAR */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-gray-150 pb-5 mb-6">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-gray-200 pb-5 mb-6">
         <div>
-          <h1 className="text-2xl font-black text-[#131921] uppercase tracking-tight flex items-center gap-2">
-            <FileCheck className="w-6 h-6 text-[#005da9] fill-[#005da9]/10" />
+          <h1 className="text-2xl font-montserrat font-extrabold text-[#1D3557] uppercase tracking-tight flex items-center gap-2">
+            <FileCheck className="w-6 h-6 text-[#00BFFF] fill-[#00BFFF]/10" />
             <span>Cotizaciones y Presupuestos</span>
           </h1>
-          <p className="text-xs text-gray-500 font-bold mt-0.5">
+          <p className="text-xs text-[#2B2D42]/70 font-medium mt-0.5">
             Gestión completa de presupuestos para clientes, cotizaciones de catálogo o libres, y conversión directa a venta.
           </p>
         </div>
@@ -689,9 +689,9 @@ ${quote.notes ? `📌 *Notas/Condiciones:* ${quote.notes}\n\n` : ''}Quedamos ate
           <button 
             type="button"
             onClick={handleOpenCreateModal}
-            className="px-4 py-2.5 bg-[#005da9] hover:bg-[#004a87] text-white text-xs font-black rounded-xl transition flex items-center gap-2 cursor-pointer shadow-md"
+            className="px-4 py-2.5 bg-[#1D3557] hover:bg-[#152742] text-white text-xs font-montserrat font-extrabold rounded-xl transition flex items-center gap-2 cursor-pointer shadow-md uppercase tracking-wider active:scale-98"
           >
-            <Plus className="w-4 h-4 shrink-0 text-[#ffb700]" />
+            <Plus className="w-4 h-4 shrink-0 text-[#40E0D0]" />
             <span>Crear Cotización</span>
           </button>
         </div>
@@ -699,22 +699,22 @@ ${quote.notes ? `📌 *Notas/Condiciones:* ${quote.notes}\n\n` : ''}Quedamos ate
 
       {/* HIGHLIGHT BANNER */}
       {showPremiumBanner && (
-        <div className="bg-[#005da9] text-white p-4 rounded-2xl mb-6 relative flex items-start gap-4 shadow-md transition-all">
-          <div className="p-2 bg-white/10 rounded-xl mt-0.5 shrink-0">
-            <Sparkles className="w-5 h-5 text-[#ffb700]" />
+        <div className="bg-[#1D3557] text-white p-4 rounded-2xl mb-6 relative flex items-start gap-4 shadow-md transition-all border border-[#00BFFF]/20">
+          <div className="p-2 bg-[#40E0D0]/20 rounded-xl mt-0.5 shrink-0">
+            <Sparkles className="w-5 h-5 text-[#40E0D0]" />
           </div>
           <div className="flex-1 text-left">
-            <h4 className="font-black text-sm tracking-tight text-white mb-0.5">
+            <h4 className="font-montserrat font-extrabold text-sm tracking-tight text-white mb-0.5 uppercase">
               Módulo de Cotizaciones Profesional Activo
             </h4>
-            <p className="text-xs text-blue-100 font-bold leading-relaxed max-w-4xl">
+            <p className="text-xs text-gray-200 font-medium leading-relaxed max-w-4xl">
               Crea cotizaciones con productos de inventario o ítems libres, imprime comprobantes PDF, comparte por WhatsApp y convierte presupuestos directamente en ventas
             </p>
           </div>
           <button 
             type="button" 
             onClick={() => setShowPremiumBanner(false)}
-            className="absolute top-3 right-3 text-white/70 hover:text-white p-1 rounded-lg hover:bg-white/10 transition cursor-pointer"
+            className="absolute top-3 right-3 text-gray-300 hover:text-white p-1 rounded-lg hover:bg-white/10 transition cursor-pointer"
           >
             <X className="w-4 h-4" />
           </button>
@@ -722,7 +722,7 @@ ${quote.notes ? `📌 *Notas/Condiciones:* ${quote.notes}\n\n` : ''}Quedamos ate
       )}
 
       {/* FILTER PANEL */}
-      <div className="bg-white border border-gray-150 p-4 rounded-2xl shadow-xs space-y-3 mb-6">
+      <div className="bg-[#F8F9FA] border border-gray-200 p-4 rounded-2xl shadow-xs space-y-3 mb-6">
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-3">
           
           <div className="flex items-center gap-2 flex-wrap text-left">
@@ -730,26 +730,26 @@ ${quote.notes ? `📌 *Notas/Condiciones:* ${quote.notes}\n\n` : ''}Quedamos ate
             <button
               type="button"
               onClick={() => setShowAdvanced(!showAdvanced)}
-              className={`px-3 py-2 border rounded-xl text-xs font-bold transition flex items-center gap-1.5 cursor-pointer ${
+              className={`px-3 py-2 border rounded-xl text-xs font-montserrat font-bold transition flex items-center gap-1.5 cursor-pointer ${
                 showAdvanced 
-                  ? 'bg-gray-100 border-gray-300 text-gray-900' 
-                  : 'bg-white border-gray-200 text-gray-600 hover:bg-gray-50'
+                  ? 'bg-gray-200 border-gray-300 text-[#1D3557]' 
+                  : 'bg-white border-gray-200 text-[#2B2D42] hover:bg-gray-50'
               }`}
             >
-              <SlidersHorizontal className="w-3.5 h-3.5" />
+              <SlidersHorizontal className="w-3.5 h-3.5 text-[#00BFFF]" />
               <span>Filtros</span>
             </button>
 
             {/* Client Dropdown */}
             <div className="flex items-center gap-1.5">
-              <span className="flex items-center gap-1 text-[10px] font-black uppercase text-[#005da9] bg-[#005da9]/5 px-2 py-1 rounded-lg border border-[#005da9]/10">
-                <User className="w-3 h-3 text-[#005da9]" />
+              <span className="flex items-center gap-1 text-[10px] font-montserrat font-extrabold uppercase text-[#1D3557] bg-[#1D3557]/10 px-2.5 py-1 rounded-lg border border-[#1D3557]/20">
+                <User className="w-3 h-3 text-[#00BFFF]" />
                 Cliente
               </span>
               <select
                 value={selectedClient}
                 onChange={(e) => setSelectedClient(e.target.value)}
-                className="px-3 py-2 bg-white border border-gray-200 rounded-xl text-xs font-bold text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#005da9] cursor-pointer"
+                className="px-3 py-2 bg-white border border-gray-200 rounded-xl text-xs font-bold text-[#2B2D42] focus:outline-none focus:ring-2 focus:ring-[#00BFFF] cursor-pointer"
               >
                 <option value="todos">Todos los clientes</option>
                 {uniqueClientNames.map(name => (
@@ -762,7 +762,7 @@ ${quote.notes ? `📌 *Notas/Condiciones:* ${quote.notes}\n\n` : ''}Quedamos ate
             <select
               value={selectedStatus}
               onChange={(e) => setSelectedStatus(e.target.value)}
-              className="px-3 py-2 bg-white border border-gray-200 rounded-xl text-xs font-bold text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#005da9] cursor-pointer"
+              className="px-3 py-2 bg-white border border-gray-200 rounded-xl text-xs font-bold text-[#2B2D42] focus:outline-none focus:ring-2 focus:ring-[#00BFFF] cursor-pointer"
             >
               <option value="todos">Todos los estados</option>
               <option value="creada">Creadas / Pendientes</option>
@@ -776,14 +776,14 @@ ${quote.notes ? `📌 *Notas/Condiciones:* ${quote.notes}\n\n` : ''}Quedamos ate
             {/* Search Input */}
             <div className="relative w-full lg:max-w-xs">
               <span className="absolute left-3 top-1/2 -translate-y-1/2">
-                <Search className="w-4 h-4 text-gray-400" />
+                <Search className="w-4 h-4 text-[#00BFFF]" />
               </span>
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Buscar cliente, N° o concepto..."
-                className="w-full pl-9 pr-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-xs font-bold text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#005da9] focus:bg-white transition"
+                className="w-full pl-9 pr-3 py-2 bg-white border border-gray-200 rounded-xl text-xs font-bold text-[#2B2D42] placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#00BFFF] transition"
               />
             </div>
           </div>
@@ -791,8 +791,8 @@ ${quote.notes ? `📌 *Notas/Condiciones:* ${quote.notes}\n\n` : ''}Quedamos ate
         </div>
 
         {showAdvanced && (
-          <div className="pt-3 border-t border-gray-100 flex items-center justify-between">
-            <span className="text-[10px] font-bold text-gray-400 uppercase">
+          <div className="pt-3 border-t border-gray-200 flex items-center justify-between">
+            <span className="text-[10px] font-montserrat font-bold text-gray-500 uppercase">
               Registros encontrados: {filteredQuotes.length}
             </span>
             <button
@@ -802,7 +802,7 @@ ${quote.notes ? `📌 *Notas/Condiciones:* ${quote.notes}\n\n` : ''}Quedamos ate
                 setSelectedClient('todos');
                 setSelectedStatus('todos');
               }}
-              className="text-[10px] font-black text-[#005da9] hover:underline cursor-pointer uppercase"
+              className="text-[10px] font-montserrat font-extrabold text-[#00BFFF] hover:underline cursor-pointer uppercase"
             >
               Limpiar filtros
             </button>
@@ -811,17 +811,17 @@ ${quote.notes ? `📌 *Notas/Condiciones:* ${quote.notes}\n\n` : ''}Quedamos ate
       </div>
 
       {/* TABLE LIST */}
-      <div className="bg-white border border-gray-150 rounded-3xl overflow-hidden shadow-xs">
+      <div className="bg-white border border-gray-200 rounded-2xl overflow-hidden shadow-xs">
         {loading ? (
           <div className="p-16 text-center">
-            <Loader2 className="w-8 h-8 animate-spin text-[#005da9] mx-auto mb-2" />
-            <p className="text-xs font-bold text-gray-500">Cargando cotizaciones...</p>
+            <Loader2 className="w-8 h-8 animate-spin text-[#00BFFF] mx-auto mb-2" />
+            <p className="text-xs font-bold text-[#2B2D42]">Cargando cotizaciones...</p>
           </div>
         ) : filteredQuotes.length === 0 ? (
           <div className="p-16 text-center text-gray-400">
-            <FileText className="w-10 h-10 mx-auto mb-3 text-gray-300" />
-            <p className="text-sm font-black text-gray-600">No se encontraron cotizaciones</p>
-            <p className="text-xs font-bold text-gray-400 mt-1">
+            <FileText className="w-10 h-10 mx-auto mb-3 text-[#00BFFF]/50" />
+            <p className="text-sm font-montserrat font-extrabold text-[#2B2D42]">No se encontraron cotizaciones</p>
+            <p className="text-xs font-medium text-gray-500 mt-1">
               Modifica los filtros o presiona "Crear Cotización" para emitir un nuevo presupuesto.
             </p>
           </div>
@@ -829,7 +829,7 @@ ${quote.notes ? `📌 *Notas/Condiciones:* ${quote.notes}\n\n` : ''}Quedamos ate
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
               <thead>
-                <tr className="bg-gray-50 border-b border-gray-100 text-gray-400 text-[10px] uppercase font-black tracking-wider">
+                <tr className="bg-[#1D3557] text-white text-[10px] uppercase font-montserrat font-extrabold tracking-wider">
                   <th className="px-6 py-4">N° / Cliente</th>
                   <th className="px-6 py-4">Contacto</th>
                   <th className="px-6 py-4">Concepto / Vendedor</th>
@@ -850,45 +850,45 @@ ${quote.notes ? `📌 *Notas/Condiciones:* ${quote.notes}\n\n` : ''}Quedamos ate
                       {/* Name / Code */}
                       <td className="px-6 py-4">
                         <div>
-                          <p className="font-extrabold text-gray-900 leading-tight">{q.client_name}</p>
-                          <span className="inline-block text-[9px] bg-slate-100 text-slate-700 font-mono font-bold px-1.5 py-0.5 rounded-md mt-1">
-                            {q.quote_number}
+                          <p className="font-montserrat font-extrabold text-[#1D3557] leading-tight">{q.client_name}</p>
+                          <span className="inline-block text-[10px] bg-[#1D3557]/10 text-[#1D3557] font-mono font-bold px-2 py-0.5 rounded-md mt-1 border border-[#1D3557]/20">
+                            #{q.quote_number}
                           </span>
                         </div>
                       </td>
 
                       {/* Phone */}
-                      <td className="px-6 py-4 font-bold text-gray-600">
+                      <td className="px-6 py-4 font-bold text-[#2B2D42]">
                         {q.client_phone ? (
-                          <span className="flex items-center gap-1 text-slate-700">
-                            <Smartphone className="w-3.5 h-3.5 text-gray-400 shrink-0" />
+                          <span className="flex items-center gap-1 text-[#2B2D42]">
+                            <Smartphone className="w-3.5 h-3.5 text-[#00BFFF] shrink-0" />
                             {q.client_phone}
                           </span>
                         ) : (
-                          <span className="text-gray-300 italic">Sin teléfono</span>
+                          <span className="text-gray-400 italic">Sin teléfono</span>
                         )}
                       </td>
 
                       {/* Concept & Seller */}
                       <td className="px-6 py-4">
-                        <p className="font-bold text-gray-900 line-clamp-1 max-w-xs">{q.concept}</p>
-                        <span className="text-[10px] font-bold text-gray-400 block mt-0.5">
+                        <p className="font-bold text-[#2B2D42] line-clamp-1 max-w-xs">{q.concept}</p>
+                        <span className="text-[10px] font-medium text-gray-500 block mt-0.5">
                           Vendedor: {q.seller_name || 'Vendedor Principal'}
                         </span>
                       </td>
 
                       {/* Creation Mode Badge */}
                       <td className="px-6 py-4">
-                        <span className="inline-flex items-center gap-1 text-[9px] font-extrabold uppercase px-2 py-0.5 rounded-md bg-gray-100 text-gray-600 border border-gray-200">
+                        <span className="inline-flex items-center gap-1 text-[9px] font-montserrat font-extrabold uppercase px-2.5 py-1 rounded-lg bg-gray-100 text-[#2B2D42] border border-gray-200">
                           {q.creation_type === 'libre' ? '✏️ Libre' : q.creation_type === 'mixto' ? '🔄 Mixto' : '📦 Catálogo'}
                         </span>
                       </td>
 
                       {/* Status */}
                       <td className="px-6 py-4">
-                        <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[9px] font-black uppercase border ${
+                        <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[9px] font-montserrat font-extrabold uppercase border ${
                           isSold
-                            ? 'bg-emerald-50 border-emerald-200 text-emerald-700'
+                            ? 'bg-[#40E0D0]/15 border-[#40E0D0]/30 text-[#1D3557]'
                             : isExpired
                             ? 'bg-rose-50 border-rose-200 text-rose-700'
                             : q.status === 'rechazada'
@@ -896,7 +896,7 @@ ${quote.notes ? `📌 *Notas/Condiciones:* ${quote.notes}\n\n` : ''}Quedamos ate
                             : 'bg-amber-50 border-amber-200 text-amber-700'
                         }`}>
                           <span className={`w-1.5 h-1.5 rounded-full ${
-                            isSold ? 'bg-emerald-500' :
+                            isSold ? 'bg-[#40E0D0]' :
                             isExpired ? 'bg-rose-500' :
                             q.status === 'rechazada' ? 'bg-gray-400' : 'bg-amber-500'
                           }`} />
@@ -910,10 +910,10 @@ ${quote.notes ? `📌 *Notas/Condiciones:* ${quote.notes}\n\n` : ''}Quedamos ate
 
                       {/* Total */}
                       <td className="px-6 py-4 whitespace-nowrap">
-                        <p className="font-mono font-black text-gray-900 text-sm">
+                        <p className="font-mono font-black text-[#1D3557] text-sm">
                           ${q.total_price.toFixed(2)} USD
                         </p>
-                        <p className="text-[10px] text-gray-400 font-bold font-mono leading-none">
+                        <p className="text-[10px] text-gray-500 font-bold font-mono leading-none">
                           Bs. {(q.total_price * bcvRate).toLocaleString('es-VE', { minimumFractionDigits: 2 })}
                         </p>
                       </td>
@@ -928,17 +928,17 @@ ${quote.notes ? `📌 *Notas/Condiciones:* ${quote.notes}\n\n` : ''}Quedamos ate
                               setSelectedQuote(q);
                               setShowDetailModal(true);
                             }}
-                            className="p-1.5 bg-slate-50 hover:bg-slate-100 text-[#005da9] rounded-xl border border-gray-200 transition cursor-pointer"
+                            className="p-1.5 bg-[#F8F9FA] hover:bg-gray-200 text-[#1D3557] rounded-xl border border-gray-200 transition cursor-pointer"
                             title="Ver detalle"
                           >
-                            <Eye className="w-4 h-4" />
+                            <Eye className="w-4 h-4 text-[#00BFFF]" />
                           </button>
 
                           {/* Print PDF */}
                           <button
                             type="button"
                             onClick={() => handlePrintPDF(q)}
-                            className="p-1.5 bg-slate-50 hover:bg-slate-100 text-slate-700 rounded-xl border border-gray-200 transition cursor-pointer"
+                            className="p-1.5 bg-[#F8F9FA] hover:bg-gray-200 text-[#2B2D42] rounded-xl border border-gray-200 transition cursor-pointer"
                             title="Imprimir / PDF"
                           >
                             <Printer className="w-4 h-4" />
@@ -971,16 +971,16 @@ ${quote.notes ? `📌 *Notas/Condiciones:* ${quote.notes}\n\n` : ''}Quedamos ate
           <div className="bg-white rounded-3xl border border-gray-100 w-full max-w-3xl shadow-2xl overflow-hidden relative text-left flex flex-col max-h-[92vh]">
             
             {/* Modal Header */}
-            <div className="bg-slate-900 p-5 text-white flex items-center justify-between">
+            <div className="bg-[#1D3557] p-5 text-white flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <div className="p-2 bg-white/10 rounded-xl">
-                  <FileCheck className="w-5 h-5 text-[#ffb700]" />
+                <div className="p-2 bg-[#40E0D0]/20 rounded-xl">
+                  <FileCheck className="w-5 h-5 text-[#40E0D0]" />
                 </div>
                 <div>
-                  <h3 className="font-extrabold text-sm tracking-tight text-white uppercase">
+                  <h3 className="font-montserrat font-extrabold text-sm tracking-tight text-white uppercase">
                     Crear Nueva Cotización
                   </h3>
-                  <p className="text-[10px] text-gray-300 font-medium">
+                  <p className="text-[10px] text-gray-200 font-medium">
                     Emisión de cotización con productos de catálogo o ítems libres.
                   </p>
                 </div>
@@ -988,7 +988,7 @@ ${quote.notes ? `📌 *Notas/Condiciones:* ${quote.notes}\n\n` : ''}Quedamos ate
               <button
                 type="button"
                 onClick={() => setShowCreateModal(false)}
-                className="text-gray-400 hover:text-white hover:bg-white/10 p-1.5 rounded-lg transition cursor-pointer"
+                className="text-gray-300 hover:text-white hover:bg-white/10 p-1.5 rounded-lg transition cursor-pointer"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -1008,7 +1008,7 @@ ${quote.notes ? `📌 *Notas/Condiciones:* ${quote.notes}\n\n` : ''}Quedamos ate
                     value={formSellerName}
                     onChange={(e) => setFormSellerName(e.target.value)}
                     placeholder="Nombre del vendedor"
-                    className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-xs font-bold text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#005da9]"
+                    className="w-full px-3 py-2 bg-[#F8F9FA] border border-gray-200 rounded-xl text-xs font-bold text-[#2B2D42] focus:outline-none focus:ring-2 focus:ring-[#00BFFF]"
                   />
                 </div>
 
@@ -1020,8 +1020,8 @@ ${quote.notes ? `📌 *Notas/Condiciones:* ${quote.notes}\n\n` : ''}Quedamos ate
                     <button
                       type="button"
                       onClick={() => setFormExpirationDays('7')}
-                      className={`py-1.5 text-[10px] font-black rounded-lg border transition ${
-                        formExpirationDays === '7' ? 'bg-[#005da9] text-white border-[#005da9]' : 'bg-gray-50 border-gray-200 text-gray-600'
+                      className={`py-1.5 text-[10px] font-montserrat font-extrabold rounded-lg border transition ${
+                        formExpirationDays === '7' ? 'bg-[#1D3557] text-white border-[#1D3557]' : 'bg-[#F8F9FA] border-gray-200 text-[#2B2D42]'
                       }`}
                     >
                       7 Días
@@ -1029,8 +1029,8 @@ ${quote.notes ? `📌 *Notas/Condiciones:* ${quote.notes}\n\n` : ''}Quedamos ate
                     <button
                       type="button"
                       onClick={() => setFormExpirationDays('15')}
-                      className={`py-1.5 text-[10px] font-black rounded-lg border transition ${
-                        formExpirationDays === '15' ? 'bg-[#005da9] text-white border-[#005da9]' : 'bg-gray-50 border-gray-200 text-gray-600'
+                      className={`py-1.5 text-[10px] font-montserrat font-extrabold rounded-lg border transition ${
+                        formExpirationDays === '15' ? 'bg-[#1D3557] text-white border-[#1D3557]' : 'bg-[#F8F9FA] border-gray-200 text-[#2B2D42]'
                       }`}
                     >
                       15 Días
@@ -1038,8 +1038,8 @@ ${quote.notes ? `📌 *Notas/Condiciones:* ${quote.notes}\n\n` : ''}Quedamos ate
                     <button
                       type="button"
                       onClick={() => setFormExpirationDays('30')}
-                      className={`py-1.5 text-[10px] font-black rounded-lg border transition ${
-                        formExpirationDays === '30' ? 'bg-[#005da9] text-white border-[#005da9]' : 'bg-gray-50 border-gray-200 text-gray-600'
+                      className={`py-1.5 text-[10px] font-montserrat font-extrabold rounded-lg border transition ${
+                        formExpirationDays === '30' ? 'bg-[#1D3557] text-white border-[#1D3557]' : 'bg-[#F8F9FA] border-gray-200 text-[#2B2D42]'
                       }`}
                     >
                       30 Días
@@ -1047,8 +1047,8 @@ ${quote.notes ? `📌 *Notas/Condiciones:* ${quote.notes}\n\n` : ''}Quedamos ate
                     <button
                       type="button"
                       onClick={() => setFormExpirationDays('none')}
-                      className={`py-1.5 text-[10px] font-black rounded-lg border transition ${
-                        formExpirationDays === 'none' ? 'bg-[#005da9] text-white border-[#005da9]' : 'bg-gray-50 border-gray-200 text-gray-600'
+                      className={`py-1.5 text-[10px] font-montserrat font-extrabold rounded-lg border transition ${
+                        formExpirationDays === 'none' ? 'bg-[#1D3557] text-white border-[#1D3557]' : 'bg-[#F8F9FA] border-gray-200 text-[#2B2D42]'
                       }`}
                     >
                       Sin Exp.
@@ -1058,21 +1058,21 @@ ${quote.notes ? `📌 *Notas/Condiciones:* ${quote.notes}\n\n` : ''}Quedamos ate
               </div>
 
               {/* CLIENT SECTION */}
-              <div className="bg-slate-50 border border-gray-200 p-4 rounded-2xl space-y-3">
+              <div className="bg-[#F8F9FA] border border-gray-200 p-4 rounded-2xl space-y-3">
                 <div className="flex items-center justify-between">
-                  <span className="text-xs font-black uppercase text-gray-500 tracking-wider">Información del Cliente</span>
-                  <div className="flex bg-gray-200 p-0.5 rounded-lg text-[10px] font-black">
+                  <span className="text-xs font-montserrat font-extrabold uppercase text-[#1D3557] tracking-wider">Información del Cliente</span>
+                  <div className="flex bg-gray-200/80 p-0.5 rounded-lg text-[10px] font-montserrat font-bold">
                     <button
                       type="button"
                       onClick={() => setFormClientType('existing')}
-                      className={`px-2.5 py-1 rounded-md transition ${formClientType === 'existing' ? 'bg-white text-slate-800 shadow-3xs' : 'text-gray-500'}`}
+                      className={`px-2.5 py-1 rounded-md transition ${formClientType === 'existing' ? 'bg-[#1D3557] text-white shadow-3xs' : 'text-[#2B2D42]'}`}
                     >
                       Cliente Existente
                     </button>
                     <button
                       type="button"
                       onClick={() => setFormClientType('new')}
-                      className={`px-2.5 py-1 rounded-md transition ${formClientType === 'new' ? 'bg-white text-slate-800 shadow-3xs' : 'text-gray-500'}`}
+                      className={`px-2.5 py-1 rounded-md transition ${formClientType === 'new' ? 'bg-[#1D3557] text-white shadow-3xs' : 'text-[#2B2D42]'}`}
                     >
                       Cliente Nuevo
                     </button>
@@ -1094,7 +1094,7 @@ ${quote.notes ? `📌 *Notas/Condiciones:* ${quote.notes}\n\n` : ''}Quedamos ate
                           setFormClientEmail(selectedObj.email || '');
                         }
                       }}
-                      className="w-full px-3 py-2 bg-white border border-gray-200 rounded-xl text-xs font-bold text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#005da9]"
+                      className="w-full px-3 py-2 bg-white border border-gray-200 rounded-xl text-xs font-bold text-[#2B2D42] focus:outline-none focus:ring-2 focus:ring-[#00BFFF]"
                     >
                       <option value="">-- Selecciona Cliente ({clients.length} disponibles) --</option>
                       {clients.map(c => (
@@ -1105,10 +1105,10 @@ ${quote.notes ? `📌 *Notas/Condiciones:* ${quote.notes}\n\n` : ''}Quedamos ate
                     </select>
 
                     {formClientId && (
-                      <div className="p-3 bg-blue-50/70 border border-blue-200 rounded-xl text-xs flex flex-wrap items-center justify-between gap-2">
+                      <div className="p-3 bg-[#1D3557]/10 border border-[#1D3557]/20 rounded-xl text-xs flex flex-wrap items-center justify-between gap-2">
                         <div className="space-y-0.5">
-                          <span className="font-extrabold text-blue-900 block">Cliente: {formClientName || formClientId}</span>
-                          <div className="text-[11px] text-blue-700 flex items-center gap-3">
+                          <span className="font-montserrat font-extrabold text-[#1D3557] block">Cliente: {formClientName || formClientId}</span>
+                          <div className="text-[11px] text-[#2B2D42] flex items-center gap-3">
                             {formClientPhone && <span>📱 {formClientPhone}</span>}
                             {formClientEmail && <span>✉️ {formClientEmail}</span>}
                           </div>
@@ -1138,7 +1138,7 @@ ${quote.notes ? `📌 *Notas/Condiciones:* ${quote.notes}\n\n` : ''}Quedamos ate
                         value={formClientName}
                         onChange={(e) => setFormClientName(e.target.value)}
                         placeholder="Ej: Pedro Pérez"
-                        className="w-full px-3 py-2 bg-white border border-gray-200 rounded-xl text-xs font-bold text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#005da9]"
+                        className="w-full px-3 py-2 bg-white border border-gray-200 rounded-xl text-xs font-bold text-[#2B2D42] focus:outline-none focus:ring-2 focus:ring-[#00BFFF]"
                       />
                     </div>
                     <div>
@@ -1148,7 +1148,7 @@ ${quote.notes ? `📌 *Notas/Condiciones:* ${quote.notes}\n\n` : ''}Quedamos ate
                         value={formClientPhone}
                         onChange={(e) => setFormClientPhone(e.target.value)}
                         placeholder="Ej: 04141234567"
-                        className="w-full px-3 py-2 bg-white border border-gray-200 rounded-xl text-xs font-bold text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#005da9]"
+                        className="w-full px-3 py-2 bg-white border border-gray-200 rounded-xl text-xs font-bold text-[#2B2D42] focus:outline-none focus:ring-2 focus:ring-[#00BFFF]"
                       />
                     </div>
                     <div>
@@ -1158,7 +1158,7 @@ ${quote.notes ? `📌 *Notas/Condiciones:* ${quote.notes}\n\n` : ''}Quedamos ate
                         value={formClientEmail}
                         onChange={(e) => setFormClientEmail(e.target.value)}
                         placeholder="Ej: cliente@gmail.com"
-                        className="w-full px-3 py-2 bg-white border border-gray-200 rounded-xl text-xs font-bold text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#005da9]"
+                        className="w-full px-3 py-2 bg-white border border-gray-200 rounded-xl text-xs font-bold text-[#2B2D42] focus:outline-none focus:ring-2 focus:ring-[#00BFFF]"
                       />
                     </div>
                   </div>
@@ -1167,7 +1167,7 @@ ${quote.notes ? `📌 *Notas/Condiciones:* ${quote.notes}\n\n` : ''}Quedamos ate
 
               {/* CONCEPT FIELD */}
               <div>
-                <label className="block text-xs font-black text-gray-700 uppercase tracking-wider mb-1">
+                <label className="block text-xs font-montserrat font-extrabold text-[#1D3557] uppercase tracking-wider mb-1">
                   Concepto / Referencia General *
                 </label>
                 <input
@@ -1176,22 +1176,22 @@ ${quote.notes ? `📌 *Notas/Condiciones:* ${quote.notes}\n\n` : ''}Quedamos ate
                   value={formConcept}
                   onChange={(e) => setFormConcept(e.target.value)}
                   placeholder="Ej: Presupuesto de impresiones de tesis y planos digitales"
-                  className="w-full px-3.5 py-2 bg-gray-50 border border-gray-200 rounded-xl text-xs font-bold text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#005da9] focus:bg-white transition"
+                  className="w-full px-3.5 py-2 bg-[#F8F9FA] border border-gray-200 rounded-xl text-xs font-bold text-[#2B2D42] focus:outline-none focus:ring-2 focus:ring-[#00BFFF] focus:bg-white transition"
                 />
               </div>
 
               {/* ITEM PICKER TABS: CATALOG VS LIBRE */}
               <div className="border border-gray-200 rounded-2xl p-4 space-y-4 bg-white">
                 <div className="flex items-center justify-between border-b border-gray-100 pb-2.5">
-                  <span className="text-xs font-black uppercase text-gray-700 tracking-wider">
+                  <span className="text-xs font-montserrat font-extrabold uppercase text-[#1D3557] tracking-wider">
                     Agregar Ítems a la Cotización
                   </span>
-                  <div className="flex bg-gray-100 p-1 rounded-xl text-xs font-bold">
+                  <div className="flex bg-gray-100 p-1 rounded-xl text-xs font-montserrat font-bold">
                     <button
                       type="button"
                       onClick={() => setItemPickerTab('catalog')}
                       className={`px-3 py-1 rounded-lg transition flex items-center gap-1 cursor-pointer ${
-                        itemPickerTab === 'catalog' ? 'bg-[#005da9] text-white shadow-3xs font-black' : 'text-gray-600 hover:text-gray-900'
+                        itemPickerTab === 'catalog' ? 'bg-[#1D3557] text-white shadow-3xs font-black' : 'text-[#2B2D42] hover:text-[#1D3557]'
                       }`}
                     >
                       <PackageCheck className="w-3.5 h-3.5" />
@@ -1201,7 +1201,7 @@ ${quote.notes ? `📌 *Notas/Condiciones:* ${quote.notes}\n\n` : ''}Quedamos ate
                       type="button"
                       onClick={() => setItemPickerTab('libre')}
                       className={`px-3 py-1 rounded-lg transition flex items-center gap-1 cursor-pointer ${
-                        itemPickerTab === 'libre' ? 'bg-[#005da9] text-white shadow-3xs font-black' : 'text-gray-600 hover:text-gray-900'
+                        itemPickerTab === 'libre' ? 'bg-[#1D3557] text-white shadow-3xs font-black' : 'text-[#2B2D42] hover:text-[#1D3557]'
                       }`}
                     >
                       <Edit3 className="w-3.5 h-3.5" />
@@ -1225,7 +1225,7 @@ ${quote.notes ? `📌 *Notas/Condiciones:* ${quote.notes}\n\n` : ''}Quedamos ate
                             placeholder="🔍 Buscar producto por nombre o SKU..."
                             value={searchProdQuery}
                             onChange={(e) => setSearchProdQuery(e.target.value)}
-                            className="w-full px-3 py-2 bg-white border border-gray-200 rounded-xl text-xs font-bold text-gray-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#005da9]"
+                            className="w-full px-3 py-2 bg-white border border-gray-200 rounded-xl text-xs font-bold text-[#2B2D42] placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#00BFFF]"
                           />
                           {searchProdQuery && (
                             <button
@@ -1250,7 +1250,7 @@ ${quote.notes ? `📌 *Notas/Condiciones:* ${quote.notes}\n\n` : ''}Quedamos ate
                             const prod = products.find(p => p.id === e.target.value);
                             if (prod) setCatalogCustomPrice(prod.price.toString());
                           }}
-                          className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-xs font-bold text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#005da9]"
+                          className="w-full px-3 py-2 bg-[#F8F9FA] border border-gray-200 rounded-xl text-xs font-bold text-[#2B2D42] focus:outline-none focus:ring-2 focus:ring-[#00BFFF]"
                         >
                           <option value="">
                             {searchProdQuery.trim()
@@ -1279,7 +1279,7 @@ ${quote.notes ? `📌 *Notas/Condiciones:* ${quote.notes}\n\n` : ''}Quedamos ate
                     {selectedProductObj && (
                       <div className="border border-gray-200 rounded-2xl overflow-hidden bg-white shadow-2xs mt-2">
                         {/* HEADER DE LA TABLA (IMAGEN 1) */}
-                        <div className="bg-gray-50/90 border-b border-gray-200/80 px-4 py-2 grid grid-cols-12 gap-2 text-[10px] font-black uppercase text-gray-500 tracking-wider items-center">
+                        <div className="bg-[#1D3557] text-white px-4 py-2 grid grid-cols-12 gap-2 text-[10px] font-montserrat font-extrabold uppercase tracking-wider items-center">
                           <div className="col-span-5 sm:col-span-6">PRODUCTO</div>
                           <div className="col-span-3 sm:col-span-2 text-center">CANT</div>
                           <div className="col-span-3 sm:col-span-2 text-center">PRECIO ($)</div>
@@ -1289,10 +1289,10 @@ ${quote.notes ? `📌 *Notas/Condiciones:* ${quote.notes}\n\n` : ''}Quedamos ate
                         {/* FILA DEL PRODUCTO SELECCIONADO */}
                         <div className="p-3.5 grid grid-cols-12 gap-2 items-center">
                           <div className="col-span-5 sm:col-span-6">
-                            <span className="text-xs font-black text-gray-900 block leading-tight">
+                            <span className="text-xs font-bold text-[#2B2D42] block leading-tight">
                               {selectedProductObj.name}
                             </span>
-                            <span className="inline-block mt-1 bg-blue-50 text-blue-700 border border-blue-200/70 font-extrabold text-[10px] px-2 py-0.5 rounded-md">
+                            <span className="inline-block mt-1 bg-[#1D3557]/10 text-[#1D3557] border border-[#1D3557]/20 font-extrabold text-[10px] px-2 py-0.5 rounded-md">
                               Exento (0%)
                             </span>
                           </div>
@@ -1301,7 +1301,7 @@ ${quote.notes ? `📌 *Notas/Condiciones:* ${quote.notes}\n\n` : ''}Quedamos ate
                             <button
                               type="button"
                               onClick={() => setCatalogQty(Math.max(1, catalogQty - 1))}
-                              className="w-6 h-6 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs font-bold transition flex items-center justify-center cursor-pointer select-none"
+                              className="w-6 h-6 rounded-full bg-gray-100 hover:bg-gray-200 text-[#2B2D42] text-xs font-bold transition flex items-center justify-center cursor-pointer select-none"
                             >
                               -
                             </button>
@@ -1310,19 +1310,19 @@ ${quote.notes ? `📌 *Notas/Condiciones:* ${quote.notes}\n\n` : ''}Quedamos ate
                               min="1"
                               value={catalogQty}
                               onChange={(e) => setCatalogQty(Math.max(1, parseInt(e.target.value) || 1))}
-                              className="w-11 py-1 text-center bg-gray-50 border border-gray-200 rounded-xl text-xs font-black text-gray-800 focus:outline-none focus:ring-1 focus:ring-[#005da9]"
+                              className="w-11 py-1 text-center bg-[#F8F9FA] border border-gray-200 rounded-xl text-xs font-black text-[#2B2D42] focus:outline-none focus:ring-1 focus:ring-[#00BFFF]"
                             />
                             <button
                               type="button"
                               onClick={() => setCatalogQty(catalogQty + 1)}
-                              className="w-6 h-6 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs font-bold transition flex items-center justify-center cursor-pointer select-none"
+                              className="w-6 h-6 rounded-full bg-gray-100 hover:bg-gray-200 text-[#2B2D42] text-xs font-bold transition flex items-center justify-center cursor-pointer select-none"
                             >
                               +
                             </button>
                           </div>
 
                           <div className="col-span-3 sm:col-span-2 flex items-center justify-center">
-                            <div className="inline-flex items-center gap-1 bg-white border border-gray-200 px-2.5 py-1 rounded-full text-xs font-black text-gray-800 focus-within:ring-1 focus-within:ring-[#005da9]">
+                            <div className="inline-flex items-center gap-1 bg-white border border-gray-200 px-2.5 py-1 rounded-full text-xs font-black text-[#2B2D42] focus-within:ring-1 focus-within:ring-[#00BFFF]">
                               <span className="text-gray-400 font-bold">$</span>
                               <input
                                 type="number"
@@ -1338,10 +1338,10 @@ ${quote.notes ? `📌 *Notas/Condiciones:* ${quote.notes}\n\n` : ''}Quedamos ate
                             <button
                               type="button"
                               onClick={handleAddCatalogItem}
-                              className="px-3 py-1.5 bg-[#005da9] hover:bg-blue-700 text-white text-xs font-bold rounded-xl transition flex items-center gap-1 shadow-3xs cursor-pointer"
+                              className="px-3 py-1.5 bg-[#1D3557] hover:bg-[#152742] text-white text-xs font-montserrat font-extrabold rounded-xl transition flex items-center gap-1 shadow-3xs cursor-pointer"
                               title="Agregar a la cotización"
                             >
-                              <Plus className="w-4 h-4" />
+                              <Plus className="w-4 h-4 text-[#40E0D0]" />
                               <span className="hidden sm:inline">Agregar</span>
                             </button>
                           </div>
@@ -1361,13 +1361,13 @@ ${quote.notes ? `📌 *Notas/Condiciones:* ${quote.notes}\n\n` : ''}Quedamos ate
                         value={freeConceptName}
                         onChange={(e) => setFreeConceptName(e.target.value)}
                         placeholder="Ej: Carnet en Lamina PVC Sublimado Colores"
-                        className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-xs font-bold text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#005da9]"
+                        className="w-full px-3 py-2 bg-[#F8F9FA] border border-gray-200 rounded-xl text-xs font-bold text-[#2B2D42] focus:outline-none focus:ring-2 focus:ring-[#00BFFF]"
                       />
                     </div>
 
                     {/* CARD CON LA FORMA DE LA IMAGEN 1 PARA CONCEPTO LIBRE */}
                     <div className="border border-gray-200 rounded-2xl overflow-hidden bg-white shadow-2xs mt-2">
-                      <div className="bg-gray-50/90 border-b border-gray-200/80 px-4 py-2 grid grid-cols-12 gap-2 text-[10px] font-black uppercase text-gray-500 tracking-wider items-center">
+                      <div className="bg-[#1D3557] text-white px-4 py-2 grid grid-cols-12 gap-2 text-[10px] font-montserrat font-extrabold uppercase tracking-wider items-center">
                         <div className="col-span-5 sm:col-span-6">CONCEPTO</div>
                         <div className="col-span-3 sm:col-span-2 text-center">CANT</div>
                         <div className="col-span-3 sm:col-span-2 text-center">PRECIO ($)</div>
@@ -1376,10 +1376,10 @@ ${quote.notes ? `📌 *Notas/Condiciones:* ${quote.notes}\n\n` : ''}Quedamos ate
 
                       <div className="p-3.5 grid grid-cols-12 gap-2 items-center">
                         <div className="col-span-5 sm:col-span-6">
-                          <span className="text-xs font-black text-gray-900 block leading-tight">
+                          <span className="text-xs font-bold text-[#2B2D42] block leading-tight">
                             {freeConceptName || 'Concepto Libre'}
                           </span>
-                          <span className="inline-block mt-1 bg-blue-50 text-blue-700 border border-blue-200/70 font-extrabold text-[10px] px-2 py-0.5 rounded-md">
+                          <span className="inline-block mt-1 bg-[#1D3557]/10 text-[#1D3557] border border-[#1D3557]/20 font-extrabold text-[10px] px-2 py-0.5 rounded-md">
                             Exento (0%)
                           </span>
                         </div>
@@ -1388,7 +1388,7 @@ ${quote.notes ? `📌 *Notas/Condiciones:* ${quote.notes}\n\n` : ''}Quedamos ate
                           <button
                             type="button"
                             onClick={() => setFreeQty(Math.max(1, freeQty - 1))}
-                            className="w-6 h-6 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs font-bold transition flex items-center justify-center cursor-pointer select-none"
+                            className="w-6 h-6 rounded-full bg-gray-100 hover:bg-gray-200 text-[#2B2D42] text-xs font-bold transition flex items-center justify-center cursor-pointer select-none"
                           >
                             -
                           </button>
@@ -1397,19 +1397,19 @@ ${quote.notes ? `📌 *Notas/Condiciones:* ${quote.notes}\n\n` : ''}Quedamos ate
                             min="1"
                             value={freeQty}
                             onChange={(e) => setFreeQty(Math.max(1, parseInt(e.target.value) || 1))}
-                            className="w-11 py-1 text-center bg-gray-50 border border-gray-200 rounded-xl text-xs font-black text-gray-800 focus:outline-none focus:ring-1 focus:ring-[#005da9]"
+                            className="w-11 py-1 text-center bg-[#F8F9FA] border border-gray-200 rounded-xl text-xs font-black text-[#2B2D42] focus:outline-none focus:ring-1 focus:ring-[#00BFFF]"
                           />
                           <button
                             type="button"
                             onClick={() => setFreeQty(freeQty + 1)}
-                            className="w-6 h-6 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs font-bold transition flex items-center justify-center cursor-pointer select-none"
+                            className="w-6 h-6 rounded-full bg-gray-100 hover:bg-gray-200 text-[#2B2D42] text-xs font-bold transition flex items-center justify-center cursor-pointer select-none"
                           >
                             +
                           </button>
                         </div>
 
                         <div className="col-span-3 sm:col-span-2 flex items-center justify-center">
-                          <div className="inline-flex items-center gap-1 bg-white border border-gray-200 px-2.5 py-1 rounded-full text-xs font-black text-gray-800 focus-within:ring-1 focus-within:ring-[#005da9]">
+                          <div className="inline-flex items-center gap-1 bg-white border border-gray-200 px-2.5 py-1 rounded-full text-xs font-black text-[#2B2D42] focus-within:ring-1 focus-within:ring-[#00BFFF]">
                             <span className="text-gray-400 font-bold">$</span>
                             <input
                               type="number"
@@ -1426,10 +1426,10 @@ ${quote.notes ? `📌 *Notas/Condiciones:* ${quote.notes}\n\n` : ''}Quedamos ate
                           <button
                             type="button"
                             onClick={handleAddFreeItem}
-                            className="px-3 py-1.5 bg-[#005da9] hover:bg-blue-700 text-white text-xs font-bold rounded-xl transition flex items-center gap-1 shadow-3xs cursor-pointer"
+                            className="px-3 py-1.5 bg-[#1D3557] hover:bg-[#152742] text-white text-xs font-montserrat font-extrabold rounded-xl transition flex items-center gap-1 shadow-3xs cursor-pointer"
                             title="Agregar a la cotización"
                           >
-                            <Plus className="w-4 h-4" />
+                            <Plus className="w-4 h-4 text-[#40E0D0]" />
                             <span className="hidden sm:inline">Agregar</span>
                           </button>
                         </div>
@@ -1440,14 +1440,14 @@ ${quote.notes ? `📌 *Notas/Condiciones:* ${quote.notes}\n\n` : ''}Quedamos ate
 
                 {/* TABLA DE ÍTEMS AGREGADOS CON LA FORMA DE LA IMAGEN 1 */}
                 <div className="pt-2">
-                  <span className="block text-[10px] font-black uppercase text-gray-500 mb-2 tracking-wider">
+                  <span className="block text-[10px] font-montserrat font-extrabold uppercase text-[#1D3557] mb-2 tracking-wider">
                     Ítems en la Cotización ({formItems.length})
                   </span>
 
                   {formItems.length > 0 ? (
                     <div className="border border-gray-200 rounded-2xl overflow-hidden bg-white shadow-2xs">
                       {/* HEADER DE LA TABLA (IMAGEN 1) */}
-                      <div className="bg-gray-50/90 border-b border-gray-200/80 px-4 py-2 grid grid-cols-12 gap-2 text-[10px] font-black uppercase text-gray-500 tracking-wider items-center">
+                      <div className="bg-[#1D3557] text-white px-4 py-2 grid grid-cols-12 gap-2 text-[10px] font-montserrat font-extrabold uppercase tracking-wider items-center">
                         <div className="col-span-5 sm:col-span-6">PRODUCTO</div>
                         <div className="col-span-3 sm:col-span-2 text-center">CANT</div>
                         <div className="col-span-3 sm:col-span-2 text-center">PRECIO ($)</div>
@@ -1457,12 +1457,12 @@ ${quote.notes ? `📌 *Notas/Condiciones:* ${quote.notes}\n\n` : ''}Quedamos ate
                       {/* FILAS DE ÍTEMS AGREGADOS (ESTILO EXACTO IMAGEN 1) */}
                       <div className="divide-y divide-gray-100">
                         {formItems.map((item, index) => (
-                          <div key={index} className="p-3.5 grid grid-cols-12 gap-2 items-center hover:bg-slate-50/50 transition">
+                          <div key={index} className="p-3.5 grid grid-cols-12 gap-2 items-center hover:bg-[#F8F9FA] transition">
                             <div className="col-span-5 sm:col-span-6">
-                              <span className="text-xs font-black text-gray-900 block leading-tight">
+                              <span className="text-xs font-bold text-[#2B2D42] block leading-tight">
                                 {item.name}
                               </span>
-                              <span className="inline-block mt-1 bg-blue-50 text-blue-700 border border-blue-200/70 font-extrabold text-[10px] px-2 py-0.5 rounded-md">
+                              <span className="inline-block mt-1 bg-[#1D3557]/10 text-[#1D3557] border border-[#1D3557]/20 font-extrabold text-[10px] px-2 py-0.5 rounded-md">
                                 Exento (0%)
                               </span>
                             </div>
@@ -1471,7 +1471,7 @@ ${quote.notes ? `📌 *Notas/Condiciones:* ${quote.notes}\n\n` : ''}Quedamos ate
                               <button
                                 type="button"
                                 onClick={() => handleUpdateItemQty(index, -1)}
-                                className="w-6 h-6 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs font-bold transition flex items-center justify-center cursor-pointer select-none"
+                                className="w-6 h-6 rounded-full bg-gray-100 hover:bg-gray-200 text-[#2B2D42] text-xs font-bold transition flex items-center justify-center cursor-pointer select-none"
                               >
                                 -
                               </button>
@@ -1480,19 +1480,19 @@ ${quote.notes ? `📌 *Notas/Condiciones:* ${quote.notes}\n\n` : ''}Quedamos ate
                                 min="1"
                                 value={item.quantity}
                                 onChange={(e) => handleSetItemQty(index, e.target.value)}
-                                className="w-11 py-1 text-center bg-gray-50 border border-gray-200 rounded-xl text-xs font-black text-gray-800 focus:outline-none focus:ring-1 focus:ring-[#005da9]"
+                                className="w-11 py-1 text-center bg-[#F8F9FA] border border-gray-200 rounded-xl text-xs font-black text-[#2B2D42] focus:outline-none focus:ring-1 focus:ring-[#00BFFF]"
                               />
                               <button
                                 type="button"
                                 onClick={() => handleUpdateItemQty(index, 1)}
-                                className="w-6 h-6 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs font-bold transition flex items-center justify-center cursor-pointer select-none"
+                                className="w-6 h-6 rounded-full bg-gray-100 hover:bg-gray-200 text-[#2B2D42] text-xs font-bold transition flex items-center justify-center cursor-pointer select-none"
                               >
                                 +
                               </button>
                             </div>
 
                             <div className="col-span-3 sm:col-span-2 flex items-center justify-center">
-                              <div className="inline-flex items-center gap-1 bg-white border border-gray-200 px-2.5 py-1 rounded-full text-xs font-black text-gray-800 focus-within:ring-1 focus-within:ring-[#005da9]">
+                              <div className="inline-flex items-center gap-1 bg-white border border-gray-200 px-2.5 py-1 rounded-full text-xs font-black text-[#2B2D42] focus-within:ring-1 focus-within:ring-[#00BFFF]">
                                 <span className="text-gray-400 font-bold">$</span>
                                 <input
                                   type="number"
@@ -1519,7 +1519,7 @@ ${quote.notes ? `📌 *Notas/Condiciones:* ${quote.notes}\n\n` : ''}Quedamos ate
                       </div>
                     </div>
                   ) : (
-                    <p className="text-[11px] text-gray-400 font-bold italic text-center py-4 bg-gray-50/50 rounded-2xl border border-dashed border-gray-200">
+                    <p className="text-[11px] text-gray-400 font-bold italic text-center py-4 bg-[#F8F9FA] rounded-2xl border border-dashed border-gray-200">
                       No se han agregado ítems a la cotización.
                     </p>
                   )}
@@ -1527,7 +1527,7 @@ ${quote.notes ? `📌 *Notas/Condiciones:* ${quote.notes}\n\n` : ''}Quedamos ate
               </div>
 
               {/* OPTIONAL DISCOUNTS & TAXES BREAKDOWN */}
-              <div className="bg-slate-50 border border-gray-200 p-4 rounded-2xl grid grid-cols-1 md:grid-cols-2 gap-3">
+              <div className="bg-[#F8F9FA] border border-gray-200 p-4 rounded-2xl grid grid-cols-1 md:grid-cols-2 gap-3">
                 <div>
                   <label className="block text-[10px] font-black uppercase text-gray-500 mb-1">
                     Descuento Aplicado ($)
@@ -1538,7 +1538,7 @@ ${quote.notes ? `📌 *Notas/Condiciones:* ${quote.notes}\n\n` : ''}Quedamos ate
                     min="0"
                     value={formDiscountAmount}
                     onChange={(e) => setFormDiscountAmount(e.target.value)}
-                    className="w-full px-3 py-2 bg-white border border-gray-200 rounded-xl text-xs font-bold text-gray-800 focus:outline-none"
+                    className="w-full px-3 py-2 bg-white border border-gray-200 rounded-xl text-xs font-bold text-[#2B2D42] focus:outline-none"
                   />
                 </div>
 
@@ -1553,7 +1553,7 @@ ${quote.notes ? `📌 *Notas/Condiciones:* ${quote.notes}\n\n` : ''}Quedamos ate
                     max="100"
                     value={formTaxPercent}
                     onChange={(e) => setFormTaxPercent(e.target.value)}
-                    className="w-full px-3 py-2 bg-white border border-gray-200 rounded-xl text-xs font-bold text-gray-800 focus:outline-none"
+                    className="w-full px-3 py-2 bg-white border border-gray-200 rounded-xl text-xs font-bold text-[#2B2D42] focus:outline-none"
                   />
                 </div>
               </div>
@@ -1561,13 +1561,13 @@ ${quote.notes ? `📌 *Notas/Condiciones:* ${quote.notes}\n\n` : ''}Quedamos ate
               {/* OBSERVATIONS NOTES */}
               <div>
                 <div className="flex items-center justify-between mb-1">
-                  <label className="block text-xs font-black text-gray-700 uppercase tracking-wider">
+                  <label className="block text-xs font-montserrat font-extrabold text-[#1D3557] uppercase tracking-wider">
                     Notas / Condiciones del Presupuesto
                   </label>
                   <button
                     type="button"
                     onClick={() => setFormNotes(DEFAULT_QUOTE_NOTES)}
-                    className="text-[10px] font-bold text-[#005da9] hover:underline cursor-pointer flex items-center gap-1"
+                    className="text-[10px] font-bold text-[#00BFFF] hover:underline cursor-pointer flex items-center gap-1"
                     title="Restablecer texto predeterminado"
                   >
                     <RotateCcw className="w-3 h-3" />
@@ -1579,13 +1579,13 @@ ${quote.notes ? `📌 *Notas/Condiciones:* ${quote.notes}\n\n` : ''}Quedamos ate
                   onChange={(e) => setFormNotes(e.target.value)}
                   placeholder="Ej: Requiere el 50% de anticipo. Tiempo de entrega: 48 horas hábiles..."
                   rows={4}
-                  className="w-full px-3 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-xs font-bold text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#005da9] focus:bg-white transition leading-relaxed"
+                  className="w-full px-3 py-2.5 bg-[#F8F9FA] border border-gray-200 rounded-xl text-xs font-bold text-[#2B2D42] focus:outline-none focus:ring-2 focus:ring-[#00BFFF] focus:bg-white transition leading-relaxed"
                 />
               </div>
 
               {/* FOOTER TOTAL CALCULATOR */}
-              <div className="bg-[#005da9]/5 border border-[#005da9]/15 p-4 rounded-2xl space-y-2">
-                <div className="flex justify-between text-xs text-gray-600 font-bold">
+              <div className="bg-[#1D3557]/5 border border-[#1D3557]/20 p-4 rounded-2xl space-y-2">
+                <div className="flex justify-between text-xs text-[#2B2D42] font-bold">
                   <span>Subtotal:</span>
                   <span className="font-mono">${formSubtotal.toFixed(2)}</span>
                 </div>
@@ -1596,21 +1596,21 @@ ${quote.notes ? `📌 *Notas/Condiciones:* ${quote.notes}\n\n` : ''}Quedamos ate
                   </div>
                 )}
                 {formTax > 0 && (
-                  <div className="flex justify-between text-xs text-slate-700 font-bold">
+                  <div className="flex justify-between text-xs text-[#2B2D42] font-bold">
                     <span>IVA ({formTaxPercent}%):</span>
                     <span className="font-mono">+${formTax.toFixed(2)}</span>
                   </div>
                 )}
-                <div className="border-t border-[#005da9]/20 pt-2 flex justify-between items-center">
+                <div className="border-t border-[#1D3557]/20 pt-2 flex justify-between items-center">
                   <div>
-                    <span className="text-xs font-black uppercase text-slate-800 block">TOTAL ESTIMADO FINAL</span>
-                    <span className="text-xs text-slate-600 font-bold">
+                    <span className="text-xs font-montserrat font-extrabold uppercase text-[#1D3557] block">TOTAL ESTIMADO FINAL</span>
+                    <span className="text-xs text-[#2B2D42]/70 font-bold">
                       Bs. {(formTotalPrice * bcvRate).toLocaleString('es-VE', { minimumFractionDigits: 2 })} (Tasa {bcvRate})
                     </span>
                   </div>
                   <div className="text-right">
-                    <span className="text-2xl font-black text-[#005da9]">${formTotalPrice.toFixed(2)}</span>
-                    <span className="text-xs font-black text-slate-800 ml-1">USD</span>
+                    <span className="text-2xl font-montserrat font-extrabold text-[#1D3557]">${formTotalPrice.toFixed(2)}</span>
+                    <span className="text-xs font-montserrat font-extrabold text-[#1D3557] ml-1">USD</span>
                   </div>
                 </div>
               </div>
@@ -1620,15 +1620,15 @@ ${quote.notes ? `📌 *Notas/Condiciones:* ${quote.notes}\n\n` : ''}Quedamos ate
                 <button
                   type="button"
                   onClick={() => setShowCreateModal(false)}
-                  className="px-4 py-2 border border-gray-200 text-gray-600 font-bold text-xs rounded-xl hover:bg-gray-50 transition cursor-pointer"
+                  className="px-4 py-2 border border-gray-200 text-[#2B2D42] font-bold text-xs rounded-xl hover:bg-gray-50 transition cursor-pointer"
                 >
                   Cancelar
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2.5 bg-[#005da9] hover:bg-[#004a87] text-white font-black text-xs rounded-xl shadow-md transition flex items-center gap-1.5 cursor-pointer"
+                  className="px-5 py-2.5 bg-[#40E0D0] hover:bg-[#36cebe] text-[#1D3557] font-montserrat font-extrabold text-xs rounded-xl shadow-md transition flex items-center gap-1.5 cursor-pointer uppercase tracking-wider"
                 >
-                  <Check className="w-4 h-4 text-[#ffb700]" />
+                  <Check className="w-4 h-4 text-[#1D3557]" />
                   <span>Guardar Cotización</span>
                 </button>
               </div>
@@ -1643,14 +1643,14 @@ ${quote.notes ? `📌 *Notas/Condiciones:* ${quote.notes}\n\n` : ''}Quedamos ate
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4">
           <div className="printable-area bg-white rounded-3xl border border-gray-100 w-full max-w-xl shadow-2xl overflow-hidden relative text-left">
             
-            <div className="bg-slate-900 p-5 text-white flex items-center justify-between">
+            <div className="bg-[#1D3557] p-5 text-white flex items-center justify-between">
               <div className="flex items-center gap-2.5">
-                <FileText className="w-5 h-5 text-[#ffb700]" />
+                <FileText className="w-5 h-5 text-[#40E0D0]" />
                 <div>
-                  <h3 className="font-extrabold text-sm tracking-tight text-white uppercase">
+                  <h3 className="font-montserrat font-extrabold text-sm tracking-tight text-white uppercase">
                     Detalle de Cotización #{selectedQuote.quote_number}
                   </h3>
-                  <p className="text-[10px] text-gray-300">
+                  <p className="text-[10px] text-gray-200">
                     Vendedor: {selectedQuote.seller_name || 'Vendedor Principal'}
                   </p>
                 </div>
@@ -1658,7 +1658,7 @@ ${quote.notes ? `📌 *Notas/Condiciones:* ${quote.notes}\n\n` : ''}Quedamos ate
               <button
                 type="button"
                 onClick={() => setShowDetailModal(false)}
-                className="text-gray-400 hover:text-white hover:bg-white/10 p-1.5 rounded-lg transition cursor-pointer"
+                className="text-gray-300 hover:text-white hover:bg-white/10 p-1.5 rounded-lg transition cursor-pointer"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -1667,14 +1667,14 @@ ${quote.notes ? `📌 *Notas/Condiciones:* ${quote.notes}\n\n` : ''}Quedamos ate
             <div className="p-6 space-y-5 max-h-[75vh] overflow-y-auto">
               
               {/* PRINT & PREVIEW BUSINESS HEADER */}
-              <div className="text-center pb-3 border-b border-gray-150 space-y-0.5">
-                <h2 className="text-base font-black uppercase text-[#005da9] tracking-tight">
+              <div className="text-center pb-3 border-b border-gray-200 space-y-0.5">
+                <h2 className="text-base font-montserrat font-extrabold uppercase text-[#1D3557] tracking-tight">
                   {businessProfile?.name || 'Copias Bella Vista'}
                 </h2>
                 {businessProfile?.slogan && (
-                  <p className="text-[10px] text-gray-500 font-bold italic">{businessProfile.slogan}</p>
+                  <p className="text-[10px] text-[#2B2D42]/70 font-bold italic">{businessProfile.slogan}</p>
                 )}
-                <div className="flex flex-wrap items-center justify-center gap-3 text-[10px] text-gray-600 font-mono pt-0.5">
+                <div className="flex flex-wrap items-center justify-center gap-3 text-[10px] text-[#2B2D42] font-mono pt-0.5">
                   {businessProfile?.rif && <span>RIF: {businessProfile.rif}</span>}
                   {businessProfile?.phone && <span>Telf: {businessProfile.phone}</span>}
                   {businessProfile?.address && <span>{businessProfile.address}</span>}
@@ -1685,14 +1685,14 @@ ${quote.notes ? `📌 *Notas/Condiciones:* ${quote.notes}\n\n` : ''}Quedamos ate
               <div className="flex items-center justify-between border-b border-gray-100 pb-4">
                 <div>
                   <span className="text-[10px] font-black uppercase text-gray-400 block leading-none">Fecha Emisión</span>
-                  <span className="text-xs font-bold text-gray-800 block mt-1">
+                  <span className="text-xs font-bold text-[#2B2D42] block mt-1">
                     {new Date(selectedQuote.created_at).toLocaleDateString('es-VE', { day: '2-digit', month: 'short', year: 'numeric' })}
                   </span>
                 </div>
 
                 <div>
                   <span className="text-[10px] font-black uppercase text-gray-400 block leading-none">Validez Hasta</span>
-                  <span className="text-xs font-bold text-gray-800 block mt-1">
+                  <span className="text-xs font-bold text-[#2B2D42] block mt-1">
                     {selectedQuote.expiration_date 
                       ? new Date(selectedQuote.expiration_date).toLocaleDateString('es-VE', { day: '2-digit', month: 'short', year: 'numeric' })
                       : 'Sin Expiración'}
@@ -1701,9 +1701,9 @@ ${quote.notes ? `📌 *Notas/Condiciones:* ${quote.notes}\n\n` : ''}Quedamos ate
 
                 <div className="text-right">
                   <span className="text-[10px] font-black uppercase text-gray-400 block leading-none">Estado</span>
-                  <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[9px] font-black uppercase border mt-1 ${
+                  <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[9px] font-montserrat font-extrabold uppercase border mt-1 ${
                     selectedQuote.status === 'vendida' || selectedQuote.status === 'facturada'
-                      ? 'bg-emerald-50 border-emerald-200 text-emerald-700'
+                      ? 'bg-[#40E0D0]/15 border-[#40E0D0]/30 text-[#1D3557]'
                       : selectedQuote.status === 'expirada'
                       ? 'bg-rose-50 border-rose-200 text-rose-700'
                       : 'bg-amber-50 border-amber-200 text-amber-700'
@@ -1718,22 +1718,22 @@ ${quote.notes ? `📌 *Notas/Condiciones:* ${quote.notes}\n\n` : ''}Quedamos ate
 
               {/* CLIENT DETAILS */}
               <div className="space-y-1.5">
-                <span className="text-[10px] font-black uppercase text-gray-400 block tracking-wider">Información del Cliente</span>
-                <div className="bg-slate-50 border border-gray-150 rounded-2xl p-4 space-y-1.5">
+                <span className="text-[10px] font-montserrat font-extrabold uppercase text-[#1D3557] block tracking-wider">Información del Cliente</span>
+                <div className="bg-[#F8F9FA] border border-gray-200 rounded-2xl p-4 space-y-1.5">
                   <div className="flex items-center gap-2">
-                    <User className="w-4 h-4 text-[#005da9]" />
-                    <span className="text-xs font-extrabold text-slate-900">{selectedQuote.client_name}</span>
+                    <User className="w-4 h-4 text-[#00BFFF]" />
+                    <span className="text-xs font-montserrat font-extrabold text-[#1D3557]">{selectedQuote.client_name}</span>
                   </div>
                   {selectedQuote.client_phone && (
                     <div className="flex items-center gap-2">
-                      <Smartphone className="w-4 h-4 text-gray-400" />
-                      <span className="text-xs font-bold text-gray-600">{selectedQuote.client_phone}</span>
+                      <Smartphone className="w-4 h-4 text-[#00BFFF]" />
+                      <span className="text-xs font-bold text-[#2B2D42]">{selectedQuote.client_phone}</span>
                     </div>
                   )}
                   {selectedQuote.client_email && (
                     <div className="flex items-center gap-2">
                       <Mail className="w-4 h-4 text-gray-400" />
-                      <span className="text-xs font-bold text-gray-600">{selectedQuote.client_email}</span>
+                      <span className="text-xs font-bold text-[#2B2D42]">{selectedQuote.client_email}</span>
                     </div>
                   )}
                 </div>
@@ -1741,35 +1741,35 @@ ${quote.notes ? `📌 *Notas/Condiciones:* ${quote.notes}\n\n` : ''}Quedamos ate
 
               {/* CONCEPT */}
               <div className="space-y-1">
-                <span className="text-[10px] font-black uppercase text-gray-400 block tracking-wider">Concepto de Operación</span>
-                <p className="text-xs font-extrabold text-slate-900 bg-amber-50/50 border border-amber-100 p-3 rounded-xl">
+                <span className="text-[10px] font-montserrat font-extrabold uppercase text-[#1D3557] block tracking-wider">Concepto de Operación</span>
+                <p className="text-xs font-extrabold text-[#1D3557] bg-[#1D3557]/5 border border-[#1D3557]/15 p-3 rounded-xl">
                   {selectedQuote.concept}
                 </p>
               </div>
 
               {/* PRODUCT ITEMS LIST */}
               <div className="space-y-1.5">
-                <span className="text-[10px] font-black uppercase text-gray-400 block tracking-wider">Detalle de Ítems</span>
-                <div className="border border-gray-150 rounded-2xl overflow-hidden">
+                <span className="text-[10px] font-montserrat font-extrabold uppercase text-[#1D3557] block tracking-wider">Detalle de Ítems</span>
+                <div className="border border-gray-200 rounded-2xl overflow-hidden">
                   <table className="w-full text-left text-xs">
                     <thead>
-                      <tr className="bg-gray-50 border-b border-gray-100 text-gray-400 font-bold">
+                      <tr className="bg-[#1D3557] text-white font-montserrat font-extrabold text-[10px] uppercase">
                         <th className="px-4 py-2">Detalle</th>
                         <th className="px-4 py-2 text-center">Tipo</th>
                         <th className="px-4 py-2 text-center">Cant</th>
                         <th className="px-4 py-2 text-right">Precio</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-gray-100 text-slate-700">
+                    <tbody className="divide-y divide-gray-100 text-[#2B2D42]">
                       {selectedQuote.items.map((item, idx) => (
-                        <tr key={idx}>
+                        <tr key={idx} className="hover:bg-[#F8F9FA]">
                           <td className="px-4 py-2.5 font-bold">{item.name}</td>
                           <td className="px-4 py-2.5 text-center">
-                            <span className="text-[9px] font-bold uppercase px-1.5 py-0.5 rounded bg-gray-100 text-gray-600">
+                            <span className="text-[9px] font-extrabold uppercase px-1.5 py-0.5 rounded bg-gray-100 text-[#2B2D42]">
                               {item.is_custom ? 'Libre' : 'Catálogo'}
                             </span>
                           </td>
-                          <td className="px-4 py-2.5 text-center font-black text-slate-900">{item.quantity}</td>
+                          <td className="px-4 py-2.5 text-center font-black text-[#1D3557]">{item.quantity}</td>
                           <td className="px-4 py-2.5 text-right font-mono font-extrabold">${item.price.toFixed(2)}</td>
                         </tr>
                       ))}
@@ -1781,17 +1781,17 @@ ${quote.notes ? `📌 *Notas/Condiciones:* ${quote.notes}\n\n` : ''}Quedamos ate
               {/* NOTES */}
               {selectedQuote.notes && (
                 <div className="space-y-1">
-                  <span className="text-[10px] font-black uppercase text-gray-400 block tracking-wider">Notas del Presupuesto</span>
-                  <p className="text-xs text-gray-600 font-bold bg-slate-50 border border-gray-150 p-3 rounded-xl italic">
+                  <span className="text-[10px] font-montserrat font-extrabold uppercase text-[#1D3557] block tracking-wider">Notas del Presupuesto</span>
+                  <p className="text-xs text-[#2B2D42] font-medium bg-[#F8F9FA] border border-gray-200 p-3 rounded-xl italic">
                     "{selectedQuote.notes}"
                   </p>
                 </div>
               )}
 
               {/* CALCULATED PRICING BLOCK */}
-              <div className="bg-[#005da9]/5 border border-[#005da9]/10 p-4 rounded-2xl space-y-1.5">
+              <div className="bg-[#1D3557]/5 border border-[#1D3557]/15 p-4 rounded-2xl space-y-1.5">
                 {selectedQuote.subtotal_price !== undefined && (
-                  <div className="flex justify-between text-xs font-bold text-gray-600">
+                  <div className="flex justify-between text-xs font-bold text-[#2B2D42]">
                     <span>Subtotal:</span>
                     <span className="font-mono">${selectedQuote.subtotal_price.toFixed(2)}</span>
                   </div>
@@ -1803,21 +1803,21 @@ ${quote.notes ? `📌 *Notas/Condiciones:* ${quote.notes}\n\n` : ''}Quedamos ate
                   </div>
                 )}
                 {selectedQuote.tax_amount !== undefined && selectedQuote.tax_amount > 0 && (
-                  <div className="flex justify-between text-xs font-bold text-slate-700">
+                  <div className="flex justify-between text-xs font-bold text-[#2B2D42]">
                     <span>IVA:</span>
                     <span className="font-mono">+${selectedQuote.tax_amount.toFixed(2)}</span>
                   </div>
                 )}
-                <div className="border-t border-[#005da9]/15 pt-2 flex justify-between items-center">
+                <div className="border-t border-[#1D3557]/15 pt-2 flex justify-between items-center">
                   <div>
-                    <span className="text-[10px] font-black uppercase text-gray-500 block">Total Cotización</span>
-                    <span className="text-[11px] font-bold text-gray-500 block">
+                    <span className="text-[10px] font-montserrat font-extrabold uppercase text-[#1D3557] block">Total Cotización</span>
+                    <span className="text-[11px] font-bold text-[#2B2D42]/70 block">
                       Bs. {(selectedQuote.total_price * bcvRate).toLocaleString('es-VE', { minimumFractionDigits: 2 })}
                     </span>
                   </div>
                   <div className="text-right">
-                    <span className="text-xl font-black text-slate-900">${selectedQuote.total_price.toFixed(2)}</span>
-                    <span className="text-xs font-black text-slate-800 ml-1">USD</span>
+                    <span className="text-xl font-montserrat font-extrabold text-[#1D3557]">${selectedQuote.total_price.toFixed(2)}</span>
+                    <span className="text-xs font-montserrat font-extrabold text-[#1D3557] ml-1">USD</span>
                   </div>
                 </div>
               </div>
@@ -1825,7 +1825,7 @@ ${quote.notes ? `📌 *Notas/Condiciones:* ${quote.notes}\n\n` : ''}Quedamos ate
             </div>
 
             {/* BUTTON BAR ACTIONS */}
-            <div className="bg-slate-50 border-t border-gray-150 p-4 flex flex-col md:flex-row gap-2 justify-between print:hidden">
+            <div className="bg-[#F8F9FA] border-t border-gray-200 p-4 flex flex-col md:flex-row gap-2 justify-between print:hidden">
               
               <div className="flex gap-2">
                 <button
@@ -1840,7 +1840,7 @@ ${quote.notes ? `📌 *Notas/Condiciones:* ${quote.notes}\n\n` : ''}Quedamos ate
                 <button
                   type="button"
                   onClick={() => handlePrintPDF(selectedQuote)}
-                  className="px-3 py-2 bg-white hover:bg-gray-100 border border-gray-200 text-slate-700 font-bold text-xs rounded-xl transition flex items-center gap-1.5 cursor-pointer"
+                  className="px-3 py-2 bg-white hover:bg-gray-100 border border-gray-200 text-[#2B2D42] font-bold text-xs rounded-xl transition flex items-center gap-1.5 cursor-pointer"
                 >
                   <Printer className="w-3.5 h-3.5" />
                   <span>Imprimir PDF</span>
@@ -1860,7 +1860,7 @@ ${quote.notes ? `📌 *Notas/Condiciones:* ${quote.notes}\n\n` : ''}Quedamos ate
                 <button
                   type="button"
                   onClick={() => setShowDetailModal(false)}
-                  className="px-4 py-2 bg-white hover:bg-gray-100 border border-gray-200 text-slate-700 font-bold text-xs rounded-xl transition cursor-pointer"
+                  className="px-4 py-2 bg-white hover:bg-gray-100 border border-gray-200 text-[#2B2D42] font-bold text-xs rounded-xl transition cursor-pointer"
                 >
                   Cerrar
                 </button>
@@ -1870,9 +1870,9 @@ ${quote.notes ? `📌 *Notas/Condiciones:* ${quote.notes}\n\n` : ''}Quedamos ate
                   <button
                     type="button"
                     onClick={() => setShowBillingModal(true)}
-                    className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-black text-xs rounded-xl shadow-md transition flex items-center gap-1.5 cursor-pointer"
+                    className="px-4 py-2 bg-[#40E0D0] hover:bg-[#36cebe] text-[#1D3557] font-montserrat font-extrabold text-xs rounded-xl shadow-md transition flex items-center gap-1.5 cursor-pointer uppercase tracking-wider"
                   >
-                    <CheckCircle2 className="w-4 h-4 shrink-0" />
+                    <CheckCircle2 className="w-4 h-4 shrink-0 text-[#1D3557]" />
                     <span>Convertir en Venta</span>
                   </button>
                 )}
@@ -1889,37 +1889,37 @@ ${quote.notes ? `📌 *Notas/Condiciones:* ${quote.notes}\n\n` : ''}Quedamos ate
         <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/60 backdrop-blur-xs p-4">
           <div className="bg-white rounded-3xl border border-gray-100 w-full max-w-sm shadow-2xl overflow-hidden text-left">
             
-            <div className="bg-emerald-600 p-5 text-white flex items-center gap-3">
-              <CheckCircle2 className="w-6 h-6 text-white" />
+            <div className="bg-[#1D3557] p-5 text-white flex items-center gap-3">
+              <CheckCircle2 className="w-6 h-6 text-[#40E0D0]" />
               <div>
-                <h3 className="font-extrabold text-sm tracking-tight text-white">
+                <h3 className="font-montserrat font-extrabold text-sm tracking-tight text-white uppercase">
                   Convertir Cotización en Venta
                 </h3>
-                <p className="text-[10px] text-emerald-100 font-bold">
+                <p className="text-[10px] text-gray-200 font-bold">
                   Cotización N° {selectedQuote.quote_number}
                 </p>
               </div>
             </div>
 
             <div className="p-5 space-y-4">
-              <p className="text-xs text-gray-600 font-bold leading-relaxed">
+              <p className="text-xs text-[#2B2D42] font-medium leading-relaxed">
                 Al confirmar la venta, la cotización cambiará a estado **Vendida**, se registrará el pedido en ventas y se descontará automáticamente el inventario de los productos de catálogo.
               </p>
 
-              <div className="bg-emerald-50 border border-emerald-100 p-3.5 rounded-2xl text-center">
-                <p className="text-2xl font-black text-emerald-800">${selectedQuote.total_price.toFixed(2)} USD</p>
+              <div className="bg-[#40E0D0]/10 border border-[#40E0D0]/30 p-3.5 rounded-2xl text-center">
+                <p className="text-2xl font-montserrat font-extrabold text-[#1D3557]">${selectedQuote.total_price.toFixed(2)} USD</p>
                 <p className="text-xs text-emerald-700 font-bold">Bs. {(selectedQuote.total_price * bcvRate).toLocaleString('es-VE', { minimumFractionDigits: 2 })}</p>
               </div>
 
               {/* PAYMENT METHOD SELECT */}
               <div>
-                <label className="block text-[10px] font-black uppercase text-gray-400 mb-1.5">
+                <label className="block text-[10px] font-montserrat font-extrabold uppercase text-gray-500 mb-1.5">
                   Método de Pago
                 </label>
                 <select
                   value={billingPaymentMethod}
                   onChange={(e) => setBillingPaymentMethod(e.target.value)}
-                  className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-xs font-bold text-gray-800 focus:outline-none"
+                  className="w-full px-3 py-2 bg-[#F8F9FA] border border-gray-200 rounded-xl text-xs font-bold text-[#2B2D42] focus:outline-none focus:ring-2 focus:ring-[#00BFFF]"
                 >
                   <option value="Efectivo USD">💵 Efectivo Dólares (USD)</option>
                   <option value="Efectivo VES">💵 Efectivo Bolívares (VES)</option>
@@ -1932,17 +1932,17 @@ ${quote.notes ? `📌 *Notas/Condiciones:* ${quote.notes}\n\n` : ''}Quedamos ate
 
               {/* PAYMENT STATUS */}
               <div>
-                <label className="block text-[10px] font-black uppercase text-gray-400 mb-1.5">
+                <label className="block text-[10px] font-montserrat font-extrabold uppercase text-gray-500 mb-1.5">
                   Estado del Pago
                 </label>
-                <div className="grid grid-cols-2 gap-2 bg-gray-50 p-1 rounded-xl border border-gray-150">
+                <div className="grid grid-cols-2 gap-2 bg-[#F8F9FA] p-1 rounded-xl border border-gray-200">
                   <button
                     type="button"
                     onClick={() => setBillingPaymentStatus('pagado')}
-                    className={`py-1.5 text-center text-xs font-black rounded-lg transition cursor-pointer ${
+                    className={`py-1.5 text-center text-xs font-montserrat font-extrabold rounded-lg transition cursor-pointer ${
                       billingPaymentStatus === 'pagado'
-                        ? 'bg-emerald-600 text-white shadow-3xs'
-                        : 'text-gray-500 hover:text-gray-800'
+                        ? 'bg-[#1D3557] text-white shadow-3xs'
+                        : 'text-[#2B2D42] hover:text-[#1D3557]'
                     }`}
                   >
                     Pagado
@@ -1950,10 +1950,10 @@ ${quote.notes ? `📌 *Notas/Condiciones:* ${quote.notes}\n\n` : ''}Quedamos ate
                   <button
                     type="button"
                     onClick={() => setBillingPaymentStatus('credito')}
-                    className={`py-1.5 text-center text-xs font-black rounded-lg transition cursor-pointer ${
+                    className={`py-1.5 text-center text-xs font-montserrat font-extrabold rounded-lg transition cursor-pointer ${
                       billingPaymentStatus === 'credito'
                         ? 'bg-amber-600 text-white shadow-3xs'
-                        : 'text-gray-500 hover:text-gray-800'
+                        : 'text-[#2B2D42] hover:text-[#1D3557]'
                     }`}
                   >
                     A Crédito
@@ -1967,7 +1967,7 @@ ${quote.notes ? `📌 *Notas/Condiciones:* ${quote.notes}\n\n` : ''}Quedamos ate
                   type="button"
                   onClick={() => setShowBillingModal(false)}
                   disabled={isBilling}
-                  className="px-4 py-2 border border-gray-200 text-gray-600 font-bold text-xs rounded-xl hover:bg-gray-50 transition cursor-pointer"
+                  className="px-4 py-2 border border-gray-200 text-[#2B2D42] font-bold text-xs rounded-xl hover:bg-gray-50 transition cursor-pointer"
                 >
                   Cancelar
                 </button>
@@ -1975,11 +1975,11 @@ ${quote.notes ? `📌 *Notas/Condiciones:* ${quote.notes}\n\n` : ''}Quedamos ate
                   type="button"
                   onClick={handleConvertToSale}
                   disabled={isBilling}
-                  className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-black text-xs rounded-xl shadow-md transition flex items-center gap-1 cursor-pointer"
+                  className="px-4 py-2 bg-[#40E0D0] hover:bg-[#36cebe] text-[#1D3557] font-montserrat font-extrabold text-xs rounded-xl shadow-md transition flex items-center gap-1 cursor-pointer uppercase tracking-wider"
                 >
                   {isBilling ? (
                     <>
-                      <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                      <Loader2 className="w-3.5 h-3.5 animate-spin text-[#1D3557]" />
                       <span>Procesando...</span>
                     </>
                   ) : (

@@ -378,24 +378,24 @@ export default function CuentasPendientesPage({
   };
 
   return (
-    <div className="space-y-6 max-w-7xl mx-auto pb-16">
+    <div className="space-y-6 max-w-7xl mx-auto pb-16 font-poppins">
       {/* 1. TOP HEADER & METRIC SUMMARY */}
-      <div className="bg-white rounded-2xl p-6 border border-gray-200/80 shadow-sm">
+      <div className="bg-white rounded-2xl p-6 border border-gray-200/80 shadow-xs">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-xl bg-violet-50 border border-violet-100 flex items-center justify-center text-violet-600 shadow-xs">
+            <div className="w-12 h-12 rounded-xl bg-[#1D3557]/10 border border-[#1D3557]/20 flex items-center justify-center text-[#1D3557] shadow-2xs">
               <Receipt className="w-6 h-6 stroke-[2.2]" />
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h1 className="text-2xl font-black text-gray-900 tracking-tight uppercase">
+                <h1 className="text-2xl font-montserrat font-extrabold text-[#1D3557] tracking-tight uppercase">
                   Cuentas Pendientes
                 </h1>
-                <span className="px-2.5 py-0.5 text-xs font-bold rounded-full bg-violet-100 text-violet-700">
+                <span className="px-2.5 py-0.5 text-xs font-montserrat font-bold rounded-full bg-[#1D3557]/10 text-[#1D3557]">
                   CxC & CxP
                 </span>
               </div>
-              <p className="text-xs text-gray-500 font-medium mt-0.5">
+              <p className="text-xs text-[#2B2D42]/70 font-medium mt-0.5">
                 Control y liquidación de deudas con proveedores y créditos a clientes en tiempo real
               </p>
             </div>
@@ -404,7 +404,7 @@ export default function CuentasPendientesPage({
           <div className="flex items-center gap-3">
             <button
               onClick={() => setShowAddModal(true)}
-              className="inline-flex items-center gap-2 bg-[#6C2BD9] hover:bg-[#5B21B6] text-white font-bold text-sm px-5 py-2.5 rounded-xl shadow-md transition-all active:scale-95"
+              className="inline-flex items-center gap-2 bg-[#1D3557] hover:bg-[#152843] text-white font-montserrat font-extrabold text-xs px-5 py-2.5 rounded-xl shadow-md transition-all active:scale-95 cursor-pointer"
             >
               <Plus className="w-4 h-4 stroke-[2.5]" />
               <span>Agregar cuenta pendiente</span>
@@ -416,8 +416,8 @@ export default function CuentasPendientesPage({
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-6 pt-6 border-t border-gray-100">
           <div className="bg-rose-50/50 border border-rose-100 rounded-xl p-4 flex items-center justify-between">
             <div>
-              <span className="text-xs font-bold uppercase tracking-wider text-rose-600">Por Pagar (CxP)</span>
-              <p className="text-xl font-black text-rose-950 mt-1">${formatAmount(totalPendingCxP)}</p>
+              <span className="text-xs font-montserrat font-extrabold uppercase tracking-wider text-rose-600">Por Pagar (CxP)</span>
+              <p className="text-xl font-black font-mono text-rose-950 mt-1">${formatAmount(totalPendingCxP)}</p>
               <p className="text-[11px] font-medium text-rose-600/80">Bs. {formatAmount(totalPendingCxP * bcvRate)}</p>
             </div>
             <div className="w-10 h-10 rounded-xl bg-rose-100/80 text-rose-600 flex items-center justify-center">
@@ -427,8 +427,8 @@ export default function CuentasPendientesPage({
 
           <div className="bg-emerald-50/50 border border-emerald-100 rounded-xl p-4 flex items-center justify-between">
             <div>
-              <span className="text-xs font-bold uppercase tracking-wider text-emerald-600">Por Cobrar (CxC)</span>
-              <p className="text-xl font-black text-emerald-950 mt-1">${formatAmount(totalPendingCxC)}</p>
+              <span className="text-xs font-montserrat font-extrabold uppercase tracking-wider text-emerald-600">Por Cobrar (CxC)</span>
+              <p className="text-xl font-black font-mono text-emerald-950 mt-1">${formatAmount(totalPendingCxC)}</p>
               <p className="text-[11px] font-medium text-emerald-600/80">Bs. {formatAmount(totalPendingCxC * bcvRate)}</p>
             </div>
             <div className="w-10 h-10 rounded-xl bg-emerald-100/80 text-emerald-600 flex items-center justify-center">
@@ -436,75 +436,75 @@ export default function CuentasPendientesPage({
             </div>
           </div>
 
-          <div className="bg-indigo-50/50 border border-indigo-100 rounded-xl p-4 flex items-center justify-between">
+          <div className="bg-[#1D3557]/5 border border-[#1D3557]/15 rounded-xl p-4 flex items-center justify-between">
             <div>
-              <span className="text-xs font-bold uppercase tracking-wider text-indigo-600">Balance Neto</span>
-              <p className={`text-xl font-black mt-1 ${totalPendingCxC >= totalPendingCxP ? 'text-emerald-700' : 'text-rose-700'}`}>
+              <span className="text-xs font-montserrat font-extrabold uppercase tracking-wider text-[#1D3557]">Balance Neto</span>
+              <p className={`text-xl font-black font-mono mt-1 ${totalPendingCxC >= totalPendingCxP ? 'text-emerald-700' : 'text-rose-700'}`}>
                 ${formatAmount(totalPendingCxC - totalPendingCxP)}
               </p>
-              <p className="text-[11px] font-medium text-indigo-600/80">
+              <p className="text-[11px] font-medium text-[#1D3557]/80">
                 {totalPendingCxC >= totalPendingCxP ? 'Superávit crediticio' : 'Déficit exigible'}
               </p>
             </div>
-            <div className="w-10 h-10 rounded-xl bg-indigo-100/80 text-indigo-600 flex items-center justify-center">
+            <div className="w-10 h-10 rounded-xl bg-[#1D3557]/10 text-[#1D3557] flex items-center justify-center">
               <ArrowLeftRight className="w-5 h-5" />
             </div>
           </div>
 
-          <div className="bg-amber-50/50 border border-amber-100 rounded-xl p-4 flex items-center justify-between">
+          <div className="bg-[#F8F9FA] border border-gray-200 rounded-xl p-4 flex items-center justify-between">
             <div>
-              <span className="text-xs font-bold uppercase tracking-wider text-amber-600">Tasa BCV Oficial</span>
-              <p className="text-xl font-black text-amber-950 mt-1">Bs. {formatAmount(bcvRate)}</p>
-              <p className="text-[11px] font-medium text-amber-700/80">Conversión en vivo</p>
+              <span className="text-xs font-montserrat font-extrabold uppercase tracking-wider text-[#00BFFF]">Tasa BCV Oficial</span>
+              <p className="text-xl font-black font-mono text-[#2B2D42] mt-1">Bs. {formatAmount(bcvRate)}</p>
+              <p className="text-[11px] font-medium text-[#2B2D42]/70">Conversión en vivo</p>
             </div>
-            <div className="w-10 h-10 rounded-xl bg-amber-100/80 text-amber-600 flex items-center justify-center">
+            <div className="w-10 h-10 rounded-xl bg-[#00BFFF]/10 text-[#00BFFF] flex items-center justify-center">
               <DollarSign className="w-5 h-5" />
             </div>
           </div>
         </div>
       </div>
 
-      {/* 2. TABS & FILTER BAR (Exactly as in screenshot) */}
-      <div className="bg-white rounded-2xl border border-gray-200/80 shadow-sm overflow-hidden">
+      {/* 2. TABS & FILTER BAR */}
+      <div className="bg-white rounded-2xl border border-gray-200/80 shadow-xs overflow-hidden">
         {/* Main Tab Switcher */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-gray-100 px-6 pt-4 pb-0 gap-4">
           <div className="flex items-center gap-8">
             <button
               onClick={() => setActiveTab('pagar')}
-              className={`pb-3.5 text-sm font-bold transition-all relative ${
+              className={`pb-3.5 text-xs font-montserrat font-extrabold uppercase tracking-wider transition-all relative cursor-pointer ${
                 activeTab === 'pagar' 
-                  ? 'text-[#6C2BD9]' 
-                  : 'text-gray-400 hover:text-gray-600'
+                  ? 'text-[#1D3557]' 
+                  : 'text-gray-400 hover:text-[#2B2D42]'
               }`}
             >
               Cuentas por pagar
               {activeTab === 'pagar' && (
-                <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#6C2BD9] rounded-t-full" />
+                <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#1D3557] rounded-t-full" />
               )}
             </button>
 
             <button
               onClick={() => setActiveTab('cobrar')}
-              className={`pb-3.5 text-sm font-bold transition-all relative ${
+              className={`pb-3.5 text-xs font-montserrat font-extrabold uppercase tracking-wider transition-all relative cursor-pointer ${
                 activeTab === 'cobrar' 
-                  ? 'text-[#6C2BD9]' 
-                  : 'text-gray-400 hover:text-gray-600'
+                  ? 'text-[#1D3557]' 
+                  : 'text-gray-400 hover:text-[#2B2D42]'
               }`}
             >
               Cuentas por cobrar
               {activeTab === 'cobrar' && (
-                <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#6C2BD9] rounded-t-full" />
+                <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-[#1D3557] rounded-t-full" />
               )}
             </button>
           </div>
 
           <div className="flex items-center gap-2 pb-3.5 sm:pb-0">
-            <label className="flex items-center gap-2 text-xs font-semibold text-gray-500 cursor-pointer select-none">
+            <label className="flex items-center gap-2 text-xs font-semibold text-[#2B2D42]/70 cursor-pointer select-none">
               <input
                 type="checkbox"
                 checked={hideZeroBalance}
                 onChange={(e) => setHideZeroBalance(e.target.checked)}
-                className="w-4 h-4 text-violet-600 rounded border-gray-300 focus:ring-violet-500"
+                className="w-4 h-4 text-[#1D3557] rounded border-gray-300 focus:ring-[#1D3557]"
               />
               <span>Ocultar cuentas en cero</span>
             </label>
@@ -513,19 +513,19 @@ export default function CuentasPendientesPage({
 
         {/* Subheader, Search Bar and Total Badge */}
         <div className="p-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <h2 className="text-base font-black text-[#6C2BD9] tracking-tight">
+          <h2 className="text-base font-montserrat font-extrabold text-[#1D3557] tracking-tight">
             {activeTab === 'pagar' ? 'Cuentas pendientes por pagar' : 'Cuentas pendientes por cobrar'}
           </h2>
 
           <div className="flex flex-col sm:flex-row sm:items-center gap-4 flex-1 max-w-xl justify-end">
             <div className="relative w-full sm:w-80">
-              <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" />
+              <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-[#00BFFF]" />
               <input
                 type="text"
                 placeholder="Búsqueda de texto completo..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-9 pr-4 py-2 text-xs bg-gray-50/70 border border-gray-200 rounded-xl focus:bg-white focus:outline-none focus:ring-2 focus:ring-violet-500/20 focus:border-violet-500 transition-all"
+                className="w-full pl-9 pr-4 py-2 text-xs bg-[#F8F9FA] border border-gray-200 rounded-xl focus:bg-white focus:outline-none focus:border-[#1D3557] transition-all text-[#2B2D42]"
               />
               {searchQuery && (
                 <button
@@ -537,17 +537,17 @@ export default function CuentasPendientesPage({
               )}
             </div>
 
-            <div className="bg-[#EDE9FE] text-[#6C2BD9] font-black px-6 py-2 rounded-2xl text-sm flex items-center justify-center whitespace-nowrap shadow-xs">
+            <div className="bg-[#1D3557] text-white font-montserrat font-extrabold px-6 py-2 rounded-2xl text-xs flex items-center justify-center whitespace-nowrap shadow-2xs">
               Total: ${formatAmount(currentTabTotalPending)}
             </div>
           </div>
         </div>
 
-        {/* 3. GROUPED UPPER TABLE (Matches Screenshot Layout) */}
+        {/* 3. GROUPED UPPER TABLE */}
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="border-b border-gray-100 text-[11px] font-bold text-gray-500 uppercase tracking-wider bg-gray-50/50">
+              <tr className="border-b border-gray-100 text-[10px] font-montserrat font-extrabold text-[#2B2D42]/70 uppercase tracking-wider bg-[#F8F9FA]">
                 <th className="py-3 px-6 w-12 text-center"></th>
                 <th className="py-3 px-6">Asunto</th>
                 <th className="py-3 px-6 text-center">Cuentas pendientes</th>
@@ -569,7 +569,7 @@ export default function CuentasPendientesPage({
                       <p className="font-semibold text-gray-500">No hay cuentas pendientes registradas</p>
                       <button
                         onClick={() => setShowAddModal(true)}
-                        className="text-xs text-violet-600 font-bold hover:underline"
+                        className="text-xs text-[#00BFFF] font-bold hover:underline"
                       >
                         + Agregar la primera cuenta
                       </button>
@@ -587,15 +587,15 @@ export default function CuentasPendientesPage({
                       onClick={() => setSelectedEntity(group.entityName)}
                       className={`cursor-pointer transition-colors group ${
                         isSelected 
-                          ? 'bg-violet-50/60 ring-2 ring-violet-500/80 ring-inset' 
-                          : 'hover:bg-gray-50/80'
+                          ? 'bg-[#1D3557]/5 border-l-4 border-l-[#1D3557]' 
+                          : 'hover:bg-[#F8F9FA]'
                       }`}
                     >
                       {/* Checkbox / Radio Selection */}
                       <td className="py-4 px-6 text-center">
                         <div className={`w-5 h-5 rounded-md flex items-center justify-center transition-all ${
                           isSelected 
-                            ? 'bg-[#6C2BD9] text-white shadow-xs' 
+                            ? 'bg-[#1D3557] text-white shadow-2xs' 
                             : 'border-2 border-gray-300 group-hover:border-gray-400'
                         }`}>
                           {isSelected && <Check className="w-3.5 h-3.5 stroke-[3]" />}
@@ -603,7 +603,7 @@ export default function CuentasPendientesPage({
                       </td>
 
                       {/* Asunto */}
-                      <td className="py-4 px-6 font-bold text-gray-900">
+                      <td className="py-4 px-6 font-extrabold text-[#2B2D42]">
                         <div className="flex items-center gap-2">
                           <span className="capitalize">{group.entityName}</span>
                         </div>
@@ -611,13 +611,13 @@ export default function CuentasPendientesPage({
 
                       {/* Cuentas Pendientes Count */}
                       <td className="py-4 px-6 text-center">
-                        <span className="inline-flex items-center justify-center gap-1 font-bold text-gray-700 bg-gray-100 px-2.5 py-0.5 rounded-full text-xs">
+                        <span className="inline-flex items-center justify-center gap-1 font-bold text-[#2B2D42] bg-[#F8F9FA] border border-gray-200 px-2.5 py-0.5 rounded-full text-xs">
                           {group.itemCount}
                         </span>
                       </td>
 
                       {/* Por pagar / Por cobrar */}
-                      <td className="py-4 px-6 text-right font-black text-gray-900">
+                      <td className="py-4 px-6 text-right font-black font-mono text-[#2B2D42]">
                         ${formatAmount(group.totalPending)}
                       </td>
 
@@ -633,12 +633,12 @@ export default function CuentasPendientesPage({
                         </span>
                       </td>
 
-                      {/* Pagar Todo / Cobrar Todo Button (Matches Gradient in Image) */}
+                      {/* Pagar Todo / Cobrar Todo CTA */}
                       <td className="py-4 px-6 text-center">
                         <button
                           onClick={(e) => handleOpenGroupPayment(group, e)}
                           disabled={group.totalPending <= 0}
-                          className="w-full bg-gradient-to-r from-[#EC4899] to-[#F43F5E] hover:from-[#DB2777] hover:to-[#E11D48] text-white font-bold text-xs py-2 px-4 rounded-xl shadow-xs transition-all active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed"
+                          className="w-full bg-[#40E0D0] hover:bg-[#36cebf] text-[#1D3557] font-montserrat font-extrabold text-xs py-2 px-4 rounded-xl shadow-2xs transition-all active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer"
                         >
                           {activeTab === 'pagar' ? 'Pagar todo' : 'Cobrar todo'}
                         </button>
@@ -652,20 +652,20 @@ export default function CuentasPendientesPage({
         </div>
       </div>
 
-      {/* 4. LOWER DETAIL SECTION (Matches Image 1 & 3) */}
+      {/* 4. LOWER DETAIL SECTION */}
       {selectedGroup && (
-        <div className="bg-white rounded-2xl p-6 border border-gray-200/80 shadow-sm space-y-4">
+        <div className="bg-white rounded-2xl p-6 border border-gray-200/80 shadow-xs space-y-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2.5">
-              <div className="w-5 h-5 rounded bg-[#6C2BD9] text-white flex items-center justify-center shadow-xs">
+              <div className="w-5 h-5 rounded bg-[#1D3557] text-white flex items-center justify-center shadow-2xs">
                 <Check className="w-3.5 h-3.5 stroke-[3]" />
               </div>
-              <h3 className="text-sm font-bold text-gray-900">
-                Detalle de <span className="text-violet-700 font-extrabold capitalize">{selectedGroup.entityName}</span>
+              <h3 className="text-sm font-montserrat font-extrabold text-[#1D3557]">
+                Detalle de <span className="text-[#1D3557] uppercase font-black">{selectedGroup.entityName}</span>
               </h3>
             </div>
 
-            <div className="text-xs text-gray-500 font-medium">
+            <div className="text-xs text-[#2B2D42]/70 font-medium">
               {selectedGroup.items.length} {selectedGroup.items.length === 1 ? 'cuenta asociada' : 'cuentas asociadas'}
             </div>
           </div>
@@ -673,7 +673,7 @@ export default function CuentasPendientesPage({
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
               <thead>
-                <tr className="border-b border-gray-100 text-[11px] font-bold text-gray-400 uppercase tracking-wider">
+                <tr className="border-b border-gray-100 text-[10px] font-montserrat font-extrabold text-[#2B2D42]/70 uppercase tracking-wider bg-[#F8F9FA]">
                   <th className="py-3 px-4">Asunto</th>
                   <th className="py-3 px-4">Emisión</th>
                   <th className="py-3 px-4">Expiración</th>
@@ -688,19 +688,19 @@ export default function CuentasPendientesPage({
                   const days = calculateDaysRemaining(item.due_date);
 
                   return (
-                    <tr key={item.id} className="hover:bg-gray-50/60 transition-colors">
+                    <tr key={item.id} className="hover:bg-[#F8F9FA] transition-colors">
                       {/* Asunto / Item concept */}
-                      <td className="py-3.5 px-4 font-bold text-gray-800">
+                      <td className="py-3.5 px-4 font-bold text-[#2B2D42]">
                         {item.subject || (item as any).invoice_number || (item as any).purchase_id || 'Concepto'}
                       </td>
 
                       {/* Emisión */}
-                      <td className="py-3.5 px-4 text-gray-600 whitespace-nowrap">
+                      <td className="py-3.5 px-4 text-[#2B2D42]/80 whitespace-nowrap">
                         {formatDate(item.issue_date || item.created_at)}
                       </td>
 
                       {/* Expiración */}
-                      <td className="py-3.5 px-4 text-gray-600 whitespace-nowrap">
+                      <td className="py-3.5 px-4 text-[#2B2D42]/80 whitespace-nowrap">
                         {item.due_date ? formatDate(item.due_date) : '--'}
                       </td>
 
@@ -717,22 +717,22 @@ export default function CuentasPendientesPage({
                       </td>
 
                       {/* Descripción */}
-                      <td className="py-3.5 px-4 text-gray-500 max-w-xs truncate">
+                      <td className="py-3.5 px-4 text-[#2B2D42]/70 max-w-xs truncate">
                         {item.description || 'Sin descripción'}
                       </td>
 
                       {/* Monto pendiente */}
-                      <td className="py-3.5 px-4 text-right font-black text-gray-900 whitespace-nowrap">
+                      <td className="py-3.5 px-4 text-right font-black font-mono text-[#2B2D42] whitespace-nowrap">
                         ${formatAmount(item.remaining_amount)}
                       </td>
 
-                      {/* Action Buttons: Pagar/Cobrar + Historial (Sin 3 puntos) */}
+                      {/* Action Buttons: Pagar/Cobrar + Historial */}
                       <td className="py-3.5 px-4 text-center">
                         <div className="flex items-center justify-center gap-2">
                           <button
                             onClick={(e) => handleOpenSinglePayment(item, e)}
                             disabled={Number(item.remaining_amount) <= 0}
-                            className="bg-gradient-to-r from-[#EC4899] to-[#F43F5E] hover:from-[#DB2777] hover:to-[#E11D48] text-white font-bold text-xs py-1.5 px-3.5 rounded-xl shadow-xs transition-all active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed whitespace-nowrap"
+                            className="bg-[#40E0D0] hover:bg-[#36cebf] text-[#1D3557] font-montserrat font-extrabold text-xs py-1.5 px-3.5 rounded-xl shadow-2xs transition-all active:scale-95 disabled:opacity-40 disabled:cursor-not-allowed whitespace-nowrap cursor-pointer"
                           >
                             {activeTab === 'pagar' ? 'Pagar' : 'Cobrar'}
                           </button>
@@ -744,9 +744,9 @@ export default function CuentasPendientesPage({
                               setShowHistoryModal(true);
                             }}
                             title="Ver historial de pagos / abonos"
-                            className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-gray-100 hover:bg-violet-50 hover:text-violet-700 hover:border-violet-200 text-gray-700 font-bold rounded-xl border border-gray-200/80 transition-all active:scale-95 text-xs whitespace-nowrap"
+                            className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#F8F9FA] hover:bg-[#1D3557]/10 hover:text-[#1D3557] text-[#2B2D42] font-montserrat font-bold rounded-xl border border-gray-200 transition-all active:scale-95 text-xs whitespace-nowrap cursor-pointer"
                           >
-                            <FileText className="w-3.5 h-3.5 text-gray-500 hover:text-violet-600" />
+                            <FileText className="w-3.5 h-3.5 text-[#00BFFF]" />
                             <span>Historial</span>
                           </button>
                         </div>
@@ -813,7 +813,7 @@ export default function CuentasPendientesPage({
 }
 
 // ============================================================================
-// MODAL: PAGO / COBRO DE CUENTAS ASOCIADAS (Matches Image 2)
+// MODAL: PAGO / COBRO DE CUENTAS ASOCIADAS
 // ============================================================================
 interface PaymentModalProps {
   type: 'pagar' | 'cobrar';
@@ -875,7 +875,7 @@ function PaymentModal({
     }
   };
 
-  // Title matching Image 2: "Pago de cuentas asociadas a mercado plaza"
+  // Title
   const modalTitle = target.type === 'group'
     ? `${type === 'pagar' ? 'Pago' : 'Cobro'} de cuentas asociadas a ${target.entityName}`
     : `${type === 'pagar' ? 'Pago' : 'Cobro'} de cuenta: ${target.account?.subject || target.entityName}`;
@@ -948,19 +948,19 @@ function PaymentModal({
       <div className="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-gray-150 animate-in fade-in zoom-in-95 duration-150">
         {/* Modal Header */}
         <div className="flex items-center justify-between pb-4 border-b border-gray-100">
-          <h3 className="text-lg font-bold text-gray-900 tracking-tight">
+          <h3 className="text-sm font-montserrat font-extrabold text-[#1D3557] tracking-tight">
             {modalTitle}
           </h3>
           <button
             onClick={onClose}
-            className="w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-500 flex items-center justify-center transition-colors"
+            className="w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-500 flex items-center justify-center transition-colors cursor-pointer"
           >
             <X className="w-4 h-4" />
           </button>
         </div>
 
         {/* Modal Form */}
-        <form onSubmit={handleSubmit} className="mt-5 space-y-4">
+        <form onSubmit={handleSubmit} className="mt-5 space-y-4 font-poppins">
           {errorMsg && (
             <div className="p-3 bg-rose-50 border border-rose-200 rounded-xl text-xs text-rose-700 flex items-center gap-2">
               <AlertCircle className="w-4 h-4 shrink-0" />
@@ -969,27 +969,27 @@ function PaymentModal({
           )}
 
           {/* Top Quick Summary */}
-          <div className="bg-violet-50/60 border border-violet-100 rounded-xl p-3.5 flex items-center justify-between text-xs">
+          <div className="bg-[#1D3557]/5 border border-[#1D3557]/15 rounded-xl p-3.5 flex items-center justify-between text-xs">
             <div>
-              <span className="text-gray-500 font-medium">Deuda total pendiente:</span>
-              <p className="text-base font-black text-violet-950">${formatAmount(target.totalPending)}</p>
+              <span className="text-[#2B2D42]/70 font-medium">Deuda total pendiente:</span>
+              <p className="text-base font-black font-mono text-[#1D3557]">${formatAmount(target.totalPending)}</p>
             </div>
             <div className="text-right">
-              <span className="text-gray-500 font-medium">Equivalente en Bs:</span>
-              <p className="text-xs font-bold text-violet-700">Bs. {formatAmount(target.totalPending * bcvRate)}</p>
+              <span className="text-[#2B2D42]/70 font-medium">Equivalente en Bs:</span>
+              <p className="text-xs font-bold font-mono text-[#00BFFF]">Bs. {formatAmount(target.totalPending * bcvRate)}</p>
             </div>
           </div>
 
-          {/* Row matching Image 2: Método de pago + Monto (USD) */}
+          {/* Método de pago + Monto */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-bold text-gray-700 mb-1.5">
+              <label className="block text-xs font-montserrat font-extrabold text-[#2B2D42] mb-1.5">
                 Método de pago:
               </label>
               <select
                 value={paymentMethod}
                 onChange={(e) => handlePaymentMethodChange(e.target.value)}
-                className="w-full px-3.5 py-2.5 text-xs font-semibold bg-white border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-violet-500/20 focus:border-violet-500 shadow-xs"
+                className="w-full px-3.5 py-2.5 text-xs font-semibold text-[#2B2D42] bg-white border border-gray-300 rounded-xl focus:outline-none focus:border-[#1D3557] shadow-xs"
               >
                 <option value="EFECTIVO">EFECTIVO</option>
                 <option value="PAGO MÓVIL">PAGO MÓVIL</option>
@@ -1001,7 +1001,7 @@ function PaymentModal({
             </div>
 
             <div>
-              <label className="block text-xs font-bold text-gray-700 mb-1.5">
+              <label className="block text-xs font-montserrat font-extrabold text-[#2B2D42] mb-1.5">
                 Monto (USD):
               </label>
               <input
@@ -1013,21 +1013,21 @@ function PaymentModal({
                 onChange={(e) => setAmountUsd(e.target.value)}
                 placeholder="200"
                 required
-                className="w-full px-3.5 py-2.5 text-xs font-bold text-gray-900 bg-white border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-violet-500/20 focus:border-violet-500 shadow-xs"
+                className="w-full px-3.5 py-2.5 text-xs font-bold font-mono text-[#2B2D42] bg-white border border-gray-300 rounded-xl focus:outline-none focus:border-[#1D3557] shadow-xs"
               />
             </div>
           </div>
 
           {/* Bank Account Selection */}
           {bankAccounts && bankAccounts.length > 0 && (
-            <div className="bg-gray-50/80 border border-gray-200/80 rounded-xl p-3 space-y-2">
-              <label className="block text-xs font-bold text-gray-800">
+            <div className="bg-[#F8F9FA] border border-gray-200 rounded-xl p-3 space-y-2">
+              <label className="block text-xs font-montserrat font-extrabold text-[#1D3557]">
                 Cuenta Bancaria (Afectar saldo y registrar movimiento):
               </label>
               <select
                 value={selectedBankId}
                 onChange={(e) => setSelectedBankId(e.target.value)}
-                className="w-full px-3.5 py-2 text-xs font-medium bg-white border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-violet-500/20 focus:border-violet-500 shadow-xs"
+                className="w-full px-3.5 py-2 text-xs font-medium text-[#2B2D42] bg-white border border-gray-300 rounded-lg focus:outline-none focus:border-[#1D3557] shadow-xs"
               >
                 <option value="">-- No vincular a cuenta bancaria (Solo registro contable) --</option>
                 {bankAccounts.map((b) => (
@@ -1038,15 +1038,15 @@ function PaymentModal({
               </select>
 
               {selectedBank && numAmount > 0 && (
-                <div className="text-[11px] bg-white border border-violet-100 rounded-lg p-2 text-gray-600 flex items-center justify-between">
+                <div className="text-[11px] bg-white border border-gray-200 rounded-lg p-2 text-[#2B2D42] flex items-center justify-between">
                   <span>
                     {type === 'pagar' ? 'Se debitará:' : 'Se acreditará:'}{' '}
-                    <strong className="text-violet-700">
+                    <strong className="text-[#1D3557] font-mono">
                       {isBankVES ? `Bs. ${formatAmount(amountForBank)}` : `$${formatAmount(amountForBank)}`}
                     </strong>{' '}
                     en {selectedBank.bank_name || selectedBank.name}
                   </span>
-                  <span className="text-gray-400 font-mono text-[10px]">
+                  <span className="text-[#2B2D42]/70 font-mono text-[10px]">
                     Saldo final:{' '}
                     <strong className={type === 'pagar' ? 'text-amber-700' : 'text-emerald-700'}>
                       {isBankVES ? 'Bs. ' : '$'}
@@ -1065,7 +1065,7 @@ function PaymentModal({
           {/* Reference & Notes */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
-              <label className="block text-xs font-semibold text-gray-600 mb-1">
+              <label className="block text-xs font-montserrat font-extrabold text-[#2B2D42]/80 mb-1">
                 Referencia bancaria:
               </label>
               <input
@@ -1073,12 +1073,12 @@ function PaymentModal({
                 value={reference}
                 onChange={(e) => setReference(e.target.value)}
                 placeholder="Ej. 948271"
-                className="w-full px-3 py-2 text-xs bg-white border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-violet-500/20 focus:border-violet-500"
+                className="w-full px-3 py-2 text-xs text-[#2B2D42] bg-white border border-gray-200 rounded-xl focus:outline-none focus:border-[#1D3557]"
               />
             </div>
 
             <div>
-              <label className="block text-xs font-semibold text-gray-600 mb-1">
+              <label className="block text-xs font-montserrat font-extrabold text-[#2B2D42]/80 mb-1">
                 Nota / Observación:
               </label>
               <input
@@ -1086,22 +1086,22 @@ function PaymentModal({
                 value={notes}
                 onChange={(e) => setNotes(e.target.value)}
                 placeholder="Abono o liquidación"
-                className="w-full px-3 py-2 text-xs bg-white border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-violet-500/20 focus:border-violet-500"
+                className="w-full px-3 py-2 text-xs text-[#2B2D42] bg-white border border-gray-200 rounded-xl focus:outline-none focus:border-[#1D3557]"
               />
             </div>
           </div>
 
           {/* Amount in Bs Preview */}
-          <div className="text-right text-[11px] text-gray-500">
-            Total en Bolívares equivalente: <span className="font-bold text-gray-900">Bs. {formatAmount(numAmountBs)}</span>
+          <div className="text-right text-[11px] text-[#2B2D42]/70 font-poppins">
+            Total en Bolívares equivalente: <span className="font-bold font-mono text-[#1D3557]">Bs. {formatAmount(numAmountBs)}</span>
           </div>
 
-          {/* Confirm Button (Purple #6C2BD9 matching Image 2) */}
+          {/* Confirm Button */}
           <div className="pt-2">
             <button
               type="submit"
               disabled={isSubmitting}
-              className="w-full py-3 bg-[#6C2BD9] hover:bg-[#5B21B6] text-white font-bold text-sm rounded-xl shadow-md transition-all active:scale-98 disabled:opacity-50"
+              className="w-full py-3 bg-[#40E0D0] hover:bg-[#36cebf] text-[#1D3557] font-montserrat font-extrabold text-xs uppercase tracking-wider rounded-xl shadow-xs transition-all active:scale-98 disabled:opacity-50 cursor-pointer"
             >
               {isSubmitting ? 'Procesando...' : type === 'pagar' ? 'Confirmar pago' : 'Confirmar cobro'}
             </button>
@@ -1219,22 +1219,22 @@ function AddAccountModal({
       <div className="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-gray-150 my-8">
         <div className="flex items-center justify-between pb-4 border-b border-gray-100">
           <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-violet-100 text-violet-700 flex items-center justify-center font-bold">
+            <div className="w-8 h-8 rounded-lg bg-[#1D3557]/10 text-[#1D3557] flex items-center justify-center font-bold">
               <Plus className="w-4 h-4" />
             </div>
-            <h3 className="text-lg font-bold text-gray-900">
+            <h3 className="text-base font-montserrat font-extrabold text-[#1D3557]">
               Agregar Cuenta Pendiente
             </h3>
           </div>
           <button
             onClick={onClose}
-            className="w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-500 flex items-center justify-center transition-colors"
+            className="w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-500 flex items-center justify-center transition-colors cursor-pointer"
           >
             <X className="w-4 h-4" />
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} className="mt-5 space-y-4 text-xs">
+        <form onSubmit={handleSubmit} className="mt-5 space-y-4 text-xs font-poppins">
           {errorMsg && (
             <div className="p-3 bg-rose-50 border border-rose-200 rounded-xl text-rose-700 flex items-center gap-2">
               <AlertCircle className="w-4 h-4 shrink-0" />
@@ -1244,15 +1244,15 @@ function AddAccountModal({
 
           {/* Type Switcher */}
           <div>
-            <label className="block font-bold text-gray-700 mb-1.5">Tipo de Cuenta:</label>
+            <label className="block font-montserrat font-extrabold text-[#2B2D42] mb-1.5">Tipo de Cuenta:</label>
             <div className="grid grid-cols-2 gap-2">
               <button
                 type="button"
                 onClick={() => setAccountType('pagar')}
-                className={`py-2 px-3 rounded-xl font-bold border transition-all ${
+                className={`py-2 px-3 rounded-xl font-montserrat font-extrabold text-xs border transition-all cursor-pointer ${
                   accountType === 'pagar'
-                    ? 'bg-rose-50 border-rose-300 text-rose-700 shadow-xs'
-                    : 'bg-gray-50 border-gray-200 text-gray-500 hover:bg-gray-100'
+                    ? 'bg-[#1D3557] text-white border-[#1D3557] shadow-xs'
+                    : 'bg-[#F8F9FA] border-gray-200 text-[#2B2D42] hover:bg-gray-100'
                 }`}
               >
                 Cuenta por Pagar (CxP)
@@ -1260,10 +1260,10 @@ function AddAccountModal({
               <button
                 type="button"
                 onClick={() => setAccountType('cobrar')}
-                className={`py-2 px-3 rounded-xl font-bold border transition-all ${
+                className={`py-2 px-3 rounded-xl font-montserrat font-extrabold text-xs border transition-all cursor-pointer ${
                   accountType === 'cobrar'
-                    ? 'bg-emerald-50 border-emerald-300 text-emerald-700 shadow-xs'
-                    : 'bg-gray-50 border-gray-200 text-gray-500 hover:bg-gray-100'
+                    ? 'bg-[#1D3557] text-white border-[#1D3557] shadow-xs'
+                    : 'bg-[#F8F9FA] border-gray-200 text-[#2B2D42] hover:bg-gray-100'
                 }`}
               >
                 Cuenta por Cobrar (CxC)
@@ -1273,7 +1273,7 @@ function AddAccountModal({
 
           {/* Entity Name (Asunto Principal) */}
           <div>
-            <label className="block font-bold text-gray-700 mb-1">
+            <label className="block font-montserrat font-extrabold text-[#2B2D42] mb-1">
               Asunto / Entidad Principal ({accountType === 'pagar' ? 'Proveedor / Acreedor' : 'Cliente / Deudor'}):
             </label>
             <input
@@ -1282,13 +1282,13 @@ function AddAccountModal({
               value={entityName}
               onChange={(e) => setEntityName(e.target.value)}
               placeholder="Ej. mercado plaza, vendedor: Sebastian, Distribuidora Polar..."
-              className="w-full px-3.5 py-2 bg-white border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-violet-500/20 focus:border-violet-500 font-semibold"
+              className="w-full px-3.5 py-2 bg-white border border-gray-300 rounded-xl focus:outline-none focus:border-[#1D3557] font-semibold text-[#2B2D42]"
             />
           </div>
 
           {/* Concept / Item / Invoice */}
           <div>
-            <label className="block font-bold text-gray-700 mb-1">
+            <label className="block font-montserrat font-extrabold text-[#2B2D42] mb-1">
               Concepto / Sub-asunto (ej. carne, lechuga, Factura #00001):
             </label>
             <input
@@ -1297,13 +1297,13 @@ function AddAccountModal({
               value={subject}
               onChange={(e) => setSubject(e.target.value)}
               placeholder="Ej. carne, lechuga, Factura #12345, Honorarios..."
-              className="w-full px-3.5 py-2 bg-white border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-violet-500/20 focus:border-violet-500 font-semibold"
+              className="w-full px-3.5 py-2 bg-white border border-gray-300 rounded-xl focus:outline-none focus:border-[#1D3557] font-semibold text-[#2B2D42]"
             />
           </div>
 
           {/* Description */}
           <div>
-            <label className="block font-semibold text-gray-600 mb-1">
+            <label className="block font-montserrat font-extrabold text-[#2B2D42]/80 mb-1">
               Descripción detallada:
             </label>
             <textarea
@@ -1311,14 +1311,14 @@ function AddAccountModal({
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               placeholder="Cuenta por pagar generada por ingreso a inventario..."
-              className="w-full px-3.5 py-2 bg-white border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-violet-500/20 focus:border-violet-500"
+              className="w-full px-3.5 py-2 bg-white border border-gray-200 rounded-xl focus:outline-none focus:border-[#1D3557] text-[#2B2D42]"
             />
           </div>
 
           {/* Montos */}
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block font-bold text-gray-700 mb-1">
+              <label className="block font-montserrat font-extrabold text-[#2B2D42] mb-1">
                 Monto Total (USD):
               </label>
               <input
@@ -1329,12 +1329,12 @@ function AddAccountModal({
                 value={totalAmount}
                 onChange={(e) => setTotalAmount(e.target.value)}
                 placeholder="500.00"
-                className="w-full px-3.5 py-2 bg-white border border-gray-300 rounded-xl font-bold focus:outline-none focus:ring-2 focus:ring-violet-500/20 focus:border-violet-500"
+                className="w-full px-3.5 py-2 bg-white border border-gray-300 rounded-xl font-mono font-bold text-[#2B2D42] focus:outline-none focus:border-[#1D3557]"
               />
             </div>
 
             <div>
-              <label className="block font-semibold text-gray-600 mb-1">
+              <label className="block font-montserrat font-extrabold text-[#2B2D42]/80 mb-1">
                 Abono Inicial (Opcional):
               </label>
               <input
@@ -1344,7 +1344,7 @@ function AddAccountModal({
                 value={initialPayment}
                 onChange={(e) => setInitialPayment(e.target.value)}
                 placeholder="0.00"
-                className="w-full px-3.5 py-2 bg-white border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-violet-500/20 focus:border-violet-500"
+                className="w-full px-3.5 py-2 bg-white border border-gray-200 rounded-xl font-mono text-[#2B2D42] focus:outline-none focus:border-[#1D3557]"
               />
             </div>
           </div>
@@ -1352,26 +1352,26 @@ function AddAccountModal({
           {/* Dates */}
           <div className="grid grid-cols-2 gap-3">
             <div>
-              <label className="block font-semibold text-gray-600 mb-1">
+              <label className="block font-montserrat font-extrabold text-[#2B2D42]/80 mb-1">
                 Fecha de Emisión:
               </label>
               <input
                 type="datetime-local"
                 value={issueDate}
                 onChange={(e) => setIssueDate(e.target.value)}
-                className="w-full px-3 py-2 bg-white border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-violet-500/20 focus:border-violet-500"
+                className="w-full px-3 py-2 bg-white border border-gray-200 rounded-xl focus:outline-none focus:border-[#1D3557] text-[#2B2D42]"
               />
             </div>
 
             <div>
-              <label className="block font-semibold text-gray-600 mb-1">
+              <label className="block font-montserrat font-extrabold text-[#2B2D42]/80 mb-1">
                 Fecha de Expiración / Vencimiento:
               </label>
               <input
                 type="datetime-local"
                 value={dueDate}
                 onChange={(e) => setDueDate(e.target.value)}
-                className="w-full px-3 py-2 bg-white border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-violet-500/20 focus:border-violet-500"
+                className="w-full px-3 py-2 bg-white border border-gray-200 rounded-xl focus:outline-none focus:border-[#1D3557] text-[#2B2D42]"
               />
             </div>
           </div>
@@ -1380,7 +1380,7 @@ function AddAccountModal({
             <button
               type="submit"
               disabled={isSubmitting}
-              className="w-full py-3 bg-[#6C2BD9] hover:bg-[#5B21B6] text-white font-bold text-sm rounded-xl shadow-md transition-all active:scale-98 disabled:opacity-50"
+              className="w-full py-3 bg-[#1D3557] hover:bg-[#152843] text-white font-montserrat font-extrabold text-xs uppercase tracking-wider rounded-xl shadow-md transition-all active:scale-98 disabled:opacity-50 cursor-pointer"
             >
               {isSubmitting ? 'Guardando...' : 'Crear Cuenta Pendiente'}
             </button>
@@ -1427,19 +1427,19 @@ function HistoryModal({ account, type, bcvRate, onClose }: HistoryModalProps) {
 
   return (
     <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4">
-      <div className="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-gray-150">
+      <div className="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl border border-gray-150 font-poppins">
         <div className="flex items-center justify-between pb-4 border-b border-gray-100">
           <div>
-            <h3 className="text-base font-bold text-gray-900">
+            <h3 className="text-sm font-montserrat font-extrabold text-[#1D3557]">
               Historial de Abonos y Pagos
             </h3>
-            <p className="text-xs text-gray-500 font-medium">
+            <p className="text-xs text-[#2B2D42]/70 font-medium">
               {account.subject} - {account.entity_name}
             </p>
           </div>
           <button
             onClick={onClose}
-            className="w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-500 flex items-center justify-center transition-colors"
+            className="w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-500 flex items-center justify-center transition-colors cursor-pointer"
           >
             <X className="w-4 h-4" />
           </button>
@@ -1447,18 +1447,18 @@ function HistoryModal({ account, type, bcvRate, onClose }: HistoryModalProps) {
 
         <div className="mt-4 space-y-3">
           {/* Summary Box */}
-          <div className="grid grid-cols-3 gap-2 bg-gray-50 p-3 rounded-xl text-center text-xs">
+          <div className="grid grid-cols-3 gap-2 bg-[#F8F9FA] border border-gray-200 p-3 rounded-xl text-center text-xs">
             <div>
-              <span className="text-gray-400 text-[10px] font-bold block uppercase">Total</span>
-              <span className="font-black text-gray-900">${formatAmount(account.total_amount)}</span>
+              <span className="text-[#2B2D42]/60 text-[10px] font-montserrat font-extrabold block uppercase">Total</span>
+              <span className="font-black font-mono text-[#2B2D42]">${formatAmount(account.total_amount)}</span>
             </div>
             <div>
-              <span className="text-emerald-500 text-[10px] font-bold block uppercase">Pagado</span>
-              <span className="font-black text-emerald-600">${formatAmount(account.paid_amount)}</span>
+              <span className="text-emerald-600 text-[10px] font-montserrat font-extrabold block uppercase">Pagado</span>
+              <span className="font-black font-mono text-emerald-600">${formatAmount(account.paid_amount)}</span>
             </div>
             <div>
-              <span className="text-rose-500 text-[10px] font-bold block uppercase">Pendiente</span>
-              <span className="font-black text-rose-600">${formatAmount(account.remaining_amount)}</span>
+              <span className="text-rose-600 text-[10px] font-montserrat font-extrabold block uppercase">Pendiente</span>
+              <span className="font-black font-mono text-rose-600">${formatAmount(account.remaining_amount)}</span>
             </div>
           </div>
 
@@ -1471,15 +1471,15 @@ function HistoryModal({ account, type, bcvRate, onClose }: HistoryModalProps) {
               payments.map((p, idx) => (
                 <div key={p.id || idx} className="py-3 flex items-center justify-between">
                   <div>
-                    <p className="font-bold text-gray-800">${formatAmount(p.amount)}</p>
-                    <p className="text-[11px] text-gray-500">{p.payment_method} {p.reference ? `• Ref: ${p.reference}` : ''}</p>
+                    <p className="font-bold font-mono text-[#2B2D42]">${formatAmount(p.amount)}</p>
+                    <p className="text-[11px] text-[#2B2D42]/70">{p.payment_method} {p.reference ? `• Ref: ${p.reference}` : ''}</p>
                     {p.notes && <p className="text-[10px] text-gray-400 italic mt-0.5">{p.notes}</p>}
                   </div>
                   <div className="text-right">
-                    <span className="text-[11px] text-gray-500 block">
+                    <span className="text-[11px] text-[#2B2D42]/70 block">
                       {new Date(p.payment_date || p.created_at).toLocaleDateString('es-ES')}
                     </span>
-                    <span className="text-[10px] text-emerald-600 font-bold bg-emerald-50 px-2 py-0.5 rounded-full">
+                    <span className="text-[10px] text-emerald-700 font-bold bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
                       Abonado
                     </span>
                   </div>
@@ -1492,7 +1492,7 @@ function HistoryModal({ account, type, bcvRate, onClose }: HistoryModalProps) {
         <div className="pt-4 mt-2 border-t border-gray-100">
           <button
             onClick={onClose}
-            className="w-full py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold text-xs rounded-xl"
+            className="w-full py-2.5 bg-[#F8F9FA] hover:bg-gray-200 text-[#2B2D42] font-montserrat font-extrabold text-xs rounded-xl cursor-pointer"
           >
             Cerrar
           </button>

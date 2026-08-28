@@ -20,6 +20,7 @@ import * as XLSX from 'xlsx';
 import { CurrencyCode, CURRENCIES } from '../lib/currency';
 import { sendPushNotification } from '../lib/pushNotifications.ts';
 import { useI18n } from '../lib/i18n.ts';
+import { AdminBrandHeader, AdminIsotype } from './AdminLogo.tsx';
 
 // 🚀 Lazy-Loaded Administrative Submodules
 const POSModule = lazy(() => import('./POSModule'));
@@ -3046,20 +3047,20 @@ export default function AdminPanel({
     };
 
     return (
-      <div className="space-y-4">
+      <div className="space-y-4 font-poppins">
         {/* Top Header Card: Usuario & Tasa BCV */}
-        <div className="p-3 bg-gradient-to-r from-blue-50/70 to-emerald-50/70 border border-blue-100/90 rounded-2xl shadow-2xs space-y-2.5">
+        <div className="p-3 bg-gradient-to-r from-[#1D3557]/5 to-[#40E0D0]/10 border border-[#1D3557]/15 rounded-2xl shadow-2xs space-y-2.5">
           {/* User Info Row */}
           <div className="flex items-center justify-between gap-2">
             <div className="flex items-center gap-2 min-w-0">
-              <div className="w-7 h-7 bg-[#005da9] text-white rounded-full flex items-center justify-center font-black text-xs shrink-0 shadow-2xs border border-blue-200">
+              <div className="w-7 h-7 bg-[#1D3557] text-white rounded-full flex items-center justify-center font-montserrat font-black text-xs shrink-0 shadow-2xs border border-[#40E0D0]">
                 {currentUser ? currentUser.name.charAt(0).toUpperCase() : (activeRole === 'admin' ? 'A' : 'V')}
               </div>
               <div className="flex flex-col min-w-0">
-                <span className="text-[11px] font-extrabold text-gray-900 leading-tight truncate">
+                <span className="text-[11px] font-extrabold text-[#2B2D42] leading-tight truncate font-montserrat">
                   {currentUser ? currentUser.name : (activeRole === 'admin' ? 'Administrador' : 'Vendedor')}
                 </span>
-                <span className="text-[8px] font-black uppercase tracking-wider text-[#005da9]">
+                <span className="text-[8.5px] font-black uppercase tracking-wider text-[#00BFFF]">
                   {currentUser ? currentUser.role : (activeRole === 'admin' ? 'Admin' : 'Vendedor')}
                 </span>
               </div>
@@ -3070,7 +3071,7 @@ export default function AdminPanel({
                   e.stopPropagation();
                   setIsSidebarCollapsed(prev => !prev);
                 }}
-                className="p-1 text-gray-400 hover:text-[#005da9] hover:bg-white/80 rounded transition cursor-pointer shrink-0"
+                className="p-1 text-gray-400 hover:text-[#1D3557] hover:bg-white/80 rounded transition cursor-pointer shrink-0"
                 title={isSidebarCollapsed ? "Fijar menú lateral (Pin)" : "Ocultar automáticamente (Collapse)"}
               >
                 {isSidebarCollapsed ? <Unlock className="w-3.5 h-3.5" /> : <Lock className="w-3.5 h-3.5" />}
@@ -3079,10 +3080,10 @@ export default function AdminPanel({
           </div>
 
           {/* Tasa BCV Row */}
-          <div className="flex items-center justify-between pt-2 border-t border-blue-100/80">
+          <div className="flex items-center justify-between pt-2 border-t border-[#1D3557]/10">
             <div className="flex items-center gap-1.5">
-              <TrendingUp className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-              <span className="text-[10px] font-bold text-gray-700">Tasa BCV:</span>
+              <TrendingUp className="w-3.5 h-3.5 text-[#00BFFF] shrink-0" />
+              <span className="text-[10px] font-bold text-[#2B2D42]">Tasa BCV:</span>
             </div>
             <div className="flex items-center gap-1">
               {isEditingBcv ? (
@@ -3115,7 +3116,7 @@ export default function AdminPanel({
                     setBcvInputValue(bcvRate.toString());
                     setIsEditingBcv(true);
                   }}
-                  className="text-xs font-black text-emerald-950 bg-white border border-emerald-200/90 px-2 py-0.5 rounded-lg cursor-pointer hover:bg-emerald-50 transition flex items-center shadow-2xs"
+                  className="text-xs font-montserrat font-black text-[#1D3557] bg-white border border-[#40E0D0]/60 px-2 py-0.5 rounded-lg cursor-pointer hover:bg-[#40E0D0]/10 transition flex items-center shadow-2xs"
                   title="Doble clic para editar tasa"
                 >
                   Bs. {bcvRate.toFixed(2)}
@@ -3140,9 +3141,9 @@ export default function AdminPanel({
 
             return (
               <div key={sIdx} className="space-y-1.5">
-                <div className="flex items-center gap-1.5 px-2 pt-2 pb-1 border-b border-gray-150/70">
-                  <span className="text-[10px] font-black text-[#005da9]">{section.sectionNumber}.</span>
-                  <span className="text-[9px] font-black uppercase tracking-wider text-gray-500">
+                <div className="flex items-center gap-1.5 px-2 pt-2 pb-1 border-b border-gray-200">
+                  <span className="text-[10px] font-black font-montserrat text-[#1D3557]">{section.sectionNumber}.</span>
+                  <span className="text-[9.5px] font-montserrat font-black uppercase tracking-wider text-[#2B2D42]/70">
                     {section.sectionTitle}
                   </span>
                 </div>
@@ -3166,18 +3167,18 @@ export default function AdminPanel({
                             handleMenuChange(group.directId as AdminMenuType);
                             if (isMobile) setIsMobileDrawerOpen(false);
                           }}
-                          className={`w-full flex items-center justify-between px-3 py-2.5 text-xs rounded-xl transition-all text-left cursor-pointer min-h-[38px] select-none ${
+                          className={`w-full flex items-center justify-between px-3 py-2.5 text-xs rounded-xl transition-all text-left cursor-pointer min-h-[38px] select-none font-montserrat ${
                             isActive
-                              ? 'bg-[#005da9] text-white font-black shadow-md tracking-tight'
-                              : 'text-gray-700 hover:bg-blue-50/80 hover:text-[#005da9] font-bold'
+                              ? 'bg-[#1D3557] text-white font-black shadow-md tracking-tight border-l-4 border-[#40E0D0]'
+                              : 'text-[#2B2D42] hover:bg-[#1D3557]/5 hover:text-[#1D3557] font-bold'
                           }`}
                         >
                           <div className="flex items-center gap-2.5 min-w-0">
-                            <GroupIcon className={`w-4 h-4 shrink-0 ${isActive ? 'text-white' : 'text-gray-500'}`} />
+                            <GroupIcon className={`w-4 h-4 shrink-0 ${isActive ? 'text-[#40E0D0]' : 'text-gray-500'}`} />
                             <span className="truncate font-black">{group.title}</span>
                           </div>
                           {group.badge && (
-                            <span className={`text-[9px] px-1.5 py-0.5 rounded-full font-black ${isActive ? 'bg-white/20 text-white' : 'bg-blue-100 text-[#005da9]'}`}>
+                            <span className={`text-[9px] px-1.5 py-0.5 rounded-full font-black ${isActive ? 'bg-[#40E0D0] text-[#1D3557]' : 'bg-[#1D3557]/10 text-[#1D3557]'}`}>
                               {group.badge}
                             </span>
                           )}
@@ -3192,19 +3193,19 @@ export default function AdminPanel({
                       <div key={group.groupId} className="space-y-0.5">
                         <button
                           onClick={() => toggleGroup(group.groupId)}
-                          className={`w-full flex items-center justify-between px-3 py-2 text-xs rounded-xl transition-all text-left cursor-pointer select-none ${
+                          className={`w-full flex items-center justify-between px-3 py-2 text-xs rounded-xl transition-all text-left cursor-pointer select-none font-montserrat ${
                             isGroupActive && !isExpanded
-                              ? 'bg-blue-50/90 text-[#005da9] font-black border border-blue-200/80'
-                              : 'text-gray-800 hover:bg-gray-100/80 font-black'
+                              ? 'bg-[#1D3557]/10 text-[#1D3557] font-black border border-[#1D3557]/20'
+                              : 'text-[#2B2D42] hover:bg-gray-100 font-bold'
                           }`}
                         >
                           <div className="flex items-center gap-2 min-w-0">
-                            <GroupIcon className={`w-4 h-4 shrink-0 ${isGroupActive ? 'text-[#005da9]' : 'text-gray-500'}`} />
+                            <GroupIcon className={`w-4 h-4 shrink-0 ${isGroupActive ? 'text-[#1D3557]' : 'text-gray-500'}`} />
                             <span className="truncate text-xs font-black">{group.title}</span>
                           </div>
                           <div className="flex items-center gap-1.5">
                             {group.badge && (
-                              <span className="text-[9px] bg-blue-100 text-[#005da9] px-1.5 py-0.5 rounded-full font-black">
+                              <span className="text-[9px] bg-[#40E0D0]/20 text-[#1D3557] px-1.5 py-0.5 rounded-full font-black">
                                 {group.badge}
                               </span>
                             )}
@@ -3218,7 +3219,7 @@ export default function AdminPanel({
 
                         {/* Sub-items list */}
                         {isExpanded && (
-                          <div className="ml-3.5 pl-2.5 border-l-2 border-blue-150/70 space-y-0.5 py-0.5">
+                          <div className="ml-3.5 pl-2.5 border-l-2 border-[#1D3557]/20 space-y-0.5 py-0.5">
                             {visibleSubItems.map((sub) => {
                               const SubIcon = sub.icon;
                               const isSubActive = currentMenu === sub.id || (sub.id === 'clientes' && currentMenu === 'clientes_proveedores' && contactsTab === 'clientes') || (sub.id === 'proveedores' && currentMenu === 'clientes_proveedores' && contactsTab === 'proveedores');
@@ -3244,8 +3245,8 @@ export default function AdminPanel({
                                   }}
                                   className={`w-full flex items-center justify-between px-2.5 py-1.5 text-xs rounded-lg transition-all text-left cursor-pointer min-h-[32px] select-none ${
                                     isSubActive
-                                      ? 'bg-[#005da9] text-white font-bold shadow-xs'
-                                      : 'text-gray-600 hover:bg-blue-50/70 hover:text-[#005da9] font-medium'
+                                      ? 'bg-[#1D3557] text-white font-montserrat font-bold shadow-xs border-r-2 border-[#40E0D0]'
+                                      : 'text-[#2B2D42] hover:bg-[#1D3557]/5 hover:text-[#1D3557] font-medium'
                                   }`}
                                 >
                                   <div className="flex items-center gap-2 min-w-0">
@@ -3401,7 +3402,17 @@ export default function AdminPanel({
         </aside>
 
         {/* Main Content Area */}
-        <div className="flex-1 min-w-0">
+        <div className="flex-1 min-w-0 space-y-4">
+          {/* Brand Header Card */}
+          <div className="bg-white border border-[#1D3557]/15 rounded-2xl p-4 md:p-5 shadow-xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 font-poppins">
+            <AdminBrandHeader showTagline={true} />
+            <div className="flex items-center gap-2 self-end sm:self-center shrink-0">
+              <span className="text-[11px] font-bold text-[#2B2D42] bg-[#F8F9FA] px-3 py-1.5 rounded-xl border border-gray-200 flex items-center gap-1.5">
+                <span className="w-2 h-2 rounded-full bg-[#40E0D0] animate-pulse"></span>
+                Tasa Oficial: <strong className="font-montserrat text-[#1D3557] font-black">Bs. {bcvRate.toFixed(2)}</strong>
+              </span>
+            </div>
+          </div>
 
           {/* VIEW: SALES (FACTURACIÓN / POS) */}
           {currentMenu === 'sales' && (
@@ -3604,13 +3615,13 @@ export default function AdminPanel({
 
                 return (
                   <>
-                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-gray-150 pb-4">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-gray-150 pb-4 font-poppins">
                       <div>
-                        <h2 className="text-xl font-black text-[#131921] uppercase tracking-tight flex items-center gap-2">
-                          <Store className="w-6 h-6 text-amber-600" />
+                        <h2 className="text-xl font-montserrat font-extrabold text-[#1D3557] uppercase tracking-tight flex items-center gap-2">
+                          <Store className="w-6 h-6 text-[#40E0D0]" />
                           <span>Control de Caja</span>
                         </h2>
-                        <p className="text-xs text-gray-500 font-medium mt-0.5">
+                        <p className="text-xs text-[#2B2D42]/70 font-medium mt-0.5">
                           Monitoreo de ingresos y egresos diarios, control de fondo fijo, y verificación de balances en bolívares y dólares.
                         </p>
                       </div>
@@ -3618,9 +3629,9 @@ export default function AdminPanel({
                       {/* Header Session Action Controls */}
                       <div className="flex items-center gap-3">
                         {activeSession ? (
-                          <div className="flex items-center gap-3 bg-emerald-50 border border-emerald-100 px-4 py-2 rounded-xl">
+                          <div className="flex items-center gap-3 bg-emerald-50 border border-emerald-200 px-4 py-2 rounded-xl">
                             <div className="text-right">
-                              <p className="text-[9px] text-emerald-800 font-black uppercase tracking-wider">Caja Abierta</p>
+                              <p className="text-[9px] text-emerald-800 font-montserrat font-extrabold uppercase tracking-wider">Caja Abierta</p>
                               <p className="text-[11px] text-emerald-600 font-mono font-bold leading-none mt-0.5">{activeSession.apertura}</p>
                             </div>
                             <button
@@ -3629,16 +3640,16 @@ export default function AdminPanel({
                                 setCajaObservaciones('');
                                 setShowCloseCajaModal(true);
                               }}
-                              className="px-4 py-2 bg-rose-600 hover:bg-rose-700 text-white text-xs font-black uppercase tracking-wider rounded-lg transition cursor-pointer flex items-center gap-1.5 shadow-sm"
+                              className="px-4 py-2 bg-rose-600 hover:bg-rose-700 text-white text-xs font-montserrat font-extrabold uppercase tracking-wider rounded-xl transition cursor-pointer flex items-center gap-1.5 shadow-2xs active:scale-95"
                             >
                               <Lock className="w-3.5 h-3.5" />
                               <span>Cerrar Caja</span>
                             </button>
                           </div>
                         ) : (
-                          <div className="flex items-center gap-3 bg-rose-50 border border-rose-100 px-4 py-2 rounded-xl">
+                          <div className="flex items-center gap-3 bg-rose-50 border border-rose-200 px-4 py-2 rounded-xl">
                             <div>
-                              <p className="text-[9px] text-rose-800 font-black uppercase tracking-wider">Caja Cerrada</p>
+                              <p className="text-[9px] text-rose-800 font-montserrat font-extrabold uppercase tracking-wider">Caja Cerrada</p>
                               <p className="text-[10px] text-rose-500 font-semibold leading-none mt-0.5">Debe abrir caja para facturar</p>
                             </div>
                             <button
@@ -3647,9 +3658,9 @@ export default function AdminPanel({
                                 setCajaObservaciones('');
                                 setShowOpenCajaModal(true);
                               }}
-                              className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-black uppercase tracking-wider rounded-lg transition cursor-pointer flex items-center gap-1.5 shadow-sm"
+                              className="px-4 py-2 bg-[#40E0D0] hover:bg-[#36cebf] text-[#1D3557] text-xs font-montserrat font-extrabold uppercase tracking-wider rounded-xl transition cursor-pointer flex items-center gap-1.5 shadow-2xs active:scale-95"
                             >
-                              <Unlock className="w-3.5 h-3.5" />
+                              <Unlock className="w-3.5 h-3.5 stroke-[2.5]" />
                               <span>Aperturar Caja</span>
                             </button>
                           </div>
@@ -3658,45 +3669,45 @@ export default function AdminPanel({
                     </div>
 
                     {/* Cash balance metrics widgets */}
-                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 font-poppins">
                       <div className="bg-emerald-50/50 border border-emerald-100 rounded-xl p-4">
-                        <p className="text-[10px] text-gray-400 font-black uppercase tracking-wider">Fondo de Apertura</p>
-                        <p className="text-lg font-black text-emerald-800 mt-1">{formatBs(initialFondoBs)}</p>
-                        <p className="text-[10px] text-emerald-600 font-bold mt-0.5">({formatUSD(initialFondoUsd)})</p>
+                        <p className="text-[10px] text-[#2B2D42]/60 font-montserrat font-extrabold uppercase tracking-wider">Fondo de Apertura</p>
+                        <p className="text-lg font-black font-mono text-emerald-800 mt-1">{formatBs(initialFondoBs)}</p>
+                        <p className="text-[10px] text-emerald-600 font-bold mt-0.5 font-mono">({formatUSD(initialFondoUsd)})</p>
                       </div>
-                      <div className="bg-blue-50/50 border border-blue-100 rounded-xl p-4">
-                        <p className="text-[10px] text-gray-400 font-black uppercase tracking-wider">Ingresos del Turno</p>
-                        <p className="text-lg font-black text-blue-800 mt-1">+{formatBs(sessionIngressesBs)}</p>
-                        <p className="text-[10px] text-blue-600 font-bold mt-0.5">(+{formatUSD(sessionIngressesUsd)})</p>
+                      <div className="bg-[#1D3557]/5 border border-[#1D3557]/15 rounded-xl p-4">
+                        <p className="text-[10px] text-[#2B2D42]/60 font-montserrat font-extrabold uppercase tracking-wider">Ingresos del Turno</p>
+                        <p className="text-lg font-black font-mono text-[#1D3557] mt-1">+{formatBs(sessionIngressesBs)}</p>
+                        <p className="text-[10px] text-[#00BFFF] font-bold mt-0.5 font-mono">(+{formatUSD(sessionIngressesUsd)})</p>
                       </div>
                       <div className="bg-rose-50/50 border border-rose-100 rounded-xl p-4">
-                        <p className="text-[10px] text-gray-400 font-black uppercase tracking-wider">Egresos del Turno</p>
-                        <p className="text-lg font-black text-rose-800 mt-1">-{formatBs(sessionEgressesBs)}</p>
-                        <p className="text-[10px] text-rose-600 font-bold mt-0.5">(-{formatUSD(sessionEgressesUsd)})</p>
+                        <p className="text-[10px] text-[#2B2D42]/60 font-montserrat font-extrabold uppercase tracking-wider">Egresos del Turno</p>
+                        <p className="text-lg font-black font-mono text-rose-800 mt-1">-{formatBs(sessionEgressesBs)}</p>
+                        <p className="text-[10px] text-rose-600 font-bold mt-0.5 font-mono">(-{formatUSD(sessionEgressesUsd)})</p>
                       </div>
-                      <div className="bg-amber-50/50 border border-amber-100 rounded-xl p-4">
-                        <p className="text-[10px] text-gray-400 font-black uppercase tracking-wider">Saldo Esperado</p>
-                        <p className="text-lg font-black text-amber-800 mt-1">{formatBs(esperadoSessionBs)}</p>
-                        <p className="text-[10px] text-amber-600 font-bold mt-0.5">({formatUSD(esperadoSessionUsd)})</p>
+                      <div className="bg-[#F8F9FA] border border-gray-200 rounded-xl p-4">
+                        <p className="text-[10px] text-[#2B2D42]/60 font-montserrat font-extrabold uppercase tracking-wider">Saldo Esperado</p>
+                        <p className="text-lg font-black font-mono text-[#2B2D42] mt-1">{formatBs(esperadoSessionBs)}</p>
+                        <p className="text-[10px] text-[#1D3557] font-bold mt-0.5 font-mono">({formatUSD(esperadoSessionUsd)})</p>
                       </div>
                     </div>
 
                     {/* Manual Cash Movement Form */}
-                    <div className="bg-gray-50 border border-gray-150 rounded-2xl p-5 relative overflow-hidden">
+                    <div className="bg-[#F8F9FA] border border-gray-200 rounded-2xl p-5 relative overflow-hidden font-poppins">
                       {!activeSession && (
                         <div className="absolute inset-0 bg-white/70 backdrop-blur-xs flex items-center justify-center z-10 p-6 text-center select-none">
                           <div className="max-w-xs space-y-2">
                             <Lock className="w-8 h-8 text-rose-500 mx-auto" />
-                            <p className="text-xs font-black uppercase text-gray-800 tracking-tight">Formulario Bloqueado</p>
-                            <p className="text-[11px] text-gray-500 font-medium leading-relaxed">Debe aperturar la caja diaria para registrar ingresos o egresos manuales de caja.</p>
+                            <p className="text-xs font-montserrat font-extrabold uppercase text-[#1D3557] tracking-tight">Formulario Bloqueado</p>
+                            <p className="text-[11px] text-[#2B2D42]/70 font-medium leading-relaxed">Debe aperturar la caja diaria para registrar ingresos o egresos manuales de caja.</p>
                           </div>
                         </div>
                       )}
                       
-                      <h3 className="text-xs font-extrabold uppercase tracking-wider text-gray-800 mb-3">Registrar Movimiento de Caja Manual</h3>
+                      <h3 className="text-xs font-montserrat font-extrabold uppercase tracking-wider text-[#1D3557] mb-3">Registrar Movimiento de Caja Manual</h3>
                       
                       {cajaSuccessMsg && (
-                        <div className="mb-4 p-3 bg-emerald-100 border border-emerald-200 text-emerald-800 text-xs font-bold rounded-lg flex items-center gap-2">
+                        <div className="mb-4 p-3 bg-emerald-100 border border-emerald-200 text-emerald-800 text-xs font-bold rounded-xl flex items-center gap-2">
                           <Check className="w-4 h-4 shrink-0" />
                           <span>{cajaSuccessMsg}</span>
                         </div>
@@ -3704,19 +3715,19 @@ export default function AdminPanel({
 
                       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                         <div>
-                          <label className="block text-[10px] font-bold text-gray-500 uppercase mb-1">Concepto o Descripción</label>
+                          <label className="block text-[10px] font-montserrat font-extrabold text-[#2B2D42]/80 uppercase mb-1">Concepto o Descripción</label>
                           <input
                             type="text"
                             placeholder="Ej. Pago de Delivery / Repuestos"
                             value={newOpConcept}
                             onChange={(e) => setNewOpConcept(e.target.value)}
                             disabled={!activeSession}
-                            className="w-full p-2 bg-white border border-gray-300 rounded-lg text-xs font-semibold text-gray-700 focus:ring-2 focus:ring-[#005da9] focus:outline-none disabled:bg-gray-100 disabled:text-gray-400"
+                            className="w-full p-2.5 bg-white border border-gray-300 rounded-xl text-xs font-semibold text-[#2B2D42] focus:border-[#1D3557] focus:outline-none disabled:bg-gray-100 disabled:text-gray-400"
                           />
                         </div>
 
                         <div>
-                          <label className="block text-[10px] font-bold text-gray-500 uppercase mb-1">Monto ($ USD)</label>
+                          <label className="block text-[10px] font-montserrat font-extrabold text-[#2B2D42]/80 uppercase mb-1">Monto ($ USD)</label>
                           <input
                             type="number"
                             step="0.01"
@@ -3724,22 +3735,22 @@ export default function AdminPanel({
                             value={newOpAmount}
                             onChange={(e) => setNewOpAmount(e.target.value)}
                             disabled={!activeSession}
-                            className="w-full p-2 bg-white border border-gray-300 rounded-lg text-xs font-semibold text-gray-700 focus:ring-2 focus:ring-[#005da9] focus:outline-none disabled:bg-gray-100 disabled:text-gray-400"
+                            className="w-full p-2.5 bg-white border border-gray-300 rounded-xl text-xs font-mono font-bold text-[#2B2D42] focus:border-[#1D3557] focus:outline-none disabled:bg-gray-100 disabled:text-gray-400"
                           />
                           {newOpAmount && !isNaN(parseFloat(newOpAmount)) && (
-                            <span className="text-[9px] text-gray-400 font-bold mt-1 block">
-                              Equivale a: <span className="text-gray-600">{(parseFloat(newOpAmount) * bcvRate).toFixed(2)} Bs.</span>
+                            <span className="text-[9px] text-[#2B2D42]/70 font-bold mt-1 block">
+                              Equivale a: <span className="text-[#1D3557] font-mono">{(parseFloat(newOpAmount) * bcvRate).toFixed(2)} Bs.</span>
                             </span>
                           )}
                         </div>
 
                         <div>
-                          <label className="block text-[10px] font-bold text-gray-500 uppercase mb-1">Tipo de Movimiento</label>
+                          <label className="block text-[10px] font-montserrat font-extrabold text-[#2B2D42]/80 uppercase mb-1">Tipo de Movimiento</label>
                           <select
                             value={newOpType}
                             onChange={(e) => setNewOpType(e.target.value as any)}
                             disabled={!activeSession}
-                            className="w-full p-2 bg-white border border-gray-300 rounded-lg text-xs font-semibold text-gray-700 focus:ring-2 focus:ring-[#005da9] focus:outline-none disabled:bg-gray-100 disabled:text-gray-400"
+                            className="w-full p-2.5 bg-white border border-gray-300 rounded-xl text-xs font-semibold text-[#2B2D42] focus:border-[#1D3557] focus:outline-none disabled:bg-gray-100 disabled:text-gray-400"
                           >
                             <option value="ingreso">Ingreso (+)</option>
                             <option value="egreso">Egreso (-)</option>
@@ -3751,7 +3762,7 @@ export default function AdminPanel({
                         <button
                           onClick={handleRegisterManualMovement}
                           disabled={!activeSession}
-                          className="px-5 py-2 bg-gray-800 hover:bg-gray-900 text-white text-xs font-black uppercase tracking-wider rounded-xl transition cursor-pointer shadow-sm disabled:bg-gray-200 disabled:text-gray-400 disabled:cursor-not-allowed"
+                          className="px-5 py-2.5 bg-[#1D3557] hover:bg-[#152843] text-white text-xs font-montserrat font-extrabold uppercase tracking-wider rounded-xl transition cursor-pointer shadow-xs disabled:bg-gray-200 disabled:text-gray-400 disabled:cursor-not-allowed active:scale-95"
                         >
                           Registrar Movimiento
                         </button>
@@ -3759,22 +3770,22 @@ export default function AdminPanel({
                     </div>
 
                     {/* Cash Movements Table for current open session */}
-                    <div className="bg-white border border-gray-200 rounded-xl shadow-xs overflow-hidden">
-                      <div className="p-4 bg-gray-50 border-b border-gray-150">
-                        <h3 className="text-xs font-black uppercase text-gray-800 tracking-wider">Detalle de Operaciones de la Sesión Activa</h3>
+                    <div className="bg-white border border-gray-200/80 rounded-2xl shadow-xs overflow-hidden font-poppins">
+                      <div className="p-4 bg-[#F8F9FA] border-b border-gray-100">
+                        <h3 className="text-xs font-montserrat font-extrabold uppercase text-[#1D3557] tracking-wider">Detalle de Operaciones de la Sesión Activa</h3>
                       </div>
                       <div className="overflow-x-auto">
                         <table className="w-full text-left border-collapse text-xs">
                           <thead>
-                            <tr className="bg-[#005da9] text-white">
-                              <th className="p-3 font-bold">ID</th>
-                              <th className="p-3 font-bold">Concepto</th>
-                              <th className="p-3 font-bold">Hora</th>
-                              <th className="p-3 font-bold text-right">Ingreso (Bs. / $)</th>
-                              <th className="p-3 font-bold text-right">Egreso (Bs. / $)</th>
+                            <tr className="bg-[#1D3557] text-white font-montserrat font-extrabold text-[10px] uppercase tracking-wider">
+                              <th className="p-3">ID</th>
+                              <th className="p-3">Concepto</th>
+                              <th className="p-3">Hora</th>
+                              <th className="p-3 text-right">Ingreso (Bs. / $)</th>
+                              <th className="p-3 text-right">Egreso (Bs. / $)</th>
                             </tr>
                           </thead>
-                          <tbody className="divide-y divide-gray-100 font-medium text-gray-700">
+                          <tbody className="divide-y divide-gray-100 font-medium text-[#2B2D42]">
                             {activeSessionOps.length === 0 ? (
                               <tr>
                                 <td colSpan={5} className="p-8 text-center text-gray-400 font-semibold italic">
@@ -3783,11 +3794,11 @@ export default function AdminPanel({
                               </tr>
                             ) : (
                               activeSessionOps.map((op: any) => (
-                                <tr key={op.id} className="hover:bg-gray-50">
+                                <tr key={op.id} className="hover:bg-[#F8F9FA]">
                                   <td className="p-3 text-gray-400 font-mono">#{op.id}</td>
-                                  <td className="p-3 font-bold text-gray-800">{op.concept}</td>
+                                  <td className="p-3 font-bold text-[#2B2D42]">{op.concept}</td>
                                   <td className="p-3 text-gray-400 font-mono">{op.time}</td>
-                                  <td className="p-3 text-right text-emerald-600 font-black">
+                                  <td className="p-3 text-right text-emerald-600 font-black font-mono">
                                     {op.type === 'ingreso' ? (
                                       <div className="flex flex-col items-end">
                                         <span>+{formatBs(op.amount_bs || (op.amount * bcvRate))}</span>
@@ -3795,7 +3806,7 @@ export default function AdminPanel({
                                       </div>
                                     ) : ''}
                                   </td>
-                                  <td className="p-3 text-right text-rose-600 font-black">
+                                  <td className="p-3 text-right text-rose-600 font-black font-mono">
                                     {op.type === 'egreso' ? (
                                       <div className="flex flex-col items-end">
                                         <span>-{formatBs(op.amount_bs || (op.amount * bcvRate))}</span>
@@ -3811,27 +3822,27 @@ export default function AdminPanel({
                       </div>
                     </div>
 
-                    {/* REPORT: RECENT SESSIONS HISTORY (As requested in 2. - Imagen 1) */}
-                    <div className="bg-white border border-gray-200 rounded-xl shadow-xs overflow-hidden mt-6">
-                      <div className="p-4 bg-gray-50 border-b border-gray-150 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                    {/* REPORT: RECENT SESSIONS HISTORY */}
+                    <div className="bg-white border border-gray-200/80 rounded-2xl shadow-xs overflow-hidden mt-6 font-poppins">
+                      <div className="p-4 bg-[#F8F9FA] border-b border-gray-100 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                         <div>
-                          <h3 className="text-xs font-black uppercase text-gray-800 tracking-wider">Historial Reciente de Sesiones y Arqueo (Reporte)</h3>
-                          <p className="text-[10px] text-gray-400 font-medium">Consulte el registro histórico de cierres de caja, balances esperados y diferencias detectadas.</p>
+                          <h3 className="text-xs font-montserrat font-extrabold uppercase text-[#1D3557] tracking-wider">Historial Reciente de Sesiones y Arqueo (Reporte)</h3>
+                          <p className="text-[10px] text-[#2B2D42]/70 font-medium">Consulte el registro histórico de cierres de caja, balances esperados y diferencias detectadas.</p>
                         </div>
                       </div>
                       <div className="overflow-x-auto">
                         <table className="w-full text-left border-collapse text-xs">
                           <thead>
-                            <tr className="bg-gray-800 text-white">
-                              <th className="p-3 font-bold">Apertura</th>
-                              <th className="p-3 font-bold">Cierre</th>
-                              <th className="p-3 font-bold text-right">Apertura Bs.</th>
-                              <th className="p-3 font-bold text-right">Cierre Bs.</th>
-                              <th className="p-3 font-bold text-right">Diferencia</th>
-                              <th className="p-3 font-bold text-center">Estado</th>
+                            <tr className="bg-[#1D3557] text-white font-montserrat font-extrabold text-[10px] uppercase tracking-wider">
+                              <th className="p-3">Apertura</th>
+                              <th className="p-3">Cierre</th>
+                              <th className="p-3 text-right">Apertura Bs.</th>
+                              <th className="p-3 text-right">Cierre Bs.</th>
+                              <th className="p-3 text-right">Diferencia</th>
+                              <th className="p-3 text-center">Estado</th>
                             </tr>
                           </thead>
-                          <tbody className="divide-y divide-gray-100 font-medium text-gray-700">
+                          <tbody className="divide-y divide-gray-100 font-medium text-[#2B2D42]">
                             {cashSessions.length === 0 ? (
                               <tr>
                                 <td colSpan={6} className="p-8 text-center text-gray-400 font-semibold italic">
@@ -3840,13 +3851,13 @@ export default function AdminPanel({
                               </tr>
                             ) : (
                               cashSessions.map((session: any) => (
-                                <tr key={session.id} className="hover:bg-gray-50">
-                                  <td className="p-3 font-bold text-gray-800">{session.apertura}</td>
-                                  <td className="p-3 text-gray-500 font-semibold">{session.cierre || '—'}</td>
-                                  <td className="p-3 text-right text-gray-700 font-mono font-bold">
+                                <tr key={session.id} className="hover:bg-[#F8F9FA]">
+                                  <td className="p-3 font-bold text-[#2B2D42]">{session.apertura}</td>
+                                  <td className="p-3 text-[#2B2D42]/70 font-semibold">{session.cierre || '—'}</td>
+                                  <td className="p-3 text-right text-[#2B2D42] font-mono font-bold">
                                     {formatBs(session.apertura_bs)}
                                   </td>
-                                  <td className="p-3 text-right text-gray-700 font-mono font-bold">
+                                  <td className="p-3 text-right text-[#2B2D42] font-mono font-bold">
                                     {formatBs(session.cierre_bs)}
                                   </td>
                                   <td className="p-3 text-right font-mono font-black">
@@ -3917,48 +3928,48 @@ export default function AdminPanel({
 
                     {/* MODAL: CERRAR CAJA / ARQUEO */}
                     {showCloseCajaModal && (
-                      <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 backdrop-blur-xs select-none">
+                      <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 backdrop-blur-xs select-none font-poppins">
                         <div className="bg-white rounded-2xl border border-gray-150 max-w-md w-full shadow-2xl p-6 text-left">
                           <div className="flex justify-between items-center border-b border-gray-100 pb-3 mb-4">
-                            <h3 className="text-sm font-black uppercase text-gray-800 flex items-center gap-2">
+                            <h3 className="text-sm font-montserrat font-extrabold uppercase text-[#1D3557] flex items-center gap-2">
                               <Lock className="w-5 h-5 text-rose-600" />
                               <span>Cerrar Caja y Arqueo</span>
                             </h3>
-                            <button onClick={() => setShowCloseCajaModal(false)} className="text-gray-400 hover:text-gray-600">
+                            <button onClick={() => setShowCloseCajaModal(false)} className="text-gray-400 hover:text-[#1D3557] cursor-pointer">
                               <X className="w-4 h-4" />
                             </button>
                           </div>
                           
                           <div className="space-y-4">
-                            <div className="p-3 bg-gray-50 border border-gray-150 rounded-xl space-y-1 text-xs font-mono">
-                              <div className="flex justify-between text-gray-500 font-bold">
+                            <div className="p-3 bg-[#F8F9FA] border border-gray-150 rounded-xl space-y-1 text-xs font-mono">
+                              <div className="flex justify-between text-[#2B2D42]/70 font-bold">
                                 <span>Fondo Inicial:</span>
-                                <span className="text-gray-800 font-black">{formatBs(initialFondoBs)}</span>
+                                <span className="text-[#1D3557] font-black">{formatBs(initialFondoBs)}</span>
                               </div>
-                              <div className="flex justify-between text-gray-500 font-bold">
+                              <div className="flex justify-between text-[#2B2D42]/70 font-bold">
                                 <span>(+) Ingresos del Turno:</span>
                                 <span className="text-emerald-600 font-black">+{formatBs(sessionIngressesBs)}</span>
                               </div>
-                              <div className="flex justify-between text-gray-500 font-bold">
+                              <div className="flex justify-between text-[#2B2D42]/70 font-bold">
                                 <span>(-) Egresos del Turno:</span>
                                 <span className="text-rose-600 font-black">-{formatBs(sessionEgressesBs)}</span>
                               </div>
                               <hr className="border-gray-200 my-1 font-sans" />
-                              <div className="flex justify-between text-gray-700 font-black text-sm">
+                              <div className="flex justify-between text-[#1D3557] font-black text-sm font-montserrat">
                                 <span>Saldo Esperado en Caja:</span>
-                                <span className="text-blue-800">{formatBs(esperadoSessionBs)}</span>
+                                <span className="text-[#00BFFF]">{formatBs(esperadoSessionBs)}</span>
                               </div>
                             </div>
 
                             <div>
-                              <label className="block text-[10px] font-bold text-gray-500 uppercase mb-1">Monto Real Contado en Caja (Bs.)</label>
+                              <label className="block text-[10px] font-montserrat font-extrabold text-[#1D3557] uppercase mb-1">Monto Real Contado en Caja (Bs.)</label>
                               <input
                                 type="number"
                                 step="0.01"
                                 placeholder="Monto contado físicamente"
                                 value={closeCajaAmountBs}
                                 onChange={(e) => setCloseCajaAmountBs(e.target.value)}
-                                className="w-full p-2 bg-gray-50 border border-gray-200 rounded-lg text-xs font-semibold text-gray-700 font-mono"
+                                className="w-full p-2.5 bg-[#F8F9FA] border border-gray-200 rounded-xl text-xs font-semibold text-[#2B2D42] font-mono focus:outline-none focus:ring-2 focus:ring-[#00BFFF]"
                               />
                               {closeCajaAmountBs && !isNaN(parseFloat(closeCajaAmountBs)) && (
                                 <div className="mt-2 p-2 rounded-lg text-[11px] font-bold">
@@ -3967,21 +3978,21 @@ export default function AdminPanel({
                                     const dif = contado - esperadoSessionBs;
                                     if (dif === 0) {
                                       return (
-                                        <div className="text-emerald-700 bg-emerald-50 border border-emerald-100 p-1.5 rounded flex items-center gap-1">
+                                        <div className="text-emerald-700 bg-emerald-50 border border-emerald-100 p-1.5 rounded-lg flex items-center gap-1">
                                           <Check className="w-3.5 h-3.5" />
                                           <span>La caja cuadra perfectamente (Diferencia: 0,00 Bs.)</span>
                                         </div>
                                       );
                                     } else if (dif > 0) {
                                       return (
-                                        <div className="text-blue-700 bg-blue-50 border border-blue-100 p-1.5 rounded flex items-center gap-1">
-                                          <Check className="w-3.5 h-3.5" />
+                                        <div className="text-[#1D3557] bg-[#40E0D0]/20 border border-[#40E0D0]/40 p-1.5 rounded-lg flex items-center gap-1 font-montserrat">
+                                          <Check className="w-3.5 h-3.5 text-[#1D3557]" />
                                           <span>Sobrante en Caja: +{formatBs(dif)}</span>
                                         </div>
                                       );
                                     } else {
                                       return (
-                                        <div className="text-rose-700 bg-rose-50 border border-rose-100 p-1.5 rounded flex items-center gap-1">
+                                        <div className="text-rose-700 bg-rose-50 border border-rose-100 p-1.5 rounded-lg flex items-center gap-1">
                                           <AlertTriangle className="w-3.5 h-3.5" />
                                           <span>Faltante en Caja: {formatBs(dif)}</span>
                                         </div>
@@ -3993,21 +4004,21 @@ export default function AdminPanel({
                             </div>
 
                             <div>
-                              <label className="block text-[10px] font-bold text-gray-500 uppercase mb-1">Observaciones de Cierre</label>
+                              <label className="block text-[10px] font-montserrat font-extrabold text-[#1D3557] uppercase mb-1">Observaciones de Cierre</label>
                               <textarea
                                 rows={2}
                                 placeholder="Ej. Todo en orden. Caja cuadrada."
                                 value={cajaObservaciones}
                                 onChange={(e) => setCajaObservaciones(e.target.value)}
-                                className="w-full p-2 bg-gray-50 border border-gray-200 rounded-lg text-xs font-semibold text-gray-700"
+                                className="w-full p-2.5 bg-[#F8F9FA] border border-gray-200 rounded-xl text-xs font-medium text-[#2B2D42] focus:outline-none focus:ring-2 focus:ring-[#00BFFF]"
                               />
                             </div>
                           </div>
 
-                          <div className="mt-5 flex justify-end gap-2 border-t border-gray-100 pt-3">
+                          <div className="mt-5 flex justify-end gap-2 border-t border-gray-100 pt-3 font-montserrat font-extrabold">
                             <button
                               onClick={() => setShowCloseCajaModal(false)}
-                              className="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-600 text-xs font-bold rounded-lg transition"
+                              className="px-4 py-2 bg-[#F8F9FA] hover:bg-gray-100 text-[#2B2D42] text-xs rounded-xl transition cursor-pointer"
                             >
                               Cancelar
                             </button>
@@ -4020,7 +4031,7 @@ export default function AdminPanel({
                                 }
                                 closeSession(bs, cajaObservaciones.trim());
                               }}
-                              className="px-4 py-2 bg-rose-600 hover:bg-rose-700 text-white text-xs font-black rounded-lg transition"
+                              className="px-4 py-2 bg-rose-600 hover:bg-rose-700 text-white text-xs font-black rounded-xl transition cursor-pointer shadow-xs uppercase tracking-wider"
                             >
                               Confirmar Cierre de Caja
                             </button>
@@ -4036,18 +4047,18 @@ export default function AdminPanel({
 
           {/* VIEW: CLIENTES CON IDENTIFICACIÓN VENEZOLANA */}
           {(currentMenu === 'clientes' || (currentMenu === 'clientes_proveedores' && contactsTab === 'clientes')) && (
-            <div className="space-y-6 text-left">
+            <div className="space-y-6 text-left font-poppins">
               {/* Unified Contact Tab Switcher */}
-              <div className="flex items-center gap-2 p-1 bg-gray-100 rounded-2xl w-fit border border-gray-200 shadow-2xs">
+              <div className="flex items-center gap-2 p-1 bg-[#F8F9FA] rounded-2xl w-fit border border-gray-200 shadow-2xs font-montserrat font-extrabold">
                 <button
                   type="button"
                   onClick={() => {
                     setContactsTab('clientes');
                     if (currentMenu !== 'clientes_proveedores') setCurrentMenu('clientes');
                   }}
-                  className="px-4 py-2 rounded-xl text-xs font-black uppercase transition-all flex items-center gap-2 cursor-pointer bg-[#005da9] text-white shadow-xs"
+                  className="px-4 py-2 rounded-xl text-xs uppercase transition-all flex items-center gap-2 cursor-pointer bg-[#1D3557] text-white shadow-xs"
                 >
-                  <Users className="w-4 h-4" />
+                  <Users className="w-4 h-4 text-[#40E0D0]" />
                   <span>Clientes ({dbClients.length})</span>
                 </button>
                 <button
@@ -4056,78 +4067,78 @@ export default function AdminPanel({
                     setContactsTab('proveedores');
                     if (currentMenu === 'clientes') setCurrentMenu('proveedores');
                   }}
-                  className="px-4 py-2 rounded-xl text-xs font-black uppercase transition-all flex items-center gap-2 cursor-pointer text-gray-600 hover:text-gray-900 hover:bg-gray-200/60"
+                  className="px-4 py-2 rounded-xl text-xs uppercase transition-all flex items-center gap-2 cursor-pointer text-[#2B2D42] hover:text-[#1D3557] hover:bg-white"
                 >
-                  <Truck className="w-4 h-4" />
+                  <Truck className="w-4 h-4 text-[#00BFFF]" />
                   <span>Proveedores ({providers.length})</span>
                 </button>
               </div>
 
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
-                  <h2 className="text-xl font-black text-[#131921] uppercase tracking-tight flex items-center gap-2">
-                    <Users className="w-6 h-6 text-[#005da9]" />
+                  <h2 className="text-xl font-montserrat font-extrabold text-[#1D3557] uppercase tracking-tight flex items-center gap-2">
+                    <Users className="w-6 h-6 text-[#00BFFF]" />
                     <span>Clientes</span>
                   </h2>
-                  <p className="text-xs text-gray-500 font-medium">
+                  <p className="text-xs text-[#2B2D42]/70 font-medium">
                     Gestión de clientes con identificación venezolana
                   </p>
                 </div>
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-2 font-montserrat font-extrabold">
                   <button
                     type="button"
                     onClick={fetchClients}
                     disabled={loadingClients}
-                    className="px-3.5 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold text-xs rounded-xl transition flex items-center gap-1.5 cursor-pointer disabled:opacity-50 active:scale-98"
+                    className="px-3.5 py-2.5 bg-[#F8F9FA] hover:bg-gray-100 text-[#1D3557] text-xs rounded-xl transition flex items-center gap-1.5 cursor-pointer disabled:opacity-50 border border-gray-200 active:scale-95 uppercase tracking-wider"
                     title="Recargar y sincronizar clientes con Supabase"
                   >
-                    <RefreshCw className={`w-3.5 h-3.5 ${loadingClients ? 'animate-spin text-[#005da9]' : ''}`} />
+                    <RefreshCw className={`w-3.5 h-3.5 ${loadingClients ? 'animate-spin text-[#00BFFF]' : 'text-[#00BFFF]'}`} />
                     <span className="hidden sm:inline">Sincronizar</span>
                   </button>
                   <button
                     onClick={openAddClientModal}
-                    className="px-4 py-2.5 bg-[#005da9] hover:bg-[#004b88] text-white font-black text-xs uppercase tracking-wider rounded-xl transition shadow-xs flex items-center gap-2 cursor-pointer active:scale-98"
+                    className="px-4 py-2.5 bg-[#40E0D0] hover:bg-[#36cebe] text-[#1D3557] text-xs uppercase tracking-wider rounded-xl transition shadow-md flex items-center gap-2 cursor-pointer active:scale-95 border-b-2 border-[#1D3557]/20"
                   >
-                    <Plus className="w-4 h-4" />
+                    <Plus className="w-4 h-4 stroke-[3]" />
                     <span>Nuevo cliente</span>
                   </button>
                 </div>
               </div>
 
               {/* Search & Filter bar */}
-              <div className="bg-white border border-gray-200 rounded-xl shadow-xs p-4 flex flex-col md:flex-row gap-4 items-center justify-between">
+              <div className="bg-white border border-gray-200 rounded-2xl shadow-xs p-4 flex flex-col md:flex-row gap-4 items-center justify-between">
                 <div className="relative w-full md:w-96">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-[#00BFFF]">
                     <Search className="w-4 h-4" />
                   </div>
                   <input
                     type="text"
                     placeholder="Buscar por nombre, código o documento..."
-                    className="w-full pl-9 pr-4 py-2 bg-gray-50 border border-gray-200 rounded-xl text-xs font-bold text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#005da9] focus:bg-white transition"
+                    className="w-full pl-9 pr-4 py-2 bg-[#F8F9FA] border border-gray-200 rounded-xl text-xs font-medium text-[#2B2D42] focus:outline-none focus:ring-2 focus:ring-[#00BFFF] focus:bg-white transition"
                     value={clientSearch}
                     onChange={(e) => setClientSearch(e.target.value)}
                   />
                   {clientSearch && (
                     <button 
                       onClick={() => setClientSearch('')} 
-                      className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600"
+                      className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-[#1D3557]"
                     >
                       <X className="w-3.5 h-3.5" />
                     </button>
                   )}
                 </div>
 
-                <div className="text-[10px] text-gray-400 font-bold uppercase shrink-0">
-                  Total en directorio: <span className="text-gray-800 font-black">{dbClients.length} clientes</span>
+                <div className="text-[10px] text-[#2B2D42]/60 font-montserrat font-bold uppercase shrink-0">
+                  Total en directorio: <span className="text-[#1D3557] font-extrabold">{dbClients.length} clientes</span>
                 </div>
               </div>
 
               {/* Table of Clientes */}
-              <div className="bg-white border border-gray-200 rounded-xl shadow-xs overflow-hidden">
+              <div className="bg-white border border-gray-200 rounded-2xl shadow-xs overflow-hidden">
                 <div className="overflow-x-auto">
                   <table className="w-full text-left border-collapse text-xs">
                     <thead>
-                      <tr className="bg-gray-50 text-gray-500 font-bold uppercase text-[10px] border-b border-gray-200">
+                      <tr className="bg-[#1D3557] text-white font-montserrat font-extrabold uppercase text-[11px] tracking-wider">
                         <th className="p-4">Código</th>
                         <th className="p-4">Documento</th>
                         <th className="p-4">Nombre</th>
@@ -4138,11 +4149,11 @@ export default function AdminPanel({
                         <th className="p-4 text-center">Acciones</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-gray-100 text-gray-700 font-semibold">
+                    <tbody className="divide-y divide-gray-100 text-[#2B2D42] font-semibold">
                       {loadingClients ? (
                         <tr>
                           <td colSpan={8} className="p-12 text-center text-gray-400 font-semibold">
-                            <RefreshCw className="w-5 h-5 animate-spin mx-auto mb-2 text-gray-400" />
+                            <RefreshCw className="w-5 h-5 animate-spin mx-auto mb-2 text-[#00BFFF]" />
                             Cargando directorio de clientes...
                           </td>
                         </tr>
@@ -4154,49 +4165,49 @@ export default function AdminPanel({
                         </tr>
                       ) : (
                         filteredDbClients.map((client) => (
-                          <tr key={client.id} className="hover:bg-gray-50/50">
+                          <tr key={client.id} className="hover:bg-[#F8F9FA] transition">
                             <td className="p-4">
-                              <span className="bg-blue-50 text-[#005da9] text-[10px] font-black uppercase px-2 py-1 rounded-lg border border-blue-100 font-mono">
+                              <span className="bg-[#1D3557]/10 text-[#1D3557] text-[10px] font-montserrat font-black uppercase px-2 py-1 rounded-lg border border-[#1D3557]/20 font-mono">
                                 {client.code}
                               </span>
                             </td>
-                            <td className="p-4 font-mono font-bold text-gray-600">{client.document}</td>
+                            <td className="p-4 font-mono font-bold text-[#2B2D42]">{client.document}</td>
                             <td className="p-4">
                               <div className="flex items-center gap-2">
-                                <span className="w-7 h-7 rounded-full bg-gray-100 text-gray-600 font-black flex items-center justify-center text-[10px] shrink-0 uppercase border border-gray-200">
+                                <span className="w-7 h-7 rounded-full bg-[#40E0D0]/20 text-[#1D3557] font-montserrat font-extrabold flex items-center justify-center text-[10px] shrink-0 uppercase border border-[#40E0D0]/40">
                                   {(client.name || '').substring(0, 2).toUpperCase()}
                                 </span>
-                                <span className="font-extrabold text-gray-900">{client.name}</span>
+                                <span className="font-extrabold text-[#1D3557]">{client.name}</span>
                               </div>
                             </td>
                             <td className="p-4">
-                              <span className={`px-2 py-0.5 rounded text-[9px] font-black uppercase ${
+                              <span className={`px-2 py-0.5 rounded text-[9px] font-montserrat font-extrabold uppercase ${
                                 client.type === 'Jurídico' 
                                   ? 'bg-purple-50 text-purple-700 border border-purple-100' 
-                                  : 'bg-emerald-50 text-emerald-700 border border-emerald-100'
+                                  : 'bg-[#40E0D0]/20 text-[#1D3557] border border-[#40E0D0]/40'
                               }`}>
                                 {client.type || 'Natural'}
                               </span>
                             </td>
-                            <td className="p-4 font-mono text-gray-500">{client.phone || 'Sin teléfono'}</td>
-                            <td className="p-4 font-mono text-gray-500 max-w-[150px] truncate" title={client.email}>
+                            <td className="p-4 font-mono text-[#2B2D42]/80">{client.phone || 'Sin teléfono'}</td>
+                            <td className="p-4 font-mono text-[#2B2D42]/80 max-w-[150px] truncate" title={client.email}>
                               {client.email || <span className="text-gray-350 italic text-[11px]">Sin correo</span>}
                             </td>
-                            <td className="p-4 font-black text-gray-900">
+                            <td className="p-4 font-black text-[#1D3557]">
                               ${(client.credit_usd || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                             </td>
                             <td className="p-4">
                               <div className="flex items-center justify-center gap-2">
                                 <button
                                   onClick={() => openEditClientModal(client)}
-                                  className="p-1.5 bg-blue-50 text-blue-700 hover:bg-blue-100 rounded-lg transition"
+                                  className="p-1.5 bg-[#00BFFF]/10 text-[#00BFFF] hover:bg-[#00BFFF]/20 rounded-lg transition cursor-pointer"
                                   title="Editar Cliente"
                                 >
                                   <Edit3 className="w-3.5 h-3.5" />
                                 </button>
                                 <button
                                   onClick={() => handleDeleteClient(client.id, client.name)}
-                                  className="p-1.5 bg-red-50 text-red-700 hover:bg-red-100 rounded-lg transition"
+                                  className="p-1.5 bg-red-50 text-red-600 hover:bg-red-100 rounded-lg transition cursor-pointer"
                                   title="Eliminar Cliente"
                                 >
                                   <Trash2 className="w-3.5 h-3.5" />
@@ -4213,16 +4224,16 @@ export default function AdminPanel({
 
               {/* -------------------- MODAL: NUEVO / EDITAR CLIENTE -------------------- */}
               {showClientModal && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4">
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4 select-none font-poppins">
                   <div className="bg-white rounded-3xl border border-gray-150 w-full max-w-md shadow-2xl overflow-hidden text-left flex flex-col">
-                    <div className="p-4 bg-gray-50 border-b border-gray-100 flex justify-between items-center">
-                      <span className="text-xs font-black text-gray-800 uppercase tracking-wider flex items-center gap-2">
-                        <Users className="w-4 h-4 text-gray-500" />
+                    <div className="p-4 bg-[#1D3557] text-white flex justify-between items-center">
+                      <span className="text-xs font-montserrat font-extrabold uppercase tracking-wider flex items-center gap-2 text-white">
+                        <Users className="w-4 h-4 text-[#40E0D0]" />
                         <span>{selectedClientForEdit ? 'Editar Cliente' : 'Nuevo Cliente'}</span>
                       </span>
                       <button 
                         onClick={() => setShowClientModal(false)}
-                        className="p-1.5 hover:bg-gray-200 text-gray-400 hover:text-gray-600 rounded-lg transition"
+                        className="p-1.5 hover:bg-white/10 text-gray-300 hover:text-white rounded-lg transition cursor-pointer"
                       >
                         <X className="w-4 h-4" />
                       </button>
@@ -4230,24 +4241,24 @@ export default function AdminPanel({
 
                     <form onSubmit={handleSaveClient} className="p-5 space-y-4">
                       <div>
-                        <label className="block text-[10px] font-black uppercase text-gray-400 mb-1">Nombre Completo / Razón Social *</label>
+                        <label className="block text-[10px] font-montserrat font-extrabold uppercase text-[#1D3557] mb-1">Nombre Completo / Razón Social *</label>
                         <input
                           type="text"
                           required
                           value={clientFormName}
                           onChange={(e) => setClientFormName(e.target.value)}
                           placeholder="Ej: Inversiones Pérez C.A., María Gómez"
-                          className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-xs font-bold text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#005da9]"
+                          className="w-full px-3 py-2 bg-[#F8F9FA] border border-gray-200 rounded-xl text-xs font-bold text-[#2B2D42] focus:outline-none focus:ring-2 focus:ring-[#00BFFF]"
                         />
                       </div>
 
                       <div className="grid grid-cols-2 gap-4">
                         <div>
-                          <label className="block text-[10px] font-black uppercase text-gray-400 mb-1">Tipo Identificación *</label>
+                          <label className="block text-[10px] font-montserrat font-extrabold uppercase text-[#1D3557] mb-1">Tipo Identificación *</label>
                           <select
                             value={clientFormType}
                             onChange={(e) => setClientFormType(e.target.value)}
-                            className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-xs font-bold text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#005da9]"
+                            className="w-full px-3 py-2 bg-[#F8F9FA] border border-gray-200 rounded-xl text-xs font-bold text-[#2B2D42] focus:outline-none focus:ring-2 focus:ring-[#00BFFF]"
                           >
                             <option value="Natural">Natural (V / E)</option>
                             <option value="Jurídico">Jurídico (J / G)</option>
@@ -4255,67 +4266,67 @@ export default function AdminPanel({
                         </div>
 
                         <div>
-                          <label className="block text-[10px] font-black uppercase text-gray-400 mb-1">Cédula o RIF *</label>
+                          <label className="block text-[10px] font-montserrat font-extrabold uppercase text-[#1D3557] mb-1">Cédula o RIF *</label>
                           <input
                             type="text"
                             required
                             value={clientFormDocument}
                             onChange={(e) => setClientFormDocument(e.target.value)}
                             placeholder="Ej: V-12345678 o J-31456987-0"
-                            className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-xs font-bold text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#005da9]"
+                            className="w-full px-3 py-2 bg-[#F8F9FA] border border-gray-200 rounded-xl text-xs font-bold text-[#2B2D42] focus:outline-none focus:ring-2 focus:ring-[#00BFFF]"
                           />
                         </div>
                       </div>
 
                       <div className="grid grid-cols-2 gap-4">
                         <div>
-                          <label className="block text-[10px] font-black uppercase text-gray-400 mb-1">Teléfono / WhatsApp</label>
+                          <label className="block text-[10px] font-montserrat font-extrabold uppercase text-[#1D3557] mb-1">Teléfono / WhatsApp</label>
                           <input
                             type="text"
                             value={clientFormPhone}
                             onChange={(e) => setClientFormPhone(e.target.value)}
                             placeholder="Ej: 0412-5551234"
-                            className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-xs font-bold text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#005da9]"
+                            className="w-full px-3 py-2 bg-[#F8F9FA] border border-gray-200 rounded-xl text-xs font-bold text-[#2B2D42] focus:outline-none focus:ring-2 focus:ring-[#00BFFF]"
                           />
                         </div>
 
                         <div>
-                          <label className="block text-[10px] font-black uppercase text-gray-400 mb-1">Límite de Crédito (USD)</label>
+                          <label className="block text-[10px] font-montserrat font-extrabold uppercase text-[#1D3557] mb-1">Límite de Crédito (USD)</label>
                           <input
                             type="number"
                             step="0.01"
                             value={clientFormCredit}
                             onChange={(e) => setClientFormCredit(Number(e.target.value))}
                             placeholder="Ej: 100.00"
-                            className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-xs font-bold text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#005da9]"
+                            className="w-full px-3 py-2 bg-[#F8F9FA] border border-gray-200 rounded-xl text-xs font-bold text-[#2B2D42] focus:outline-none focus:ring-2 focus:ring-[#00BFFF]"
                           />
                         </div>
                       </div>
 
                       <div>
-                        <label className="block text-[10px] font-black uppercase text-gray-400 mb-1">Correo Electrónico</label>
+                        <label className="block text-[10px] font-montserrat font-extrabold uppercase text-[#1D3557] mb-1">Correo Electrónico</label>
                         <input
                           type="email"
                           value={clientFormEmail}
                           onChange={(e) => setClientFormEmail(e.target.value)}
                           placeholder="Ej: cliente@ejemplo.com"
-                          className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-xs font-bold text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#005da9]"
+                          className="w-full px-3 py-2 bg-[#F8F9FA] border border-gray-200 rounded-xl text-xs font-bold text-[#2B2D42] focus:outline-none focus:ring-2 focus:ring-[#00BFFF]"
                         />
                       </div>
 
-                      <div className="flex gap-2 pt-3 border-t border-gray-100">
+                      <div className="flex gap-2 pt-3 border-t border-gray-100 font-montserrat font-extrabold">
                         <button
                           type="button"
                           onClick={() => setShowClientModal(false)}
-                          className="flex-1 py-2 bg-gray-100 hover:bg-gray-200 text-gray-600 font-bold text-xs rounded-xl transition"
+                          className="flex-1 py-2.5 bg-gray-100 hover:bg-gray-200 text-[#2B2D42] text-xs rounded-xl transition cursor-pointer"
                         >
                           Cancelar
                         </button>
                         <button
                           type="submit"
-                          className="flex-1 py-2 bg-[#005da9] hover:bg-[#004b88] text-white font-black text-xs uppercase rounded-xl transition"
+                          className="flex-1 py-2.5 bg-[#40E0D0] hover:bg-[#36cebe] text-[#1D3557] font-extrabold text-xs uppercase rounded-xl transition cursor-pointer shadow-md border-b-2 border-[#1D3557]/20"
                         >
-                          Guardar
+                          Guardar Cliente
                         </button>
                       </div>
                     </form>
@@ -4414,18 +4425,18 @@ export default function AdminPanel({
 
           {/* VIEW: PROVEEDORES */}
           {(currentMenu === 'proveedores' || (currentMenu === 'clientes_proveedores' && contactsTab === 'proveedores')) && (
-            <div className="space-y-6 text-left" id="module-proveedores">
+            <div className="space-y-6 text-left font-poppins" id="module-proveedores">
               {/* Unified Contact Tab Switcher */}
-              <div className="flex items-center gap-2 p-1 bg-gray-100 rounded-2xl w-fit border border-gray-200 shadow-2xs">
+              <div className="flex items-center gap-2 p-1 bg-[#F8F9FA] rounded-2xl w-fit border border-gray-200 shadow-2xs font-montserrat font-extrabold">
                 <button
                   type="button"
                   onClick={() => {
                     setContactsTab('clientes');
                     if (currentMenu === 'proveedores') setCurrentMenu('clientes');
                   }}
-                  className="px-4 py-2 rounded-xl text-xs font-black uppercase transition-all flex items-center gap-2 cursor-pointer text-gray-600 hover:text-gray-900 hover:bg-gray-200/60"
+                  className="px-4 py-2 rounded-xl text-xs uppercase transition-all flex items-center gap-2 cursor-pointer text-[#2B2D42] hover:text-[#1D3557] hover:bg-white"
                 >
-                  <Users className="w-4 h-4" />
+                  <Users className="w-4 h-4 text-[#00BFFF]" />
                   <span>Clientes ({dbClients.length})</span>
                 </button>
                 <button
@@ -4434,66 +4445,66 @@ export default function AdminPanel({
                     setContactsTab('proveedores');
                     if (currentMenu !== 'clientes_proveedores') setCurrentMenu('proveedores');
                   }}
-                  className="px-4 py-2 rounded-xl text-xs font-black uppercase transition-all flex items-center gap-2 cursor-pointer bg-[#005da9] text-white shadow-xs"
+                  className="px-4 py-2 rounded-xl text-xs uppercase transition-all flex items-center gap-2 cursor-pointer bg-[#1D3557] text-white shadow-xs"
                 >
-                  <Truck className="w-4 h-4" />
+                  <Truck className="w-4 h-4 text-[#40E0D0]" />
                   <span>Proveedores ({providers.length})</span>
                 </button>
               </div>
 
               <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                 <div>
-                  <h2 className="text-xl font-black text-[#131921] uppercase tracking-tight flex items-center gap-2">
-                    <Truck className="w-6 h-6 text-[#005da9]" />
+                  <h2 className="text-xl font-montserrat font-extrabold text-[#1D3557] uppercase tracking-tight flex items-center gap-2">
+                    <Truck className="w-6 h-6 text-[#00BFFF]" />
                     <span>Proveedores</span>
                   </h2>
-                  <p className="text-xs text-gray-500 font-medium">
+                  <p className="text-xs text-[#2B2D42]/70 font-medium">
                     Gestión de proveedores con datos fiscales venezolanos
                   </p>
                 </div>
                 <button
                   onClick={openAddProviderModal}
-                  className="px-4 py-2.5 bg-[#005da9] hover:bg-[#004b88] text-white font-black text-xs uppercase tracking-wider rounded-xl transition shadow-xs flex items-center gap-2"
+                  className="px-4 py-2.5 bg-[#40E0D0] hover:bg-[#36cebe] text-[#1D3557] font-montserrat font-extrabold text-xs uppercase tracking-wider rounded-xl transition shadow-md flex items-center gap-2 cursor-pointer active:scale-95 border-b-2 border-[#1D3557]/20"
                 >
-                  <Plus className="w-4 h-4" />
+                  <Plus className="w-4 h-4 stroke-[3]" />
                   <span>Nuevo proveedor</span>
                 </button>
               </div>
 
               {/* Search & Filter bar */}
-              <div className="bg-white border border-gray-200 rounded-xl shadow-xs p-4 flex flex-col md:flex-row gap-4 items-center justify-between">
+              <div className="bg-white border border-gray-200 rounded-2xl shadow-xs p-4 flex flex-col md:flex-row gap-4 items-center justify-between">
                 <div className="relative w-full md:w-96">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-[#00BFFF]">
                     <Search className="w-4 h-4" />
                   </div>
                   <input
                     type="text"
                     placeholder="Buscar por razón social, RIF o código..."
-                    className="w-full pl-9 pr-4 py-2 bg-gray-50 border border-gray-200 rounded-xl text-xs font-bold text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#005da9] focus:bg-white transition"
+                    className="w-full pl-9 pr-4 py-2 bg-[#F8F9FA] border border-gray-200 rounded-xl text-xs font-medium text-[#2B2D42] focus:outline-none focus:ring-2 focus:ring-[#00BFFF] focus:bg-white transition"
                     value={providerSearch}
                     onChange={(e) => setProviderSearch(e.target.value)}
                   />
                   {providerSearch && (
                     <button 
                       onClick={() => setProviderSearch('')} 
-                      className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600"
+                      className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-[#1D3557]"
                     >
                       <X className="w-3.5 h-3.5" />
                     </button>
                   )}
                 </div>
 
-                <div className="text-[10px] text-gray-400 font-bold uppercase shrink-0">
-                  Total proveedores: <span className="text-gray-800 font-black">{providers.length}</span>
+                <div className="text-[10px] text-[#2B2D42]/60 font-montserrat font-bold uppercase shrink-0">
+                  Total proveedores: <span className="text-[#1D3557] font-extrabold">{providers.length}</span>
                 </div>
               </div>
 
               {/* Table of Proveedores */}
-              <div className="bg-white border border-gray-200 rounded-xl shadow-xs overflow-hidden">
+              <div className="bg-white border border-gray-200 rounded-2xl shadow-xs overflow-hidden">
                 <div className="overflow-x-auto">
                   <table className="w-full text-left border-collapse text-xs">
                     <thead>
-                      <tr className="bg-gray-50 text-gray-500 font-bold uppercase text-[10px] border-b border-gray-200">
+                      <tr className="bg-[#1D3557] text-white font-montserrat font-extrabold uppercase text-[11px] tracking-wider">
                         <th className="p-4">Código</th>
                         <th className="p-4">RIF</th>
                         <th className="p-4">Razón social</th>
@@ -4503,11 +4514,11 @@ export default function AdminPanel({
                         <th className="p-4 text-center">Acciones</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-gray-100 text-gray-700 font-semibold">
+                    <tbody className="divide-y divide-gray-100 text-[#2B2D42] font-semibold">
                       {loadingProviders ? (
                         <tr>
                           <td colSpan={7} className="p-12 text-center text-gray-400 font-semibold">
-                            <RefreshCw className="w-5 h-5 animate-spin mx-auto mb-2 text-gray-400" />
+                            <RefreshCw className="w-5 h-5 animate-spin mx-auto mb-2 text-[#00BFFF]" />
                             Cargando proveedores...
                           </td>
                         </tr>
@@ -4519,37 +4530,37 @@ export default function AdminPanel({
                         </tr>
                       ) : (
                         filteredProviders.map((prov) => (
-                          <tr key={prov.id} className="hover:bg-gray-50/50">
+                          <tr key={prov.id} className="hover:bg-[#F8F9FA] transition">
                             <td className="p-4">
-                              <span className="bg-orange-50 text-orange-700 text-[10px] font-black uppercase px-2 py-1 rounded-lg border border-orange-100 font-mono">
+                              <span className="bg-[#1D3557]/10 text-[#1D3557] text-[10px] font-montserrat font-black uppercase px-2 py-1 rounded-lg border border-[#1D3557]/20 font-mono">
                                 {prov.code}
                               </span>
                             </td>
-                            <td className="p-4 font-mono font-bold text-gray-600">{prov.rif}</td>
-                            <td className="p-4 font-extrabold text-gray-900">{prov.name}</td>
+                            <td className="p-4 font-mono font-bold text-[#2B2D42]">{prov.rif}</td>
+                            <td className="p-4 font-extrabold text-[#1D3557]">{prov.name}</td>
                             <td className="p-4">
-                              <span className={`px-2 py-0.5 rounded text-[9px] font-black uppercase ${
+                              <span className={`px-2 py-0.5 rounded text-[9px] font-montserrat font-extrabold uppercase ${
                                 prov.type === 'Jurídico' 
                                   ? 'bg-purple-50 text-purple-700 border border-purple-100' 
-                                  : 'bg-emerald-50 text-emerald-700 border border-emerald-100'
+                                  : 'bg-[#40E0D0]/20 text-[#1D3557] border border-[#40E0D0]/40'
                               }`}>
                                 {prov.type || 'Jurídico'}
                               </span>
                             </td>
-                            <td className="p-4 font-mono text-gray-500">{prov.phone || 'Sin teléfono'}</td>
-                            <td className="p-4 text-gray-600">{prov.bank_name || 'No especificado'}</td>
+                            <td className="p-4 font-mono text-[#2B2D42]/80">{prov.phone || 'Sin teléfono'}</td>
+                            <td className="p-4 text-[#2B2D42]">{prov.bank_name || 'No especificado'}</td>
                             <td className="p-4">
                               <div className="flex items-center justify-center gap-2">
                                 <button
                                   onClick={() => openEditProviderModal(prov)}
-                                  className="p-1.5 bg-blue-50 text-blue-700 hover:bg-blue-100 rounded-lg transition"
+                                  className="p-1.5 bg-[#00BFFF]/10 text-[#00BFFF] hover:bg-[#00BFFF]/20 rounded-lg transition cursor-pointer"
                                   title="Editar Proveedor"
                                 >
                                   <Edit3 className="w-3.5 h-3.5" />
                                 </button>
                                 <button
                                   onClick={() => handleDeleteProvider(prov.id, prov.name)}
-                                  className="p-1.5 bg-red-50 text-red-700 hover:bg-red-100 rounded-lg transition"
+                                  className="p-1.5 bg-red-50 text-red-600 hover:bg-red-100 rounded-lg transition cursor-pointer"
                                   title="Eliminar Proveedor"
                                 >
                                   <Trash2 className="w-3.5 h-3.5" />
@@ -4566,16 +4577,16 @@ export default function AdminPanel({
 
               {/* -------------------- MODAL: NUEVO / EDITAR PROVEEDOR -------------------- */}
               {showProviderModal && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4">
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4 select-none font-poppins">
                   <div className="bg-white rounded-3xl border border-gray-150 w-full max-w-md shadow-2xl overflow-hidden text-left flex flex-col">
-                    <div className="p-4 bg-gray-50 border-b border-gray-100 flex justify-between items-center">
-                      <span className="text-xs font-black text-gray-800 uppercase tracking-wider flex items-center gap-2">
-                        <Truck className="w-4 h-4 text-gray-500" />
+                    <div className="p-4 bg-[#1D3557] text-white flex justify-between items-center">
+                      <span className="text-xs font-montserrat font-extrabold uppercase tracking-wider flex items-center gap-2 text-white">
+                        <Truck className="w-4 h-4 text-[#40E0D0]" />
                         <span>{selectedProviderForEdit ? 'Editar Proveedor' : 'Nuevo Proveedor'}</span>
                       </span>
                       <button 
                         onClick={() => setShowProviderModal(false)}
-                        className="p-1.5 hover:bg-gray-200 text-gray-400 hover:text-gray-600 rounded-lg transition"
+                        className="p-1.5 hover:bg-white/10 text-gray-300 hover:text-white rounded-lg transition cursor-pointer"
                       >
                         <X className="w-4 h-4" />
                       </button>
@@ -4584,36 +4595,36 @@ export default function AdminPanel({
                     <form onSubmit={handleSaveProvider} className="p-5 space-y-4">
                       <div className="grid grid-cols-3 gap-4">
                         <div className="col-span-1">
-                          <label className="block text-[10px] font-black uppercase text-gray-400 mb-1">Código *</label>
+                          <label className="block text-[10px] font-montserrat font-extrabold uppercase text-[#1D3557] mb-1">Código *</label>
                           <input
                             type="text"
                             required
                             value={providerFormCode}
                             onChange={(e) => setProviderFormCode(e.target.value)}
                             placeholder="PROV-001"
-                            className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-xs font-bold text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#005da9]"
+                            className="w-full px-3 py-2 bg-[#F8F9FA] border border-gray-200 rounded-xl text-xs font-bold text-[#2B2D42] focus:outline-none focus:ring-2 focus:ring-[#00BFFF]"
                           />
                         </div>
                         <div className="col-span-2">
-                          <label className="block text-[10px] font-black uppercase text-gray-400 mb-1">Razón Social *</label>
+                          <label className="block text-[10px] font-montserrat font-extrabold uppercase text-[#1D3557] mb-1">Razón Social *</label>
                           <input
                             type="text"
                             required
                             value={providerFormName}
                             onChange={(e) => setProviderFormName(e.target.value)}
                             placeholder="Ej: Distribuidora Bella Vista C.A."
-                            className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-xs font-bold text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#005da9]"
+                            className="w-full px-3 py-2 bg-[#F8F9FA] border border-gray-200 rounded-xl text-xs font-bold text-[#2B2D42] focus:outline-none focus:ring-2 focus:ring-[#00BFFF]"
                           />
                         </div>
                       </div>
 
                       <div className="grid grid-cols-2 gap-4">
                         <div>
-                          <label className="block text-[10px] font-black uppercase text-gray-400 mb-1">Tipo de Firma *</label>
+                          <label className="block text-[10px] font-montserrat font-extrabold uppercase text-[#1D3557] mb-1">Tipo de Firma *</label>
                           <select
                             value={providerFormType}
                             onChange={(e) => setProviderFormType(e.target.value)}
-                            className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-xs font-bold text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#005da9]"
+                            className="w-full px-3 py-2 bg-[#F8F9FA] border border-gray-200 rounded-xl text-xs font-bold text-[#2B2D42] focus:outline-none focus:ring-2 focus:ring-[#00BFFF]"
                           >
                             <option value="Jurídico">Jurídico (J / G)</option>
                             <option value="Natural">Natural (V / E)</option>
@@ -4621,55 +4632,55 @@ export default function AdminPanel({
                         </div>
 
                         <div>
-                          <label className="block text-[10px] font-black uppercase text-gray-400 mb-1">RIF / Cédula *</label>
+                          <label className="block text-[10px] font-montserrat font-extrabold uppercase text-[#1D3557] mb-1">RIF / Cédula *</label>
                           <input
                             type="text"
                             required
                             value={providerFormRif}
                             onChange={(e) => setProviderFormRif(e.target.value)}
                             placeholder="Ej: J-12345678-9"
-                            className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-xs font-bold text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#005da9]"
+                            className="w-full px-3 py-2 bg-[#F8F9FA] border border-gray-200 rounded-xl text-xs font-bold text-[#2B2D42] focus:outline-none focus:ring-2 focus:ring-[#00BFFF]"
                           />
                         </div>
                       </div>
 
                       <div className="grid grid-cols-2 gap-4">
                         <div>
-                          <label className="block text-[10px] font-black uppercase text-gray-400 mb-1">Teléfono</label>
+                          <label className="block text-[10px] font-montserrat font-extrabold uppercase text-[#1D3557] mb-1">Teléfono</label>
                           <input
                             type="text"
                             value={providerFormPhone}
                             onChange={(e) => setProviderFormPhone(e.target.value)}
                             placeholder="Ej: 0261-7000123"
-                            className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-xs font-bold text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#005da9]"
+                            className="w-full px-3 py-2 bg-[#F8F9FA] border border-gray-200 rounded-xl text-xs font-bold text-[#2B2D42] focus:outline-none focus:ring-2 focus:ring-[#00BFFF]"
                           />
                         </div>
 
                         <div>
-                          <label className="block text-[10px] font-black uppercase text-gray-400 mb-1">Banco Receptor</label>
+                          <label className="block text-[10px] font-montserrat font-extrabold uppercase text-[#1D3557] mb-1">Banco Receptor</label>
                           <input
                             type="text"
                             value={providerFormBankName}
                             onChange={(e) => setProviderFormBankName(e.target.value)}
                             placeholder="Ej: Banesco, Banco de Venezuela"
-                            className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-xs font-bold text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#005da9]"
+                            className="w-full px-3 py-2 bg-[#F8F9FA] border border-gray-200 rounded-xl text-xs font-bold text-[#2B2D42] focus:outline-none focus:ring-2 focus:ring-[#00BFFF]"
                           />
                         </div>
                       </div>
 
-                      <div className="flex gap-2 pt-3 border-t border-gray-100">
+                      <div className="flex gap-2 pt-3 border-t border-gray-100 font-montserrat font-extrabold">
                         <button
                           type="button"
                           onClick={() => setShowProviderModal(false)}
-                          className="flex-1 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold text-xs uppercase tracking-wider rounded-xl transition"
+                          className="flex-1 py-2.5 bg-gray-100 hover:bg-gray-200 text-[#2B2D42] text-xs uppercase tracking-wider rounded-xl transition cursor-pointer"
                         >
                           Cancelar
                         </button>
                         <button
                           type="submit"
-                          className="flex-1 py-2 bg-[#005da9] hover:bg-[#004b88] text-white font-black text-xs uppercase tracking-wider rounded-xl transition shadow-xs"
+                          className="flex-1 py-2.5 bg-[#40E0D0] hover:bg-[#36cebe] text-[#1D3557] font-extrabold text-xs uppercase tracking-wider rounded-xl transition cursor-pointer shadow-md border-b-2 border-[#1D3557]/20"
                         >
-                          Guardar
+                          Guardar Proveedor
                         </button>
                       </div>
                     </form>
@@ -4694,14 +4705,14 @@ export default function AdminPanel({
 
           {/* VIEW: USUARIOS Y ACCESOS DEL PERSONAL INTERNO */}
           {currentMenu === 'users' && (
-            <div className="space-y-6 text-left" id="module-usuarios">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-4 rounded-2xl border border-gray-200 shadow-xs">
+            <div className="space-y-6 text-left font-poppins" id="module-usuarios">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-5 rounded-2xl border border-gray-200 shadow-xs">
                 <div>
-                  <h2 className="text-xl font-black text-[#131921] uppercase tracking-tight flex items-center gap-2">
-                    <UserCheck className="w-6 h-6 text-[#005da9]" />
+                  <h2 className="text-xl font-montserrat font-extrabold text-[#1D3557] uppercase tracking-tight flex items-center gap-2">
+                    <UserCheck className="w-6 h-6 text-[#00BFFF]" />
                     <span>Configuración de Usuarios Internos y Permisos</span>
                   </h2>
-                  <p className="text-xs text-gray-500 font-medium mt-1">
+                  <p className="text-xs text-[#2B2D42]/70 font-medium mt-1">
                     Administración exclusiva del personal de tienda, asignación de roles y activación/desactivación de botones de acceso por módulo.
                   </p>
                 </div>
@@ -4719,7 +4730,7 @@ export default function AdminPanel({
                         setUserFormError('');
                         setShowUserModal(true);
                       }}
-                      className="px-4 py-2.5 bg-[#28a745] hover:bg-[#218838] text-white text-xs font-black rounded-xl transition shadow-sm uppercase tracking-wider flex items-center gap-2 shrink-0 cursor-pointer"
+                      className="px-4 py-2.5 bg-[#40E0D0] hover:bg-[#36cebe] text-[#1D3557] font-montserrat font-extrabold text-xs rounded-xl transition shadow-md uppercase tracking-wider flex items-center gap-2 shrink-0 cursor-pointer border-b-2 border-[#1D3557]/20 active:scale-95"
                     >
                       <Plus className="w-4 h-4 stroke-[3]" />
                       <span>+ Incorporar Nuevo Usuario Interno</span>
@@ -4733,21 +4744,21 @@ export default function AdminPanel({
               </div>
 
               {/* INTERNAL STAFF TABLE */}
-              <div className="bg-white border border-gray-200 rounded-2xl shadow-sm p-4 relative pb-6">
+              <div className="bg-white border border-gray-200 rounded-2xl shadow-xs p-4 relative pb-6">
                 <div className="flex items-center justify-between gap-3 mb-4 border-b border-gray-100 pb-3">
-                  <h3 className="text-sm font-black text-gray-800 uppercase flex items-center gap-2">
-                    <UserCheck className="w-4 h-4 text-[#005da9]" />
+                  <h3 className="text-sm font-montserrat font-extrabold text-[#1D3557] uppercase flex items-center gap-2">
+                    <UserCheck className="w-4 h-4 text-[#00BFFF]" />
                     <span>Personal Registrado en la Tienda ({storeUsers.filter(u => u.role !== 'Cliente').length}):</span>
                   </h3>
-                  <span className="text-[11px] text-gray-500 font-medium">
-                    Haz clic en <span className="font-bold text-[#005da9]">🔑 Botones de Accesos</span> en cada fila para activar/desactivar módulos individuales.
+                  <span className="text-[11px] text-[#2B2D42]/70 font-medium">
+                    Haz clic en <span className="font-bold text-[#00BFFF]">🔑 Botones de Accesos</span> en cada fila para activar/desactivar módulos individuales.
                   </span>
                 </div>
                 
                 <div className="overflow-x-auto">
                   <table className="w-full text-left text-xs border-collapse">
-                    <thead className="bg-gray-50 border-b border-gray-200 text-gray-500 font-bold uppercase tracking-wider">
-                      <tr>
+                    <thead>
+                      <tr className="bg-[#1D3557] text-white font-montserrat font-extrabold uppercase text-[11px] tracking-wider">
                         <th className="px-4 py-3">Nombre del Personal</th>
                         <th className="px-4 py-3">Correo / Usuario</th>
                         <th className="px-4 py-3">Contraseña</th>
@@ -4757,10 +4768,10 @@ export default function AdminPanel({
                         <th className="px-4 py-3 text-right">Acciones</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-gray-100">
+                    <tbody className="divide-y divide-gray-100 text-[#2B2D42]">
                       {loadingUsers ? (
                         <tr>
-                          <td colSpan={7} className="px-4 py-8 text-center text-gray-500">Cargando usuarios internos...</td>
+                          <td colSpan={7} className="px-4 py-8 text-center text-gray-500 font-medium">Cargando usuarios internos...</td>
                         </tr>
                       ) : storeUsers
                           .filter(u => u.role !== 'Cliente')
@@ -4773,7 +4784,7 @@ export default function AdminPanel({
                             return true;
                           }).length === 0 ? (
                         <tr>
-                          <td colSpan={7} className="px-4 py-8 text-center text-gray-500">No hay usuarios internos registrados.</td>
+                          <td colSpan={7} className="px-4 py-8 text-center text-gray-500 font-medium">No hay usuarios internos registrados.</td>
                         </tr>
                       ) : (
                         storeUsers
@@ -4792,10 +4803,10 @@ export default function AdminPanel({
                               : getDefaultPermissionsForRole(user.role);
 
                             return (
-                              <tr key={user.id || user.email} className={!user.is_active ? 'opacity-50 bg-gray-50' : 'hover:bg-gray-50/80 transition'}>
-                                <td className="px-4 py-3.5 font-bold text-[#131921]">{user.name}</td>
-                                <td className="px-4 py-3.5 font-mono font-medium text-gray-700">{user.email}</td>
-                                <td className="px-4 py-3.5 font-mono text-gray-600">
+                              <tr key={user.id || user.email} className={!user.is_active ? 'opacity-50 bg-[#F8F9FA]' : 'hover:bg-[#F8F9FA] transition'}>
+                                <td className="px-4 py-3.5 font-extrabold text-[#1D3557]">{user.name}</td>
+                                <td className="px-4 py-3.5 font-mono font-medium text-[#2B2D42]">{user.email}</td>
+                                <td className="px-4 py-3.5 font-mono text-[#2B2D42]/80">
                                   <div className="flex items-center gap-2">
                                     <span>
                                       {visiblePasswords[user.id || user.email] 
@@ -4808,23 +4819,23 @@ export default function AdminPanel({
                                         const key = user.id || user.email;
                                         setVisiblePasswords(prev => ({ ...prev, [key]: !prev[key] }));
                                       }}
-                                      className="text-gray-400 hover:text-gray-700 text-[10px] underline cursor-pointer"
+                                      className="text-[#00BFFF] hover:underline text-[10px] cursor-pointer font-sans"
                                     >
                                       {visiblePasswords[user.id || user.email] ? 'Ocultar' : 'Ver'}
                                     </button>
                                   </div>
                                 </td>
                                 <td className="px-4 py-3.5">
-                                  <span className={`inline-block px-2.5 py-1 rounded-full border font-black text-[10px] uppercase tracking-wider ${
+                                  <span className={`inline-block px-2.5 py-1 rounded-full border font-montserrat font-extrabold text-[10px] uppercase tracking-wider ${
                                     user.role === 'Gerente'
                                       ? 'border-purple-200 text-purple-700 bg-purple-50'
                                       : user.role === 'Admin' || user.role === 'Administrador'
-                                      ? 'border-blue-200 text-blue-700 bg-blue-50'
+                                      ? 'border-[#1D3557]/20 text-[#1D3557] bg-[#1D3557]/10'
                                       : user.role === 'Cajero'
-                                      ? 'border-emerald-200 text-emerald-700 bg-emerald-50'
+                                      ? 'border-[#40E0D0]/40 text-[#1D3557] bg-[#40E0D0]/20'
                                       : user.role === 'Despachador'
                                       ? 'border-amber-200 text-amber-700 bg-amber-50'
-                                      : 'border-indigo-200 text-indigo-700 bg-indigo-50'
+                                      : 'border-[#00BFFF]/30 text-[#00BFFF] bg-[#00BFFF]/10'
                                   }`}>
                                     {user.role}
                                   </span>
@@ -4833,26 +4844,26 @@ export default function AdminPanel({
                                   <button
                                     type="button"
                                     onClick={() => handleOpenPermissionsModal(user)}
-                                    className="px-3 py-1.5 bg-emerald-50 hover:bg-emerald-100 border border-emerald-300 text-emerald-800 rounded-xl font-bold text-[11px] transition flex items-center gap-1.5 cursor-pointer shadow-2xs"
+                                    className="px-3 py-1.5 bg-[#40E0D0]/10 hover:bg-[#40E0D0]/20 border border-[#40E0D0]/40 text-[#1D3557] rounded-xl font-montserrat font-extrabold text-[11px] transition flex items-center gap-1.5 cursor-pointer shadow-2xs"
                                   >
-                                    <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
+                                    <ShieldCheck className="w-3.5 h-3.5 text-[#00BFFF]" />
                                     <span>🔑 Botones de Accesos ({currentPerms.length} activos)</span>
                                   </button>
                                 </td>
-                                <td className="px-4 py-3.5">
+                                <td className="px-4 py-3.5 font-montserrat font-bold">
                                   {((activeRole as string) === 'Admin' || (activeRole as string) === 'Gerente' || activeRole === 'admin' || activeRole === 'vendedor') ? (
                                     <button 
                                       onClick={() => handleToggleStoreUserStatus(user.id || user.email, user.is_active)}
                                       className={`text-xs font-bold cursor-pointer px-2.5 py-1 rounded-full transition ${
                                         user.is_active 
-                                          ? 'bg-green-50 text-green-700 border border-green-200 hover:bg-green-100' 
-                                          : 'bg-red-50 text-red-700 border border-red-200 hover:bg-red-100'
+                                          ? 'bg-emerald-50 text-emerald-700 border border-emerald-200 hover:bg-emerald-100' 
+                                          : 'bg-rose-50 text-rose-700 border border-rose-200 hover:bg-rose-100'
                                       }`}
                                     >
                                       {user.is_active ? '🟢 Activo' : '🔴 Inactivo'}
                                     </button>
                                   ) : (
-                                    <span className={`text-xs font-bold px-2.5 py-1 rounded-full ${user.is_active ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700'}`}>
+                                    <span className={`text-xs font-bold px-2.5 py-1 rounded-full ${user.is_active ? 'bg-emerald-50 text-emerald-700' : 'bg-rose-50 text-rose-700'}`}>
                                       {user.is_active ? '🟢 Activo' : '🔴 Inactivo'}
                                     </span>
                                   )}
@@ -4861,7 +4872,7 @@ export default function AdminPanel({
                                   <div className="flex items-center justify-end gap-1">
                                     <button 
                                       onClick={() => handleOpenPermissionsModal(user)}
-                                      className="p-1.5 text-emerald-600 hover:bg-emerald-50 rounded-lg transition cursor-pointer"
+                                      className="p-1.5 text-[#00BFFF] hover:bg-[#00BFFF]/10 rounded-lg transition cursor-pointer"
                                       title="Configurar Botones de Permisos"
                                     >
                                       <ShieldCheck className="w-4 h-4" />
@@ -4879,14 +4890,14 @@ export default function AdminPanel({
                                             setUserFormError('');
                                             setShowUserModal(true);
                                           }}
-                                          className="p-1.5 text-blue-600 hover:bg-blue-50 rounded-lg transition cursor-pointer"
+                                          className="p-1.5 text-[#1D3557] hover:bg-[#1D3557]/10 rounded-lg transition cursor-pointer"
                                           title="Editar Usuario Interno"
                                         >
                                           <Edit3 className="w-4 h-4" />
                                         </button>
                                         <button 
                                           onClick={() => handleDeleteStoreUser(user.id || user.email, user.name)}
-                                          className="p-1.5 text-red-500 hover:bg-red-50 rounded-lg transition cursor-pointer"
+                                          className="p-1.5 text-rose-600 hover:bg-rose-50 rounded-lg transition cursor-pointer"
                                           title="Eliminar Usuario Interno"
                                         >
                                           <Trash2 className="w-4 h-4" />
@@ -4905,33 +4916,33 @@ export default function AdminPanel({
               </div>
 
               {/* PERMISSIONS REFERENCE MATRIX */}
-              <div className="bg-white border border-gray-200 rounded-2xl shadow-sm overflow-hidden p-4">
+              <div className="bg-white border border-gray-200 rounded-2xl shadow-xs overflow-hidden p-4">
                 <div className="flex items-center justify-between mb-3 pb-2 border-b border-gray-100">
-                  <h3 className="text-xs font-black text-gray-800 uppercase flex items-center gap-1.5">
-                    <ShieldCheck className="w-4 h-4 text-[#005da9]" />
+                  <h3 className="text-xs font-montserrat font-extrabold text-[#1D3557] uppercase flex items-center gap-1.5">
+                    <ShieldCheck className="w-4 h-4 text-[#00BFFF]" />
                     <span>Matriz de Referencia de Accesos Predeterminados por Rol</span>
                   </h3>
                 </div>
                 
                 <div className="overflow-x-auto">
                   <table className="w-full text-left text-xs">
-                    <thead className="bg-gray-50 border-b border-gray-200 text-gray-600 font-bold uppercase text-[10px]">
-                      <tr>
-                        <th className="px-3 py-2">Rol / Función</th>
-                        <th className="px-3 py-2 text-center">Pedidos</th>
-                        <th className="px-3 py-2 text-center">Facturación</th>
-                        <th className="px-3 py-2 text-center">Productos</th>
-                        <th className="px-3 py-2 text-center">Caja</th>
-                        <th className="px-3 py-2 text-center">Clientes</th>
-                        <th className="px-3 py-2 text-center">Proveedores</th>
-                        <th className="px-3 py-2 text-center">Compras</th>
-                        <th className="px-3 py-2 text-center">Reportes</th>
-                        <th className="px-3 py-2 text-center">Configuración</th>
+                    <thead>
+                      <tr className="bg-[#1D3557] text-white font-montserrat font-extrabold uppercase text-[10px] tracking-wider">
+                        <th className="px-3 py-2.5">Rol / Función</th>
+                        <th className="px-3 py-2.5 text-center">Pedidos</th>
+                        <th className="px-3 py-2.5 text-center">Facturación</th>
+                        <th className="px-3 py-2.5 text-center">Productos</th>
+                        <th className="px-3 py-2.5 text-center">Caja</th>
+                        <th className="px-3 py-2.5 text-center">Clientes</th>
+                        <th className="px-3 py-2.5 text-center">Proveedores</th>
+                        <th className="px-3 py-2.5 text-center">Compras</th>
+                        <th className="px-3 py-2.5 text-center">Reportes</th>
+                        <th className="px-3 py-2.5 text-center">Configuración</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-gray-100 font-medium">
-                      <tr className="hover:bg-gray-50">
-                        <td className="px-3 py-2 font-bold text-purple-700">Gerente General</td>
+                    <tbody className="divide-y divide-gray-100 font-medium text-[#2B2D42]">
+                      <tr className="hover:bg-[#F8F9FA]">
+                        <td className="px-3 py-2 font-montserrat font-extrabold text-purple-700">Gerente General</td>
                         <td className="px-3 py-2 text-center text-emerald-600 font-bold">✓ Acceso Total</td>
                         <td className="px-3 py-2 text-center text-emerald-600 font-bold">✓ Acceso Total</td>
                         <td className="px-3 py-2 text-center text-emerald-600 font-bold">✓ Acceso Total</td>
@@ -4942,8 +4953,8 @@ export default function AdminPanel({
                         <td className="px-3 py-2 text-center text-emerald-600 font-bold">✓ Acceso Total</td>
                         <td className="px-3 py-2 text-center text-emerald-600 font-bold">✓ Acceso Total</td>
                       </tr>
-                      <tr className="hover:bg-gray-50">
-                        <td className="px-3 py-2 font-bold text-blue-700">Administrador</td>
+                      <tr className="hover:bg-[#F8F9FA]">
+                        <td className="px-3 py-2 font-montserrat font-extrabold text-[#1D3557]">Administrador</td>
                         <td className="px-3 py-2 text-center text-emerald-600 font-bold">✓ Activo</td>
                         <td className="px-3 py-2 text-center text-emerald-600 font-bold">✓ Activo</td>
                         <td className="px-3 py-2 text-center text-emerald-600 font-bold">✓ Activo</td>
@@ -4954,8 +4965,8 @@ export default function AdminPanel({
                         <td className="px-3 py-2 text-center text-emerald-600 font-bold">✓ Activo</td>
                         <td className="px-3 py-2 text-center text-emerald-600 font-bold">✓ Activo</td>
                       </tr>
-                      <tr className="hover:bg-gray-50">
-                        <td className="px-3 py-2 font-bold text-emerald-700">Cajero (POS)</td>
+                      <tr className="hover:bg-[#F8F9FA]">
+                        <td className="px-3 py-2 font-montserrat font-extrabold text-[#40E0D0] bg-[#1D3557] rounded-sm">Cajero (POS)</td>
                         <td className="px-3 py-2 text-center text-emerald-600 font-bold">✓ Activo</td>
                         <td className="px-3 py-2 text-center text-emerald-600 font-bold">✓ Activo</td>
                         <td className="px-3 py-2 text-center text-gray-300">-</td>
@@ -4966,8 +4977,8 @@ export default function AdminPanel({
                         <td className="px-3 py-2 text-center text-gray-300">-</td>
                         <td className="px-3 py-2 text-center text-gray-300">-</td>
                       </tr>
-                      <tr className="hover:bg-gray-50">
-                        <td className="px-3 py-2 font-bold text-amber-700">Despachador</td>
+                      <tr className="hover:bg-[#F8F9FA]">
+                        <td className="px-3 py-2 font-montserrat font-extrabold text-amber-700">Despachador</td>
                         <td className="px-3 py-2 text-center text-gray-300">-</td>
                         <td className="px-3 py-2 text-center text-gray-300">-</td>
                         <td className="px-3 py-2 text-center text-emerald-600 font-bold">✓ Solo Productos</td>
@@ -4978,8 +4989,8 @@ export default function AdminPanel({
                         <td className="px-3 py-2 text-center text-gray-300">-</td>
                         <td className="px-3 py-2 text-center text-gray-300">-</td>
                       </tr>
-                      <tr className="hover:bg-gray-50">
-                        <td className="px-3 py-2 font-bold text-indigo-700">Repartidor</td>
+                      <tr className="hover:bg-[#F8F9FA]">
+                        <td className="px-3 py-2 font-montserrat font-extrabold text-[#00BFFF]">Repartidor</td>
                         <td className="px-3 py-2 text-center text-emerald-600 font-bold">✓ Solo Pedidos</td>
                         <td className="px-3 py-2 text-center text-gray-300">-</td>
                         <td className="px-3 py-2 text-center text-gray-300">-</td>
@@ -4999,20 +5010,23 @@ export default function AdminPanel({
 
           {/* VIEW: CONFIGURACIÓN */}
           {currentMenu === 'settings' && (
-            <div className="space-y-6 text-left">
-              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+            <div className="space-y-6 text-left font-poppins">
+              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white p-5 rounded-2xl border border-gray-200 shadow-xs">
                 <div>
-                  <h2 className="text-xl font-black text-[#131921] uppercase tracking-tight flex items-center gap-2">
-                    <Settings className="w-6 h-6 text-gray-600" />
+                  <h2 className="text-xl font-montserrat font-extrabold text-[#1D3557] uppercase tracking-tight flex items-center gap-2">
+                    <Settings className="w-6 h-6 text-[#00BFFF]" />
                     <span>Configuración General</span>
                   </h2>
+                  <p className="text-xs text-[#2B2D42]/70 font-medium mt-1">
+                    Parámetros de tienda, tipo de cambio BCV, impuestos y datos institucionales
+                  </p>
                 </div>
                 
                 <button 
                   onClick={() => handleMenuChange('audit')}
-                  className="bg-rose-50 text-rose-600 hover:bg-rose-100 border border-rose-200 font-bold text-xs px-4 py-2 rounded-lg flex items-center gap-2 transition cursor-pointer"
+                  className="bg-[#1D3557] text-white hover:bg-[#152741] font-montserrat font-extrabold text-xs px-4 py-2.5 rounded-xl flex items-center gap-2 transition cursor-pointer shadow-xs uppercase tracking-wider"
                 >
-                  <Activity className="w-4 h-4" />
+                  <Activity className="w-4 h-4 text-[#40E0D0]" />
                   Registro de Auditoría
                 </button>
               </div>
@@ -5045,12 +5059,12 @@ export default function AdminPanel({
             <div className="space-y-6">
               <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 text-left">
                 <div>
-                  <h2 className="text-xl font-black text-[#131921] uppercase tracking-tight flex items-center gap-2">
-                    <Package className="w-6 h-6 text-[#FF9900]" />
-                    <span>Productos</span>
+                  <h2 className="text-xl font-montserrat font-extrabold text-[#1D3557] uppercase tracking-tight flex items-center gap-2">
+                    <Package className="w-6 h-6 text-[#00BFFF]" />
+                    <span>Productos y Mercancías</span>
                   </h2>
-                  <p className="text-xs text-gray-500 font-medium">
-                    Gestión completa de productos, categorías, inventario y marcas del sistema.
+                  <p className="text-xs text-[#2B2D42]/70 font-medium font-poppins">
+                    Gestión completa de productos, categorías, inventario y marcas de la plataforma.
                   </p>
                 </div>
 
@@ -5058,9 +5072,9 @@ export default function AdminPanel({
                 <div className="flex flex-wrap gap-2">
                   <button
                     onClick={handlePrintInventoryReport}
-                    className="px-4 py-2.5 bg-gray-800 hover:bg-gray-900 text-white text-xs font-black rounded-full flex items-center gap-2 cursor-pointer shadow-md hover:shadow-lg transition active:scale-98"
+                    className="px-4 py-2.5 bg-[#1D3557] hover:bg-[#152742] text-white text-xs font-montserrat font-extrabold rounded-xl flex items-center gap-2 cursor-pointer shadow-xs hover:shadow-md transition active:scale-95 uppercase tracking-wider"
                   >
-                    <Printer className="w-4 h-4 text-[#FF9900]" />
+                    <Printer className="w-4 h-4 text-[#40E0D0]" />
                     <span>Imprimir Reporte</span>
                   </button>
                   
@@ -5075,26 +5089,26 @@ export default function AdminPanel({
                       />
                       <button
                         onClick={() => fileInputRef.current?.click()}
-                        className="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-black rounded-full flex items-center gap-1.5 cursor-pointer shadow-md hover:shadow-lg transition active:scale-98"
+                        className="px-4 py-2.5 bg-white border border-[#1D3557]/20 hover:bg-[#F8F9FA] text-[#1D3557] text-xs font-montserrat font-extrabold rounded-xl flex items-center gap-1.5 cursor-pointer shadow-xs transition active:scale-95 uppercase tracking-wider"
                         id="btn-import-products"
                       >
-                        <Upload className="w-4 h-4" />
+                        <Upload className="w-4 h-4 text-[#00BFFF]" />
                         <span>Importar Excel</span>
                       </button>
                       <button
                         onClick={handleExportExcel}
-                        className="px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-black rounded-full flex items-center gap-1.5 cursor-pointer shadow-md hover:shadow-lg transition active:scale-98"
+                        className="px-4 py-2.5 bg-white border border-[#1D3557]/20 hover:bg-[#F8F9FA] text-[#1D3557] text-xs font-montserrat font-extrabold rounded-xl flex items-center gap-1.5 cursor-pointer shadow-xs transition active:scale-95 uppercase tracking-wider"
                         id="btn-export-products"
                       >
-                        <Download className="w-4 h-4" />
+                        <Download className="w-4 h-4 text-[#00BFFF]" />
                         <span>Exportar Excel</span>
                       </button>
                       <button
                         onClick={() => handleOpenProductForm(null)}
-                        className="px-4 py-2.5 bg-[#FF9900] hover:bg-[#e68a00] text-[#131921] text-xs font-black rounded-full flex items-center gap-1.5 cursor-pointer shadow-md hover:shadow-lg transition active:scale-98"
+                        className="px-4 py-2.5 bg-[#40E0D0] hover:bg-[#36cebe] text-[#1D3557] text-xs font-montserrat font-extrabold rounded-xl flex items-center gap-1.5 cursor-pointer shadow-md hover:shadow-lg transition active:scale-95 uppercase tracking-wider border-b-2 border-[#1D3557]/20"
                         id="btn-add-product"
                       >
-                        <Plus className="w-4 h-4" />
+                        <Plus className="w-4 h-4 text-[#1D3557] stroke-[3]" />
                         <span>Nuevo Producto</span>
                       </button>
                     </div>
@@ -5103,10 +5117,10 @@ export default function AdminPanel({
                   {activeTab === 'categories' && (
                     <button
                       onClick={() => handleOpenCategoryForm(null)}
-                      className="px-4 py-2.5 bg-[#FF9900] hover:bg-[#e68a00] text-[#131921] text-xs font-black rounded-full flex items-center gap-1.5 cursor-pointer shadow-md hover:shadow-lg transition active:scale-98"
+                      className="px-4 py-2.5 bg-[#40E0D0] hover:bg-[#36cebe] text-[#1D3557] text-xs font-montserrat font-extrabold rounded-xl flex items-center gap-1.5 cursor-pointer shadow-md hover:shadow-lg transition active:scale-95 uppercase tracking-wider border-b-2 border-[#1D3557]/20"
                       id="btn-add-category"
                     >
-                      <Plus className="w-4 h-4" />
+                      <Plus className="w-4 h-4 text-[#1D3557] stroke-[3]" />
                       <span>Nueva Categoría</span>
                     </button>
                   )}
@@ -5114,10 +5128,10 @@ export default function AdminPanel({
                   {activeTab === 'brands' && (
                     <button
                       onClick={() => handleOpenBrandForm(null)}
-                      className="px-4 py-2.5 bg-[#FF9900] hover:bg-[#e68a00] text-[#131921] text-xs font-black rounded-full flex items-center gap-1.5 cursor-pointer shadow-md hover:shadow-lg transition active:scale-98"
+                      className="px-4 py-2.5 bg-[#40E0D0] hover:bg-[#36cebe] text-[#1D3557] text-xs font-montserrat font-extrabold rounded-xl flex items-center gap-1.5 cursor-pointer shadow-md hover:shadow-lg transition active:scale-95 uppercase tracking-wider border-b-2 border-[#1D3557]/20"
                       id="btn-add-brand"
                     >
-                      <Plus className="w-4 h-4" />
+                      <Plus className="w-4 h-4 text-[#1D3557] stroke-[3]" />
                       <span>Nueva Marca</span>
                     </button>
                   )}
@@ -5125,33 +5139,33 @@ export default function AdminPanel({
               </div>
 
               {/* Tabs Navigation */}
-              <div className="flex border-b border-gray-200">
+              <div className="flex border-b border-gray-200 gap-1 font-montserrat">
                 <button
                   onClick={() => handleTabClick('products')}
-                  className={`px-5 py-3 text-xs font-extrabold uppercase tracking-wider border-b-2 transition ${
+                  className={`px-5 py-3 text-xs font-extrabold uppercase tracking-wider transition rounded-t-xl ${
                     activeTab === 'products'
-                      ? 'border-[#FF9900] text-[#131921]'
-                      : 'border-transparent text-gray-400 hover:text-gray-700'
+                      ? 'bg-[#1D3557] text-white shadow-xs'
+                      : 'text-[#2B2D42]/70 hover:text-[#1D3557] hover:bg-[#F8F9FA]'
                   }`}
                 >
                   Artículos del Catálogo ({totalProducts})
                 </button>
                 <button
                   onClick={() => handleTabClick('categories')}
-                  className={`px-5 py-3 text-xs font-extrabold uppercase tracking-wider border-b-2 transition ${
+                  className={`px-5 py-3 text-xs font-extrabold uppercase tracking-wider transition rounded-t-xl ${
                     activeTab === 'categories'
-                      ? 'border-[#FF9900] text-[#131921]'
-                      : 'border-transparent text-gray-400 hover:text-gray-700'
+                      ? 'bg-[#1D3557] text-white shadow-xs'
+                      : 'text-[#2B2D42]/70 hover:text-[#1D3557] hover:bg-[#F8F9FA]'
                   }`}
                 >
                   Categorías ({totalCategories})
                 </button>
                 <button
                   onClick={() => handleTabClick('brands')}
-                  className={`px-5 py-3 text-xs font-extrabold uppercase tracking-wider border-b-2 transition ${
+                  className={`px-5 py-3 text-xs font-extrabold uppercase tracking-wider transition rounded-t-xl ${
                     activeTab === 'brands'
-                      ? 'border-[#FF9900] text-[#131921]'
-                      : 'border-transparent text-gray-400 hover:text-gray-700'
+                      ? 'bg-[#1D3557] text-white shadow-xs'
+                      : 'text-[#2B2D42]/70 hover:text-[#1D3557] hover:bg-[#F8F9FA]'
                   }`}
                 >
                   Marcas ({totalBrands})
@@ -5165,11 +5179,11 @@ export default function AdminPanel({
             <div className="space-y-6">
               <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 text-left">
                 <div>
-                  <h2 className="text-xl font-black text-[#131921] uppercase tracking-tight flex items-center gap-2">
-                    <ClipboardList className="w-6 h-6 text-[#008296]" />
+                  <h2 className="text-xl font-montserrat font-extrabold text-[#1D3557] uppercase tracking-tight flex items-center gap-2">
+                    <ClipboardList className="w-6 h-6 text-[#00BFFF]" />
                     <span>Control de Pedidos</span>
                   </h2>
-                  <p className="text-xs text-gray-500 font-medium">
+                  <p className="text-xs text-[#2B2D42]/70 font-medium">
                     Validación de pagos, despachos, estados de entrega y notificaciones en tiempo real al cliente.
                   </p>
                 </div>
@@ -5182,26 +5196,26 @@ export default function AdminPanel({
                       setPedidosFacturadosTab('todos');
                       setShowPedidosFacturadosModal(true);
                     }}
-                    className="px-4 py-2.5 bg-[#005da9] hover:bg-[#004b87] text-white text-xs font-black rounded-full transition shadow-md hover:shadow-lg uppercase tracking-wider flex items-center gap-2 cursor-pointer active:scale-98"
+                    className="px-4 py-2.5 bg-[#1D3557] hover:bg-[#152742] text-white text-xs font-montserrat font-extrabold rounded-xl transition shadow-md hover:shadow-lg uppercase tracking-wider flex items-center gap-2 cursor-pointer active:scale-98"
                     id="btn-pedidos-facturados"
                   >
-                    <FileText className="w-4 h-4" />
+                    <FileText className="w-4 h-4 text-[#40E0D0]" />
                     <span>Pedidos Facturados</span>
                   </button>
                   <button
                     onClick={fetchOrders}
-                    className="px-4 py-2.5 bg-[#131921] hover:bg-black text-white text-xs font-black rounded-full transition shadow-md hover:shadow-lg uppercase tracking-wider flex items-center gap-2 cursor-pointer active:scale-98"
+                    className="px-4 py-2.5 bg-white border border-[#1D3557]/20 hover:bg-[#F8F9FA] text-[#1D3557] text-xs font-montserrat font-extrabold rounded-xl transition shadow-xs hover:shadow-md uppercase tracking-wider flex items-center gap-2 cursor-pointer active:scale-98"
                     id="btn-refresh-orders"
                   >
-                    <RefreshCw className={`w-4 h-4 ${loadingOrders ? 'animate-spin' : ''}`} />
+                    <RefreshCw className={`w-4 h-4 text-[#00BFFF] ${loadingOrders ? 'animate-spin' : ''}`} />
                     <span>Actualizar Pedidos</span>
                   </button>
                   <button
                     onClick={handleExportOrdersExcel}
-                    className="px-4 py-2.5 bg-[#16a34a] hover:bg-[#15803d] text-white text-xs font-black rounded-full transition shadow-md hover:shadow-lg uppercase tracking-wider flex items-center gap-2 cursor-pointer active:scale-98"
+                    className="px-4 py-2.5 bg-[#40E0D0] hover:bg-[#36cebe] text-[#1D3557] text-xs font-montserrat font-black rounded-xl transition shadow-md hover:shadow-lg uppercase tracking-wider flex items-center gap-2 cursor-pointer active:scale-98 border-b-2 border-[#1D3557]/20"
                     id="btn-export-orders"
                   >
-                    <Download className="w-4 h-4" />
+                    <Download className="w-4 h-4 text-[#1D3557]" />
                     <span>Exportar Pedidos</span>
                   </button>
                 </div>
@@ -5217,16 +5231,16 @@ export default function AdminPanel({
         {activeTab === 'products' && (
           <div>
             {/* Search Bar & Filter Controls */}
-            <div className="p-3 bg-gray-50/70 border-b border-gray-200 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+            <div className="p-3 bg-[#F8F9FA] border-b border-gray-200 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
               {/* Search input */}
               <div className="relative flex-1 max-w-md">
-                <Search className="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                <Search className="w-4 h-4 text-[#00BFFF] absolute left-3 top-1/2 -translate-y-1/2" />
                 <input
                   type="text"
                   placeholder="Buscar ítems por nombre, SKU, marca..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-9 pr-8 py-1.5 bg-white border border-gray-300 rounded-lg text-xs font-semibold text-gray-900 focus:outline-none focus:ring-1 focus:ring-[#FF9900]"
+                  className="w-full pl-9 pr-8 py-1.5 bg-white border border-gray-200 rounded-xl text-xs font-poppins font-medium text-[#2B2D42] focus:outline-none focus:ring-2 focus:ring-[#00BFFF]"
                 />
                 {searchQuery && (
                   <button
@@ -5244,16 +5258,16 @@ export default function AdminPanel({
                 <button
                   type="button"
                   onClick={() => setShowFilterDropdown(!showFilterDropdown)}
-                  className={`px-3.5 py-1.5 bg-white border rounded-lg text-xs font-bold text-gray-700 flex items-center gap-1.5 shadow-2xs cursor-pointer transition ${
+                  className={`px-3.5 py-1.5 bg-white border rounded-xl text-xs font-montserrat font-extrabold text-[#1D3557] flex items-center gap-1.5 shadow-2xs cursor-pointer transition ${
                     showFilterDropdown || productFilterOption !== 'inventario_venta'
-                      ? 'border-[#FF9900] text-[#131921] bg-amber-50/50'
-                      : 'border-gray-300 hover:bg-gray-50'
+                      ? 'border-[#00BFFF] text-[#1D3557] bg-[#00BFFF]/10'
+                      : 'border-gray-200 hover:bg-[#F8F9FA]'
                   }`}
                 >
-                  <SlidersHorizontal className="w-4 h-4 text-gray-500" />
+                  <SlidersHorizontal className="w-4 h-4 text-[#00BFFF]" />
                   <span>Filtros</span>
                   {productFilterOption !== 'inventario_venta' && (
-                    <span className="w-2 h-2 rounded-full bg-[#FF9900]" />
+                    <span className="w-2 h-2 rounded-full bg-[#40E0D0]" />
                   )}
                 </button>
 
@@ -5266,8 +5280,8 @@ export default function AdminPanel({
                     />
                     <div className="absolute right-0 mt-2 w-64 bg-white rounded-xl shadow-xl border border-gray-200 z-30 p-3 text-left space-y-2">
                       <div className="flex items-center justify-between border-b border-gray-100 pb-2">
-                        <span className="text-xs font-black text-gray-900 uppercase tracking-wide flex items-center gap-1.5">
-                          <SlidersHorizontal className="w-3.5 h-3.5 text-[#FF9900]" />
+                        <span className="text-xs font-montserrat font-black text-[#1D3557] uppercase tracking-wide flex items-center gap-1.5">
+                          <SlidersHorizontal className="w-3.5 h-3.5 text-[#00BFFF]" />
                           Filtros de Productos
                         </span>
                         {productFilterOption !== 'inventario_venta' && (
@@ -5277,14 +5291,14 @@ export default function AdminPanel({
                               setProductFilterOption('inventario_venta');
                               setShowFilterDropdown(false);
                             }}
-                            className="text-[11px] font-bold text-purple-600 hover:text-purple-800 cursor-pointer"
+                            className="text-[11px] font-montserrat font-extrabold text-[#00BFFF] hover:underline cursor-pointer"
                           >
                             Restablecer
                           </button>
                         )}
                       </div>
 
-                      <div className="space-y-1 text-xs font-medium text-gray-700">
+                      <div className="space-y-1 text-xs font-poppins font-medium text-[#2B2D42]">
                         {[
                           { id: 'inventario_venta', label: 'Inventario de Venta (Por defecto)' },
                           { id: 'inventario_costo', label: 'Inventario de Costo' },
@@ -5303,13 +5317,13 @@ export default function AdminPanel({
                             }}
                             className={`w-full text-left px-2.5 py-1.5 rounded-lg flex items-center justify-between transition text-xs font-bold ${
                               productFilterOption === opt.id
-                                ? 'bg-amber-50 text-[#FF9900] border border-amber-200'
-                                : 'hover:bg-gray-100 text-gray-700 border border-transparent'
+                                ? 'bg-[#1D3557]/10 text-[#1D3557] font-montserrat font-extrabold border border-[#1D3557]/20'
+                                : 'hover:bg-[#F8F9FA] text-[#2B2D42] border border-transparent'
                             }`}
                           >
                             <span>{opt.label}</span>
                             {productFilterOption === opt.id && (
-                              <Check className="w-3.5 h-3.5 text-[#FF9900]" />
+                              <Check className="w-3.5 h-3.5 text-[#40E0D0]" />
                             )}
                           </button>
                         ))}
@@ -5321,33 +5335,33 @@ export default function AdminPanel({
             </div>
 
             {/* Products Table */}
-            <table className="w-full text-left border-collapse text-xs">
+            <table className="w-full text-left border-collapse text-xs font-poppins">
               <thead>
-                <tr className="bg-[#131921] text-white">
-                  <th className="p-3 font-extrabold">SKU</th>
-                  <th className="p-3 font-extrabold">Nombre</th>
-                  <th className="p-3 font-extrabold">Categoría</th>
+                <tr className="bg-[#1D3557] text-white font-montserrat font-extrabold uppercase text-[11px] tracking-wider">
+                  <th className="p-3">SKU</th>
+                  <th className="p-3">Nombre</th>
+                  <th className="p-3">Categoría</th>
                   {productFilterOption === 'inventario_costo' ? (
-                    <th className="p-3 font-extrabold text-right">Precio Costo</th>
+                    <th className="p-3 text-right">Precio Costo</th>
                   ) : (
-                    <th className="p-3 font-extrabold text-right">Precio Venta</th>
+                    <th className="p-3 text-right">Precio Venta</th>
                   )}
-                  <th className="p-3 font-extrabold text-center">Cantidad</th>
+                  <th className="p-3 text-center">Cantidad</th>
                   {(productFilterOption === 'mas_vendidos' || productFilterOption === 'sin_rotacion') && (
-                    <th className="p-3 font-extrabold text-center">Unid. Vendidas</th>
+                    <th className="p-3 text-center">Unid. Vendidas</th>
                   )}
                   {productFilterOption === 'inventario_costo' ? (
-                    <th className="p-3 font-extrabold text-right">Valor Inv. Costo</th>
+                    <th className="p-3 text-right">Valor Inv. Costo</th>
                   ) : (
-                    <th className="p-3 font-extrabold text-right">Valor Inventario</th>
+                    <th className="p-3 text-right">Valor Inventario</th>
                   )}
                   {productFilterOption === 'ubicacion' && (
-                    <th className="p-3 font-extrabold">Ubicación</th>
+                    <th className="p-3">Ubicación</th>
                   )}
-                  <th className="p-3 font-extrabold text-right sticky right-0 bg-[#131921] z-10">Acciones</th>
+                  <th className="p-3 text-right sticky right-0 bg-[#1D3557] z-10">Acciones</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-gray-100">
+              <tbody className="divide-y divide-gray-100 text-[#2B2D42]">
                 {filteredProducts.length === 0 ? (
                   <tr>
                     <td colSpan={10} className="p-8 text-center text-gray-400 font-semibold text-xs">
@@ -5365,7 +5379,7 @@ export default function AdminPanel({
                     const locationText = (prod as any).location || 'Almacén Principal';
 
                     return (
-                      <tr key={prod.id} className="hover:bg-gray-50/50 transition">
+                      <tr key={prod.id} className="hover:bg-[#F8F9FA] transition">
                         <td className="p-3 font-mono font-bold text-gray-500">
                           <div>{prod.sku}</div>
                           {prod.barcode_qr && (
@@ -5375,28 +5389,28 @@ export default function AdminPanel({
                             </div>
                           )}
                         </td>
-                        <td className="p-3 font-bold text-gray-900 truncate max-w-xs">
+                        <td className="p-3 font-bold text-[#1D3557] truncate max-w-xs">
                           <div className="flex items-center gap-1.5">
                             <span>{prod.name}</span>
                             {prod.featured && (
-                              <span className="px-1.5 py-0.2 bg-amber-100 text-amber-800 text-[9px] font-black rounded uppercase">
+                              <span className="px-1.5 py-0.2 bg-[#40E0D0]/20 text-[#1D3557] text-[9px] font-montserrat font-extrabold rounded uppercase">
                                 Destacado
                               </span>
                             )}
                           </div>
                         </td>
-                        <td className="p-3 font-semibold text-gray-600">{cat}</td>
+                        <td className="p-3 font-semibold text-[#2B2D42]/80">{cat}</td>
 
                         {/* Price Column */}
                         {productFilterOption === 'inventario_costo' ? (
-                          <td className="p-3 font-bold text-gray-700 text-right">
+                          <td className="p-3 font-bold text-[#2B2D42] text-right">
                             ${costPrice.toFixed(2)}
                           </td>
                         ) : (
-                          <td className="p-3 font-black text-gray-900 text-right">
+                          <td className="p-3 font-black text-[#1D3557] text-right">
                             {prod.offer_price ? (
                               <div className="flex flex-col items-end">
-                                <span className="text-[#FF9900] font-black">${prod.offer_price.toFixed(2)}</span>
+                                <span className="text-[#00BFFF] font-black">${prod.offer_price.toFixed(2)}</span>
                                 <span className="text-[10px] text-gray-400 line-through">${prod.price.toFixed(2)}</span>
                               </div>
                             ) : (
@@ -5412,7 +5426,7 @@ export default function AdminPanel({
                               ? 'bg-red-100 text-red-600' 
                               : prod.stock <= ((prod as any).critical_stock || inventarioLowStockThreshold || 5)
                                 ? 'bg-amber-100 text-amber-700'
-                                : 'bg-emerald-50 text-emerald-600'
+                                : 'bg-[#40E0D0]/20 text-[#1D3557] border border-[#40E0D0]/40'
                           }`}>
                             {prod.stock} disp.
                           </span>
@@ -5427,11 +5441,11 @@ export default function AdminPanel({
 
                         {/* Inv Value */}
                         {productFilterOption === 'inventario_costo' ? (
-                          <td className="p-3 font-black text-blue-600 text-right">
+                          <td className="p-3 font-black text-[#00BFFF] text-right">
                             ${costInvValue.toFixed(2)}
                           </td>
                         ) : (
-                          <td className="p-3 font-black text-emerald-600 text-right">
+                          <td className="p-3 font-black text-[#1D3557] text-right">
                             ${saleInvValue.toFixed(2)}
                           </td>
                         )}
@@ -5451,7 +5465,7 @@ export default function AdminPanel({
                           <button
                             type="button" 
                             onClick={(e) => { e.stopPropagation(); handleOpenProductForm(prod); }}
-                            className="p-1.5 text-sky-600 hover:bg-sky-50 rounded border border-transparent hover:border-sky-200 transition cursor-pointer inline-flex items-center gap-1"
+                            className="p-1.5 text-[#00BFFF] hover:bg-[#00BFFF]/10 rounded border border-transparent hover:border-[#00BFFF]/30 transition cursor-pointer inline-flex items-center gap-1"
                             title="Editar"
                           >
                             <Edit3 className="w-3.5 h-3.5" />
@@ -5460,7 +5474,7 @@ export default function AdminPanel({
                           <button
                             type="button" 
                             onClick={(e) => { e.stopPropagation(); setMovementModalProd(prod); setMovementQty(1); setMovementType('ingreso'); }}
-                            className="p-1.5 text-amber-600 hover:bg-amber-50 rounded border border-transparent hover:border-amber-200 transition cursor-pointer inline-flex items-center gap-1"
+                            className="p-1.5 text-[#1D3557] hover:bg-[#1D3557]/10 rounded border border-transparent hover:border-[#1D3557]/30 transition cursor-pointer inline-flex items-center gap-1"
                             title="Movimiento de Producto"
                           >
                             <ArrowLeftRight className="w-3.5 h-3.5" />
@@ -5477,17 +5491,17 @@ export default function AdminPanel({
 
         {/* Categories Table */}
         {activeTab === 'categories' && (
-          <table className="w-full text-left border-collapse text-xs">
+          <table className="w-full text-left border-collapse text-xs font-poppins">
             <thead>
-              <tr className="bg-[#131921] text-white">
-                <th className="p-3 font-extrabold">Miniatura</th>
-                <th className="p-3 font-extrabold">Nombre de Categoría</th>
-                <th className="p-3 font-extrabold">Slug Único</th>
-                <th className="p-3 font-extrabold text-center">Visible</th>
-                <th className="p-3 font-extrabold text-right">Acciones</th>
+              <tr className="bg-[#1D3557] text-white font-montserrat font-extrabold uppercase text-[11px] tracking-wider">
+                <th className="p-3">Miniatura</th>
+                <th className="p-3">Nombre de Categoría</th>
+                <th className="p-3">Slug Único</th>
+                <th className="p-3 text-center">Visible</th>
+                <th className="p-3 text-right">Acciones</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-100">
+            <tbody className="divide-y divide-gray-100 text-[#2B2D42]">
               {filteredCategories.length === 0 ? (
                 <tr>
                   <td colSpan={5} className="p-8 text-center text-gray-400 font-semibold">
@@ -5496,7 +5510,7 @@ export default function AdminPanel({
                 </tr>
               ) : (
                 filteredCategories.map((cat) => (
-                  <tr key={cat.id} className="hover:bg-gray-50/50 transition">
+                  <tr key={cat.id} className="hover:bg-[#F8F9FA] transition">
                     <td className="p-3">
                       <img 
                         src={cat.image_url} 
@@ -5505,16 +5519,16 @@ export default function AdminPanel({
                         referrerPolicy="no-referrer"
                       />
                     </td>
-                    <td className="p-3 font-bold text-gray-900">{cat.name}</td>
+                    <td className="p-3 font-bold text-[#1D3557]">{cat.name}</td>
                     <td className="p-3 font-mono text-gray-400">{cat.slug}</td>
                     <td className="p-3 text-center">
                       <button
                         type="button" onClick={(e) => { e.stopPropagation(); handleToggleActiveCategory(cat); }}
-                        className="text-gray-400 hover:text-[#007185] transition"
+                        className="text-gray-400 hover:text-[#00BFFF] transition"
                         title={cat.active ?? true ? "Ocultar Categoría" : "Mostrar Categoría"}
                       >
                         {cat.active ?? true ? (
-                          <ToggleRight className="w-6 h-6 mx-auto text-emerald-500" />
+                          <ToggleRight className="w-6 h-6 mx-auto text-[#40E0D0]" />
                         ) : (
                           <ToggleLeft className="w-6 h-6 mx-auto text-gray-300" />
                         )}
@@ -5523,7 +5537,7 @@ export default function AdminPanel({
                     <td className="p-3 text-right space-x-1 whitespace-nowrap">
                       <button
                         onClick={() => handleOpenCategoryForm(cat)}
-                        className="p-1 text-sky-600 hover:bg-sky-50 rounded border border-transparent hover:border-sky-200 transition cursor-pointer"
+                        className="p-1 text-[#00BFFF] hover:bg-[#00BFFF]/10 rounded border border-transparent transition cursor-pointer"
                         title="Editar"
                       >
                         <Edit3 className="w-3.5 h-3.5" />
@@ -5546,16 +5560,16 @@ export default function AdminPanel({
 
         {/* Brands Table */}
         {activeTab === 'brands' && (
-          <table className="w-full text-left border-collapse text-xs">
+          <table className="w-full text-left border-collapse text-xs font-poppins">
             <thead>
-              <tr className="bg-[#131921] text-white">
-                <th className="p-3 font-extrabold">Logo</th>
-                <th className="p-3 font-extrabold">Nombre de Marca</th>
-                <th className="p-3 font-extrabold text-center">Visible</th>
-                <th className="p-3 font-extrabold text-right">Acciones</th>
+              <tr className="bg-[#1D3557] text-white font-montserrat font-extrabold uppercase text-[11px] tracking-wider">
+                <th className="p-3">Logo</th>
+                <th className="p-3">Nombre de Marca</th>
+                <th className="p-3 text-center">Visible</th>
+                <th className="p-3 text-right">Acciones</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-100">
+            <tbody className="divide-y divide-gray-100 text-[#2B2D42]">
               {filteredBrands.length === 0 ? (
                 <tr>
                   <td colSpan={4} className="p-8 text-center text-gray-400 font-semibold">
@@ -5564,7 +5578,7 @@ export default function AdminPanel({
                 </tr>
               ) : (
                 filteredBrands.map((b) => (
-                  <tr key={b.id} className="hover:bg-gray-50/50 transition">
+                  <tr key={b.id} className="hover:bg-[#F8F9FA] transition">
                     <td className="p-3">
                       <img 
                         src={b.logo_url} 
@@ -5573,15 +5587,15 @@ export default function AdminPanel({
                         referrerPolicy="no-referrer"
                       />
                     </td>
-                    <td className="p-3 font-bold text-gray-900">{b.name}</td>
+                    <td className="p-3 font-bold text-[#1D3557]">{b.name}</td>
                     <td className="p-3 text-center">
                       <button
                         type="button" onClick={(e) => { e.stopPropagation(); handleToggleActiveBrand(b); }}
-                        className="text-gray-400 hover:text-[#007185] transition"
+                        className="text-gray-400 hover:text-[#00BFFF] transition"
                         title={b.active ?? true ? "Ocultar Marca" : "Mostrar Marca"}
                       >
                         {b.active ?? true ? (
-                          <ToggleRight className="w-6 h-6 mx-auto text-emerald-500" />
+                          <ToggleRight className="w-6 h-6 mx-auto text-[#40E0D0]" />
                         ) : (
                           <ToggleLeft className="w-6 h-6 mx-auto text-gray-300" />
                         )}
@@ -5590,7 +5604,7 @@ export default function AdminPanel({
                     <td className="p-3 text-right space-x-1 whitespace-nowrap">
                       <button
                         onClick={() => handleOpenBrandForm(b)}
-                        className="p-1 text-sky-600 hover:bg-sky-50 rounded border border-transparent hover:border-sky-200 transition cursor-pointer"
+                        className="p-1 text-[#00BFFF] hover:bg-[#00BFFF]/10 rounded border border-transparent transition cursor-pointer"
                         title="Editar"
                       >
                         <Edit3 className="w-3.5 h-3.5" />
@@ -5615,7 +5629,7 @@ export default function AdminPanel({
 
         {/* Orders Table & Panel */}
         {currentMenu === 'orders' && (
-          <div className="p-4 bg-gray-50/50 space-y-4">
+          <div className="p-4 bg-[#F8F9FA]/60 space-y-4">
             
             {/* Header for Orders */}
             <div className="flex justify-end items-center mb-2">
@@ -5624,7 +5638,7 @@ export default function AdminPanel({
                   handleMenuChange('sales');
                   if (typeof setActiveTab === 'function') setActiveTab('sales');
                 }}
-                className="px-4 py-2.5 bg-[#0284c7] hover:bg-[#0369a1] text-white text-xs font-black rounded-full transition shadow-md hover:shadow-lg uppercase tracking-wider flex items-center gap-2 cursor-pointer active:scale-98"
+                className="px-4 py-2.5 bg-[#40E0D0] hover:bg-[#36cebe] text-[#1D3557] text-xs font-montserrat font-black rounded-xl transition shadow-md hover:shadow-lg uppercase tracking-wider flex items-center gap-2 cursor-pointer active:scale-98 border-b-2 border-[#1D3557]/20"
               >
                 <Plus className="w-4 h-4 stroke-[3]" />
                 <span>Nuevo Pedido</span>
@@ -5633,56 +5647,56 @@ export default function AdminPanel({
 
             {/* Orders Tab Subheader Metrics */}
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-              <div className="bg-white border border-gray-200 rounded-lg p-3.5 shadow-xs flex items-center gap-3 text-left">
-                <div className="p-2 bg-blue-50 text-blue-600 rounded-full">
-                  <ClipboardList className="w-5 h-5" />
+              <div className="bg-white border border-[#1D3557]/15 rounded-2xl p-4 shadow-2xs flex items-center gap-3.5 text-left">
+                <div className="p-2.5 bg-[#1D3557]/10 text-[#1D3557] rounded-xl">
+                  <ClipboardList className="w-5 h-5 text-[#00BFFF]" />
                 </div>
                 <div>
-                  <p className="text-[10px] text-gray-400 font-extrabold uppercase tracking-wide">Total Pedidos</p>
-                  <p className="text-lg font-black text-[#131921]">{totalOrdersCount}</p>
+                  <p className="text-[10px] text-[#2B2D42]/60 font-montserrat font-extrabold uppercase tracking-wide">Total Pedidos</p>
+                  <p className="text-xl font-montserrat font-black text-[#1D3557]">{totalOrdersCount}</p>
                 </div>
               </div>
 
-              <div className="bg-white border border-gray-200 rounded-lg p-3.5 shadow-xs flex items-center gap-3 text-left">
-                <div className="p-2 bg-amber-50 text-amber-500 rounded-full">
-                  <Clock className="w-5 h-5" />
+              <div className="bg-white border border-[#1D3557]/15 rounded-2xl p-4 shadow-2xs flex items-center gap-3.5 text-left">
+                <div className="p-2.5 bg-amber-500/10 text-amber-700 rounded-xl">
+                  <Clock className="w-5 h-5 text-amber-600" />
                 </div>
                 <div>
-                  <p className="text-[10px] text-gray-400 font-extrabold uppercase tracking-wide">Pendientes</p>
-                  <p className="text-lg font-black text-amber-600">{pendingOrdersCount}</p>
+                  <p className="text-[10px] text-[#2B2D42]/60 font-montserrat font-extrabold uppercase tracking-wide">Pendientes</p>
+                  <p className="text-xl font-montserrat font-black text-amber-700">{pendingOrdersCount}</p>
                 </div>
               </div>
 
-              <div className="bg-white border border-gray-200 rounded-lg p-3.5 shadow-xs flex items-center gap-3 text-left">
-                <div className="p-2 bg-emerald-50 text-emerald-600 rounded-full">
-                  <Check className="w-5 h-5" />
+              <div className="bg-white border border-[#1D3557]/15 rounded-2xl p-4 shadow-2xs flex items-center gap-3.5 text-left">
+                <div className="p-2.5 bg-[#40E0D0]/15 text-[#1D3557] rounded-xl">
+                  <Check className="w-5 h-5 text-[#40E0D0]" />
                 </div>
                 <div>
-                  <p className="text-[10px] text-gray-400 font-extrabold uppercase tracking-wide">Completados</p>
-                  <p className="text-lg font-black text-emerald-600">{completedOrdersCount}</p>
+                  <p className="text-[10px] text-[#2B2D42]/60 font-montserrat font-extrabold uppercase tracking-wide">Completados</p>
+                  <p className="text-xl font-montserrat font-black text-[#1D3557]">{completedOrdersCount}</p>
                 </div>
               </div>
 
-              <div className="bg-white border border-gray-200 rounded-lg p-3.5 shadow-xs flex items-center gap-3 text-left">
-                <div className="p-2 bg-purple-50 text-purple-600 rounded-full">
-                  <Coins className="w-5 h-5" />
+              <div className="bg-white border border-[#1D3557]/15 rounded-2xl p-4 shadow-2xs flex items-center gap-3.5 text-left">
+                <div className="p-2.5 bg-[#00BFFF]/10 text-[#00BFFF] rounded-xl">
+                  <Coins className="w-5 h-5 text-[#00BFFF]" />
                 </div>
                 <div>
-                  <p className="text-[10px] text-gray-400 font-extrabold uppercase tracking-wide">Facturación Activa</p>
-                  <p className="text-lg font-black text-purple-700">${totalRevenue.toFixed(2)}</p>
+                  <p className="text-[10px] text-[#2B2D42]/60 font-montserrat font-extrabold uppercase tracking-wide">Facturación Activa</p>
+                  <p className="text-xl font-montserrat font-black text-[#1D3557]">${totalRevenue.toFixed(2)}</p>
                 </div>
               </div>
             </div>
 
             {/* Sub-filters row */}
-            <div className="bg-white p-3 border border-gray-200 rounded-lg flex flex-wrap gap-4 items-center justify-between text-xs text-left">
+            <div className="bg-white p-4 border border-[#1D3557]/15 rounded-2xl flex flex-wrap gap-4 items-center justify-between text-xs text-left shadow-2xs">
               <div className="flex flex-wrap gap-3 items-center">
                 <div>
-                  <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-wide mb-1">Estado de Entrega</label>
+                  <label className="block text-[10px] font-montserrat font-extrabold text-[#1D3557] uppercase tracking-wide mb-1">Estado de Entrega</label>
                   <select
                     value={statusFilter}
                     onChange={(e) => setStatusFilter(e.target.value)}
-                    className="bg-white border border-gray-300 rounded px-2.5 py-1 text-xs focus:ring-1 focus:ring-[#008296] focus:outline-none font-semibold text-gray-700"
+                    className="bg-[#F8F9FA] border border-gray-200 rounded-xl px-3 py-1.5 text-xs focus:ring-2 focus:ring-[#00BFFF] focus:outline-none font-bold text-[#2B2D42]"
                   >
                     <option value="all">Todos los Estados</option>
                     <option value="recibido">Recibido</option>
@@ -5695,11 +5709,11 @@ export default function AdminPanel({
                 </div>
 
                 <div>
-                  <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-wide mb-1">Estado de Pago</label>
+                  <label className="block text-[10px] font-montserrat font-extrabold text-[#1D3557] uppercase tracking-wide mb-1">Estado de Pago</label>
                   <select
                     value={paymentStatusFilter}
                     onChange={(e) => setPaymentStatusFilter(e.target.value)}
-                    className="bg-white border border-gray-300 rounded px-2.5 py-1 text-xs focus:ring-1 focus:ring-[#008296] focus:outline-none font-semibold text-gray-700"
+                    className="bg-[#F8F9FA] border border-gray-200 rounded-xl px-3 py-1.5 text-xs focus:ring-2 focus:ring-[#00BFFF] focus:outline-none font-bold text-[#2B2D42]"
                   >
                     <option value="all">Todos los Pagos</option>
                     <option value="pendiente">Pendiente</option>
@@ -5709,11 +5723,11 @@ export default function AdminPanel({
                 </div>
 
                 <div>
-                  <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-wide mb-1">Método de Entrega</label>
+                  <label className="block text-[10px] font-montserrat font-extrabold text-[#1D3557] uppercase tracking-wide mb-1">Método de Entrega</label>
                   <select
                     value={deliveryMethodFilter}
                     onChange={(e) => setDeliveryMethodFilter(e.target.value)}
-                    className="bg-white border border-gray-300 rounded px-2.5 py-1 text-xs focus:ring-1 focus:ring-[#008296] focus:outline-none font-semibold text-gray-700"
+                    className="bg-[#F8F9FA] border border-gray-200 rounded-xl px-3 py-1.5 text-xs focus:ring-2 focus:ring-[#00BFFF] focus:outline-none font-bold text-[#2B2D42]"
                   >
                     <option value="all">Todos</option>
                     <option value="retiro">Retiro en Tienda</option>
@@ -5722,18 +5736,18 @@ export default function AdminPanel({
                 </div>
 
                 <div>
-                  <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-wide mb-1">Filtrar por Fecha</label>
+                  <label className="block text-[10px] font-montserrat font-extrabold text-[#1D3557] uppercase tracking-wide mb-1">Filtrar por Fecha</label>
                   <div className="flex items-center gap-1.5">
                     <input
                       type="date"
                       value={dateFilter}
                       onChange={(e) => setDateFilter(e.target.value)}
-                      className="bg-white border border-gray-300 rounded px-2 py-0.5 text-xs focus:ring-1 focus:ring-[#008296] focus:outline-none font-semibold text-gray-700 h-[26px]"
+                      className="bg-[#F8F9FA] border border-gray-200 rounded-xl px-3 py-1 text-xs focus:ring-2 focus:ring-[#00BFFF] focus:outline-none font-bold text-[#2B2D42] h-[30px]"
                     />
                     {dateFilter && (
                       <button
                         onClick={() => setDateFilter('')}
-                        className="px-2.5 py-0.5 bg-[#dc2626] hover:bg-[#b91c1c] text-white rounded-full text-[10px] font-black uppercase tracking-wider shadow-xs transition cursor-pointer"
+                        className="px-2.5 py-1 bg-rose-600 hover:bg-rose-700 text-white rounded-xl text-[10px] font-montserrat font-black uppercase tracking-wider shadow-xs transition cursor-pointer"
                         title="Limpiar fecha"
                       >
                         Limpiar
@@ -5749,29 +5763,29 @@ export default function AdminPanel({
                 <button
                   type="button"
                   onClick={() => setSoundAlertEnabled(!soundAlertEnabled)}
-                  className={`p-2 rounded-full transition flex items-center justify-center cursor-pointer shadow-md active:scale-98 ${
+                  className={`p-2 rounded-xl transition flex items-center justify-center cursor-pointer shadow-xs active:scale-98 ${
                     soundAlertEnabled
-                      ? 'bg-[#16a34a] hover:bg-[#15803d] text-white'
-                      : 'bg-[#dc2626] hover:bg-[#b91c1c] text-white'
+                      ? 'bg-[#40E0D0] hover:bg-[#36cebe] text-[#1D3557]'
+                      : 'bg-rose-600 hover:bg-rose-700 text-white'
                   }`}
                   title={soundAlertEnabled ? 'Alerta sonora de pedidos activada (ON)' : 'Alerta sonora desactivada (OFF)'}
                 >
                   {soundAlertEnabled ? (
-                    <Volume2 className="w-4 h-4 stroke-[2.5] animate-pulse" />
+                    <Volume2 className="w-4 h-4 stroke-[2.5] animate-pulse text-[#1D3557]" />
                   ) : (
                     <VolumeX className="w-4 h-4 stroke-[2.5]" />
                   )}
                 </button>
 
                 {/* View Switcher Toggle Buttons */}
-                <div className="bg-gray-100 p-1 rounded-full border border-gray-200 flex items-center shadow-xs">
+                <div className="bg-[#F8F9FA] p-1 rounded-2xl border border-gray-200 flex items-center shadow-2xs">
                   <button
                     type="button"
                     onClick={() => setOrdersViewMode('kanban')}
-                    className={`px-3.5 py-1.5 rounded-full text-xs font-black transition flex items-center gap-1.5 cursor-pointer uppercase tracking-wider ${
+                    className={`px-3.5 py-1.5 rounded-xl text-xs font-montserrat font-extrabold transition flex items-center gap-1.5 cursor-pointer uppercase tracking-wider ${
                       ordersViewMode === 'kanban'
-                        ? 'bg-[#0284c7] text-white shadow-md'
-                        : 'text-gray-600 hover:text-gray-900'
+                        ? 'bg-[#1D3557] text-white shadow-xs'
+                        : 'text-[#2B2D42] hover:text-[#1D3557]'
                     }`}
                   >
                     <Kanban className="w-3.5 h-3.5 stroke-[2.5]" />
@@ -5780,10 +5794,10 @@ export default function AdminPanel({
                   <button
                     type="button"
                     onClick={() => setOrdersViewMode('table')}
-                    className={`px-3.5 py-1.5 rounded-full text-xs font-black transition flex items-center gap-1.5 cursor-pointer uppercase tracking-wider ${
+                    className={`px-3.5 py-1.5 rounded-xl text-xs font-montserrat font-extrabold transition flex items-center gap-1.5 cursor-pointer uppercase tracking-wider ${
                       ordersViewMode === 'table'
-                        ? 'bg-[#0284c7] text-white shadow-md'
-                        : 'text-gray-600 hover:text-gray-900'
+                        ? 'bg-[#1D3557] text-white shadow-xs'
+                        : 'text-[#2B2D42] hover:text-[#1D3557]'
                     }`}
                   >
                     <LayoutGrid className="w-3.5 h-3.5 stroke-[2.5]" />
@@ -5791,7 +5805,7 @@ export default function AdminPanel({
                   </button>
                 </div>
 
-                <div className="text-[11px] text-gray-400 font-bold hidden lg:block ml-2">
+                <div className="text-[11px] text-[#2B2D42]/60 font-bold hidden lg:block ml-2">
                   {filteredOrders.length} / {orders.length} pedidos
                 </div>
               </div>
@@ -5801,12 +5815,12 @@ export default function AdminPanel({
             {ordersViewMode === 'kanban' ? (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-3 overflow-x-auto pb-4">
                 {[
-                  { id: 'recibido', title: 'Recibido', bg: 'bg-slate-50', headerBg: 'bg-[#1e293b] text-white', border: 'border-slate-200', badge: 'bg-slate-200 text-slate-800', nextStatus: 'preparando', nextLabel: 'Preparar ➡️', nextBtnBg: 'bg-[#ea580c] hover:bg-[#c2410c]' },
-                  { id: 'preparando', title: 'Preparando', bg: 'bg-amber-50/50', headerBg: 'bg-[#ea580c] text-white', border: 'border-amber-200', badge: 'bg-amber-100 text-amber-900', nextStatus: 'listo para retirar', nextLabel: 'Listo ➡️', nextBtnBg: 'bg-[#6366f1] hover:bg-[#4f46e5]' },
-                  { id: 'listo para retirar', title: 'Listo p/ Retiro', bg: 'bg-indigo-50/50', headerBg: 'bg-[#6366f1] text-white', border: 'border-indigo-200', badge: 'bg-indigo-100 text-indigo-900', nextStatus: 'en camino', nextLabel: 'Despachar ➡️', nextBtnBg: 'bg-[#0284c7] hover:bg-[#0369a1]' },
-                  { id: 'en camino', title: 'En Camino', bg: 'bg-sky-50/50', headerBg: 'bg-[#0284c7] text-white', border: 'border-sky-200', badge: 'bg-sky-100 text-sky-900', nextStatus: 'entregado', nextLabel: 'Entregado ➡️', nextBtnBg: 'bg-[#059669] hover:bg-[#047857]' },
-                  { id: 'entregado', title: 'Entregado', bg: 'bg-emerald-50/50', headerBg: 'bg-[#059669] text-white', border: 'border-emerald-200', badge: 'bg-emerald-100 text-emerald-900', nextStatus: null, nextLabel: '', nextBtnBg: '' },
-                  { id: 'cancelado', title: 'Cancelado', bg: 'bg-rose-50/50', headerBg: 'bg-[#dc2626] text-white', border: 'border-rose-200', badge: 'bg-rose-100 text-rose-900', nextStatus: null, nextLabel: '', nextBtnBg: '' }
+                  { id: 'recibido', title: 'Recibido', bg: 'bg-[#F8F9FA]', headerBg: 'bg-[#1D3557] text-white', border: 'border-[#1D3557]/15', badge: 'bg-[#1D3557]/10 text-[#1D3557]', nextStatus: 'preparando', nextLabel: 'Preparar ➡️', nextBtnBg: 'bg-amber-600 hover:bg-amber-700' },
+                  { id: 'preparando', title: 'Preparando', bg: 'bg-amber-50/40', headerBg: 'bg-amber-600 text-white', border: 'border-amber-200', badge: 'bg-amber-100 text-amber-900', nextStatus: 'listo para retirar', nextLabel: 'Listo ➡️', nextBtnBg: 'bg-[#00BFFF] hover:bg-[#009bd1]' },
+                  { id: 'listo para retirar', title: 'Listo p/ Retiro', bg: 'bg-sky-50/40', headerBg: 'bg-[#00BFFF] text-white', border: 'border-sky-200', badge: 'bg-sky-100 text-sky-900', nextStatus: 'en camino', nextLabel: 'Despachar ➡️', nextBtnBg: 'bg-[#1D3557] hover:bg-[#152742]' },
+                  { id: 'en camino', title: 'En Camino', bg: 'bg-[#1D3557]/5', headerBg: 'bg-[#1D3557] text-white', border: 'border-[#1D3557]/20', badge: 'bg-[#1D3557]/10 text-[#1D3557]', nextStatus: 'entregado', nextLabel: 'Entregado ➡️', nextBtnBg: 'bg-[#40E0D0] hover:bg-[#36cebe] text-[#1D3557]' },
+                  { id: 'entregado', title: 'Entregado', bg: 'bg-[#40E0D0]/10', headerBg: 'bg-[#40E0D0] text-[#1D3557]', border: 'border-[#40E0D0]/30', badge: 'bg-[#40E0D0]/20 text-[#1D3557]', nextStatus: null, nextLabel: '', nextBtnBg: '' },
+                  { id: 'cancelado', title: 'Cancelado', bg: 'bg-rose-50/40', headerBg: 'bg-rose-600 text-white', border: 'border-rose-200', badge: 'bg-rose-100 text-rose-900', nextStatus: null, nextLabel: '', nextBtnBg: '' }
                 ].map((col) => {
                   const colOrders = filteredOrders.filter(o => {
                     const rawSt = pendingChanges[o.id]?.status ?? (o.status || 'recibido');
@@ -5816,16 +5830,16 @@ export default function AdminPanel({
                   const colRevenue = colOrders.reduce((sum, o) => sum + Number(o.total_price || 0), 0);
 
                   return (
-                    <div key={col.id} className={`${col.bg} border ${col.border} rounded-xl p-2 flex flex-col min-w-[230px] max-h-[700px]`}>
+                    <div key={col.id} className={`${col.bg} border ${col.border} rounded-2xl p-2.5 flex flex-col min-w-[230px] max-h-[700px]`}>
                       {/* Column Header */}
-                      <div className={`${col.headerBg} p-2 rounded-lg flex items-center justify-between mb-2 shadow-xs`}>
+                      <div className={`${col.headerBg} p-2.5 rounded-xl flex items-center justify-between mb-2 shadow-2xs`}>
                         <div>
-                          <h3 className="font-black text-xs tracking-tight uppercase flex items-center gap-1.5">
+                          <h3 className="font-montserrat font-extrabold text-xs tracking-tight uppercase flex items-center gap-1.5">
                             <span>{col.title}</span>
                           </h3>
                           <p className="text-[10px] opacity-80 font-mono">${colRevenue.toFixed(2)} USD</p>
                         </div>
-                        <span className="text-xs font-black bg-white/20 px-2 py-0.5 rounded-full">
+                        <span className="text-xs font-montserrat font-black bg-white/20 px-2 py-0.5 rounded-full">
                           {colOrders.length}
                         </span>
                       </div>
@@ -5834,11 +5848,11 @@ export default function AdminPanel({
                       <div className="flex-1 overflow-y-auto space-y-2 pr-0.5">
                         {loadingOrders ? (
                           <div className="p-4 text-center text-gray-400">
-                            <RefreshCw className="w-5 h-5 animate-spin mx-auto mb-1 text-[#008296]" />
+                            <RefreshCw className="w-5 h-5 animate-spin mx-auto mb-1 text-[#00BFFF]" />
                             <span className="text-[10px]">Cargando...</span>
                           </div>
                         ) : colOrders.length === 0 ? (
-                          <div className="p-4 text-center text-gray-400 text-[11px] font-medium border border-dashed border-gray-300 rounded-lg my-2">
+                          <div className="p-4 text-center text-gray-400 text-[11px] font-medium border border-dashed border-gray-300 rounded-xl my-2">
                             Sin pedidos
                           </div>
                         ) : (
@@ -5851,17 +5865,17 @@ export default function AdminPanel({
                             return (
                               <div 
                                 key={order.id} 
-                                className="bg-white border border-gray-200 hover:border-gray-400 rounded-xl p-3 shadow-2xs transition flex flex-col justify-between text-left group"
+                                className="bg-white border border-gray-200 hover:border-[#00BFFF] rounded-2xl p-3.5 shadow-2xs transition flex flex-col justify-between text-left group"
                               >
                                 {/* Top Row: Order # & Delivery Badge */}
                                 <div className="flex items-center justify-between gap-1 mb-1.5">
-                                  <span className="font-mono font-black text-xs text-gray-900">
+                                  <span className="font-mono font-black text-xs text-[#1D3557]">
                                     #{formattedNum}
                                   </span>
-                                  <span className={`text-[9px] font-black uppercase px-2 py-0.5 rounded-full ${
+                                  <span className={`text-[9px] font-montserrat font-extrabold uppercase px-2 py-0.5 rounded-full ${
                                     order.delivery_method === 'retiro' 
                                       ? 'bg-amber-100 text-amber-900 border border-amber-200' 
-                                      : 'bg-blue-100 text-blue-900 border border-blue-200'
+                                      : 'bg-[#1D3557]/10 text-[#1D3557] border border-[#1D3557]/20'
                                   }`}>
                                     {order.delivery_method === 'retiro' ? '🏪 Retiro' : '🛵 Envío'}
                                   </span>
@@ -5869,7 +5883,7 @@ export default function AdminPanel({
 
                                 {/* Customer Info */}
                                 <div className="mb-2">
-                                  <p className="font-bold text-xs text-gray-900 truncate">
+                                  <p className="font-montserrat font-bold text-xs text-[#2B2D42] truncate">
                                     {order.customer_name || 'Cliente general'}
                                   </p>
                                   {order.phone_number && (
@@ -5881,7 +5895,7 @@ export default function AdminPanel({
 
                                 {/* Items snippet */}
                                 {Array.isArray(order.items) && order.items.length > 0 && (
-                                  <div className="bg-gray-50 p-1.5 rounded-lg text-[10px] text-gray-600 mb-2 border border-gray-100 line-clamp-2">
+                                  <div className="bg-[#F8F9FA] p-2 rounded-xl text-[10px] text-[#2B2D42] mb-2 border border-gray-200 line-clamp-2">
                                     {order.items.map((it: any) => `${it.quantity || 1}x ${it.name || 'Producto'}`).join(', ')}
                                   </div>
                                 )}
@@ -5890,7 +5904,7 @@ export default function AdminPanel({
                                 <div className="flex items-center justify-between border-t border-gray-100 pt-2 mb-2">
                                   <OrderTimer createdAt={order.created_at} status={order.status} currentTime={currentTime} />
                                   <div className="text-right">
-                                    <span className="text-sm font-black text-gray-900 block">
+                                    <span className="text-sm font-montserrat font-black text-[#1D3557] block">
                                       ${Number(order.total_price || 0).toFixed(2)}
                                     </span>
                                   </div>
@@ -5903,7 +5917,7 @@ export default function AdminPanel({
                                     disabled={isUpdating}
                                     value={(currentPaymentStatus || '').toLowerCase()}
                                     onChange={(e) => handlePendingChange(order.id, 'payment_status', e.target.value)}
-                                    className={`text-[10px] font-extrabold rounded px-2 py-0.5 border cursor-pointer ${
+                                    className={`text-[10px] font-extrabold rounded-lg px-2 py-0.5 border cursor-pointer ${
                                       (currentPaymentStatus || '').toLowerCase() === 'pendiente' ? 'bg-amber-100 text-amber-800 border-amber-300' :
                                       (currentPaymentStatus || '').toLowerCase() === 'pagado' ? 'bg-emerald-100 text-emerald-800 border-emerald-300' :
                                       'bg-red-100 text-red-800 border-red-300'
@@ -5919,10 +5933,10 @@ export default function AdminPanel({
                                 <div className="flex items-center justify-between gap-1.5 pt-2 border-t border-gray-100">
                                   <button
                                     onClick={() => setSelectedOrder(order)}
-                                    className="px-2.5 py-1 bg-[#1e293b] hover:bg-[#0f172a] text-white rounded-full transition cursor-pointer text-[10px] font-black uppercase tracking-wider shadow-sm flex items-center gap-1 active:scale-95"
+                                    className="px-2.5 py-1 bg-[#1D3557] hover:bg-[#152742] text-white rounded-xl transition cursor-pointer text-[10px] font-montserrat font-bold uppercase tracking-wider shadow-xs flex items-center gap-1 active:scale-95"
                                     title="Ver detalle completo"
                                   >
-                                    <Eye className="w-3.5 h-3.5 stroke-[2.5]" />
+                                    <Eye className="w-3.5 h-3.5 stroke-[2.5] text-[#00BFFF]" />
                                     <span>Detalle</span>
                                   </button>
 
@@ -5930,7 +5944,7 @@ export default function AdminPanel({
                                     <button
                                       onClick={() => handleConfirmOrderChanges(order.id)}
                                       disabled={isUpdating}
-                                      className="px-3 py-1 bg-[#059669] hover:bg-[#047857] text-white font-black rounded-full text-[10px] uppercase tracking-wider flex items-center gap-1 cursor-pointer shadow-md transition animate-pulse active:scale-95"
+                                      className="px-3 py-1 bg-[#40E0D0] hover:bg-[#36cebe] text-[#1D3557] font-montserrat font-black rounded-xl text-[10px] uppercase tracking-wider flex items-center gap-1 cursor-pointer shadow-md transition animate-pulse active:scale-95 border-b border-[#1D3557]/20"
                                     >
                                       <Check className="w-3 h-3 stroke-[3]" />
                                       <span>Confirmar</span>
@@ -5938,7 +5952,7 @@ export default function AdminPanel({
                                   ) : col.nextStatus ? (
                                     <button
                                       onClick={() => handlePendingChange(order.id, 'status', col.nextStatus!)}
-                                      className={`px-3 py-1 ${col.nextBtnBg} text-white text-[10px] font-black rounded-full shadow-md transition cursor-pointer uppercase tracking-wider flex items-center gap-1 active:scale-95`}
+                                      className={`px-3 py-1 ${col.nextBtnBg} text-[10px] font-montserrat font-extrabold rounded-xl shadow-xs transition cursor-pointer uppercase tracking-wider flex items-center gap-1 active:scale-95`}
                                       title={`Avanzar a ${col.nextStatus}`}
                                     >
                                       {col.nextLabel}
@@ -5956,10 +5970,10 @@ export default function AdminPanel({
               </div>
             ) : (
               /* Table View */
-              <div className="bg-white border border-gray-200 rounded-lg shadow-xs overflow-x-auto max-h-[650px] overflow-y-auto">
+              <div className="bg-white border border-[#1D3557]/15 rounded-2xl shadow-xs overflow-x-auto max-h-[650px] overflow-y-auto">
               {loadingOrders ? (
                 <div className="p-12 text-center text-gray-400">
-                  <RefreshCw className="w-8 h-8 animate-spin mx-auto mb-3 text-[#008296]" />
+                  <RefreshCw className="w-8 h-8 animate-spin mx-auto mb-3 text-[#00BFFF]" />
                   <p className="font-semibold text-xs">Cargando lista de pedidos desde la base de datos...</p>
                 </div>
               ) : filteredOrders.length === 0 ? (
@@ -5969,20 +5983,20 @@ export default function AdminPanel({
                 </div>
               ) : (
                 <table className="w-full text-left border-collapse text-xs">
-                  <thead className="sticky top-0 z-20 bg-[#131921] shadow-xs">
-                    <tr className="bg-[#131921] text-white">
-                      <th className="p-3 font-extrabold">Pedido N°</th>
-                      <th className="p-3 font-extrabold">Cliente / Contacto</th>
-                      <th className="p-3 font-extrabold">Método Entrega</th>
-                      <th className="p-3 font-extrabold">Método Pago</th>
-                      <th className="p-3 font-extrabold text-right">Total (USD)</th>
-                      <th className="p-3 font-extrabold text-left">Tiempo / Inicio</th>
-                      <th className="p-3 font-extrabold text-center">Estado de la Entrega</th>
-                      <th className="p-3 font-extrabold text-center">Estado del Pago</th>
-                      <th className="p-3 font-extrabold text-right">Detalles</th>
+                  <thead className="sticky top-0 z-20 bg-[#1D3557] shadow-xs">
+                    <tr className="bg-[#1D3557] text-white">
+                      <th className="p-3.5 font-montserrat font-extrabold">Pedido N°</th>
+                      <th className="p-3.5 font-montserrat font-extrabold">Cliente / Contacto</th>
+                      <th className="p-3.5 font-montserrat font-extrabold">Método Entrega</th>
+                      <th className="p-3.5 font-montserrat font-extrabold">Método Pago</th>
+                      <th className="p-3.5 font-montserrat font-extrabold text-right">Total (USD)</th>
+                      <th className="p-3.5 font-montserrat font-extrabold text-left">Tiempo / Inicio</th>
+                      <th className="p-3.5 font-montserrat font-extrabold text-center">Estado de la Entrega</th>
+                      <th className="p-3.5 font-montserrat font-extrabold text-center">Estado del Pago</th>
+                      <th className="p-3.5 font-montserrat font-extrabold text-right">Detalles</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-gray-100 font-medium">
+                  <tbody className="divide-y divide-gray-100 font-medium text-[#2B2D42]">
                     {filteredOrders.map((order) => {
                       const formattedNum = String(order.order_number || '').padStart(7, '0');
                       const orderDate = order.created_at ? new Date(order.created_at).toLocaleDateString() : 'N/A';
@@ -5993,15 +6007,15 @@ export default function AdminPanel({
                       const hasPendingChanges = !!pendingChanges[order.id];
 
                       return (
-                        <tr key={order.id} className="hover:bg-gray-50/50 transition">
+                        <tr key={order.id} className="hover:bg-[#F8F9FA] transition">
                           {/* Order number with padding */}
-                          <td className="p-3 font-mono font-black text-[#008296] text-[13px]">
-                            {formattedNum}
+                          <td className="p-3 font-mono font-black text-[#1D3557] text-[13px]">
+                            #{formattedNum}
                           </td>
 
                           {/* Customer contact info */}
                           <td className="p-3 text-left">
-                            <div className="font-bold text-gray-900">{order.customer_name}</div>
+                            <div className="font-montserrat font-bold text-[#2B2D42]">{order.customer_name}</div>
                             <div className="text-gray-400 text-[10px] font-mono">{order.phone_number}</div>
                           </td>
 
@@ -6043,14 +6057,14 @@ export default function AdminPanel({
                                 disabled={isUpdating}
                                 value={(currentStatus || '').toLowerCase()}
                                 onChange={(e) => handlePendingChange(order.id, 'status', e.target.value)}
-                                className={`text-[11px] font-black rounded-lg border px-2 py-1 focus:ring-1 focus:ring-[#008296] focus:outline-none font-bold select-none cursor-pointer text-center ${
-                                  (currentStatus || '').toLowerCase() === 'recibido' ? 'bg-gray-100 text-gray-700 border-gray-300' :
-                                  (currentStatus || '').toLowerCase() === 'preparando' ? 'bg-amber-50 text-amber-700 border-amber-300' :
-                                  (currentStatus || '').toLowerCase() === 'listo para retirar' ? 'bg-indigo-50 text-indigo-700 border-indigo-300' :
-                                  (currentStatus || '').toLowerCase() === 'en camino' ? 'bg-sky-50 text-sky-700 border-sky-300' :
-                                  (currentStatus || '').toLowerCase() === 'entregado' ? 'bg-emerald-50 text-emerald-700 border-emerald-300' :
-                                  'bg-red-50 text-red-700 border-red-300'
-                                } ${pendingChanges[order.id]?.status ? 'ring-2 ring-emerald-500 ring-offset-1' : ''}`}
+                                className={`text-[11px] font-black rounded-xl border px-2.5 py-1 focus:ring-2 focus:ring-[#00BFFF] focus:outline-none select-none cursor-pointer text-center ${
+                                  (currentStatus || '').toLowerCase() === 'recibido' ? 'bg-[#F8F9FA] text-[#1D3557] border-[#1D3557]/20' :
+                                  (currentStatus || '').toLowerCase() === 'preparando' ? 'bg-amber-50 text-amber-800 border-amber-300' :
+                                  (currentStatus || '').toLowerCase() === 'listo para retirar' ? 'bg-sky-50 text-sky-800 border-sky-300' :
+                                  (currentStatus || '').toLowerCase() === 'en camino' ? 'bg-[#1D3557]/10 text-[#1D3557] border-[#1D3557]/30' :
+                                  (currentStatus || '').toLowerCase() === 'entregado' ? 'bg-[#40E0D0]/15 text-[#1D3557] border-[#40E0D0]/40 font-bold' :
+                                  'bg-rose-50 text-rose-800 border-rose-300'
+                                } ${pendingChanges[order.id]?.status ? 'ring-2 ring-[#40E0D0] ring-offset-1' : ''}`}
                               >
                                 <option value="recibido">Recibido</option>
                                 <option value="preparando">Preparando</option>
@@ -6060,8 +6074,8 @@ export default function AdminPanel({
                                 <option value="cancelado">Cancelado</option>
                               </select>
                               {isUpdating && (
-                                <div className="absolute inset-0 bg-white/70 flex items-center justify-center rounded">
-                                  <RefreshCw className="w-3 h-3 animate-spin text-gray-500" />
+                                <div className="absolute inset-0 bg-white/70 flex items-center justify-center rounded-xl">
+                                  <RefreshCw className="w-3 h-3 animate-spin text-[#00BFFF]" />
                                 </div>
                               )}
                             </div>
@@ -6074,19 +6088,19 @@ export default function AdminPanel({
                                 disabled={isUpdating}
                                 value={(currentPaymentStatus || '').toLowerCase()}
                                 onChange={(e) => handlePendingChange(order.id, 'payment_status', e.target.value)}
-                                className={`text-[11px] font-black rounded-lg border px-2.5 py-1 focus:ring-1 focus:ring-[#008296] focus:outline-none font-bold select-none cursor-pointer text-center ${
+                                className={`text-[11px] font-black rounded-xl border px-2.5 py-1 focus:ring-2 focus:ring-[#00BFFF] focus:outline-none select-none cursor-pointer text-center ${
                                   (currentPaymentStatus || '').toLowerCase() === 'pendiente' ? 'bg-amber-100 text-amber-800 border-amber-300' :
                                   (currentPaymentStatus || '').toLowerCase() === 'pagado' ? 'bg-emerald-100 text-emerald-800 border-emerald-300' :
                                   'bg-red-100 text-red-800 border-red-300'
-                                } ${pendingChanges[order.id]?.payment_status ? 'ring-2 ring-emerald-500 ring-offset-1' : ''}`}
+                                } ${pendingChanges[order.id]?.payment_status ? 'ring-2 ring-[#40E0D0] ring-offset-1' : ''}`}
                               >
                                 <option value="pendiente">Pendiente</option>
                                 <option value="pagado">Pagado</option>
                                 <option value="reembolsado">Reembolsado</option>
                               </select>
                               {isUpdating && (
-                                <div className="absolute inset-0 bg-white/70 flex items-center justify-center rounded">
-                                  <RefreshCw className="w-3 h-3 animate-spin text-gray-500" />
+                                <div className="absolute inset-0 bg-white/70 flex items-center justify-center rounded-xl">
+                                  <RefreshCw className="w-3 h-3 animate-spin text-[#00BFFF]" />
                                 </div>
                               )}
                             </div>
@@ -6099,7 +6113,7 @@ export default function AdminPanel({
                                 <button
                                   onClick={() => handleConfirmOrderChanges(order.id)}
                                   disabled={isUpdating}
-                                  className="px-3 py-1 bg-[#059669] hover:bg-[#047857] text-white font-black rounded-full text-[10px] uppercase tracking-wider flex items-center gap-1 cursor-pointer shadow-md transition animate-pulse active:scale-95"
+                                  className="px-3 py-1 bg-[#40E0D0] hover:bg-[#36cebe] text-[#1D3557] font-montserrat font-black rounded-xl text-[10px] uppercase tracking-wider flex items-center gap-1 cursor-pointer shadow-md transition animate-pulse active:scale-95 border-b border-[#1D3557]/20"
                                   title="Confirmar cambios de estado en la base de datos"
                                 >
                                   <Check className="w-3 h-3 stroke-[3]" />
@@ -6108,10 +6122,10 @@ export default function AdminPanel({
                               )}
                               <button
                                 onClick={() => setSelectedOrder(order)}
-                                className="px-2.5 py-1 bg-[#0284c7] hover:bg-[#0369a1] text-white rounded-full transition cursor-pointer text-[10px] font-black uppercase tracking-wider shadow-sm flex items-center gap-1 active:scale-95"
+                                className="px-2.5 py-1 bg-[#1D3557] hover:bg-[#152742] text-white rounded-xl transition cursor-pointer text-[10px] font-montserrat font-bold uppercase tracking-wider shadow-xs flex items-center gap-1 active:scale-95"
                                 title="Ver Detalle"
                               >
-                                <Eye className="w-3.5 h-3.5 stroke-[2.5]" />
+                                <Eye className="w-3.5 h-3.5 stroke-[2.5] text-[#00BFFF]" />
                                 <span>Detalle</span>
                               </button>
                             </div>
@@ -6857,54 +6871,54 @@ export default function AdminPanel({
       {/* 4. ORDER DETAILS MODAL */}
       {selectedOrder && (
         <div className="fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-4 backdrop-blur-xs overflow-y-auto">
-          <div className="bg-white rounded-xl shadow-2xl max-w-3xl w-full max-h-[90vh] flex flex-col overflow-hidden text-left border border-gray-200">
+          <div className="bg-white rounded-2xl shadow-2xl max-w-3xl w-full max-h-[90vh] flex flex-col overflow-hidden text-left border border-gray-200">
             {/* Header */}
-            <div className="bg-[#131921] text-white p-4 flex justify-between items-center">
+            <div className="bg-[#1D3557] text-white p-4 flex justify-between items-center">
               <div>
-                <h3 className="font-black text-sm uppercase tracking-wider flex items-center gap-2">
-                  <ClipboardList className="w-5 h-5 text-[#008296]" />
+                <h3 className="font-montserrat font-extrabold text-sm uppercase tracking-wider flex items-center gap-2 text-white">
+                  <ClipboardList className="w-5 h-5 text-[#40E0D0]" />
                   <span>Detalle de Pedido #{String(selectedOrder.order_number || '').padStart(7, '0')}</span>
                 </h3>
-                <p className="text-[10px] text-gray-400 mt-0.5 font-mono">
+                <p className="text-[10px] text-gray-200 mt-0.5 font-mono">
                   ID: {selectedOrder.id || 'N/A'} • Recibido: {selectedOrder.created_at ? new Date(selectedOrder.created_at).toLocaleString() : 'N/A'}
                 </p>
               </div>
-              <button onClick={() => setSelectedOrder(null)} className="text-gray-400 hover:text-white transition cursor-pointer">
+              <button onClick={() => setSelectedOrder(null)} className="text-gray-300 hover:text-white transition cursor-pointer">
                 <X className="w-5 h-5" />
               </button>
             </div>
 
             {/* Content (Scrollable Grid) */}
-            <div className="p-5 overflow-y-auto flex-1 grid grid-cols-1 md:grid-cols-12 gap-5 leading-normal text-xs text-gray-700">
+            <div className="p-5 overflow-y-auto flex-1 grid grid-cols-1 md:grid-cols-12 gap-5 leading-normal text-xs text-[#2B2D42]">
               
               {/* Left Column: Customer and Payment details (col-span-5) */}
               <div className="md:col-span-5 space-y-4">
                 
                 {/* Section: Customer Info */}
-                <div className="bg-gray-50 border border-gray-200 rounded-lg p-3.5 space-y-2.5">
-                  <h4 className="font-extrabold text-[#131921] uppercase tracking-wider text-[10px] border-b border-gray-200 pb-1.5 flex items-center gap-1.5">
+                <div className="bg-[#F8F9FA] border border-gray-200 rounded-2xl p-4 space-y-2.5">
+                  <h4 className="font-montserrat font-extrabold text-[#1D3557] uppercase tracking-wider text-[10px] border-b border-gray-200 pb-1.5 flex items-center gap-1.5">
                     Cliente / Contacto
                   </h4>
                   
                   <div className="space-y-1">
                     <p className="text-xs text-gray-400 font-bold uppercase tracking-wide text-[9px]">Nombre completo</p>
-                    <p className="font-black text-gray-950 text-sm">{selectedOrder.customer_name}</p>
+                    <p className="font-montserrat font-black text-[#1D3557] text-sm">{selectedOrder.customer_name}</p>
                   </div>
 
                   <div className="space-y-1">
                     <p className="text-xs text-gray-400 font-bold uppercase tracking-wide text-[9px]">Teléfono de contacto</p>
-                    <p className="font-black text-gray-900 font-mono text-xs">{selectedOrder.phone_number}</p>
+                    <p className="font-bold text-[#2B2D42] font-mono text-xs">{selectedOrder.phone_number}</p>
                   </div>
 
                   {/* WhatsApp contact template selector */}
                   <div className="pt-2 border-t border-gray-200 mt-2 space-y-2">
-                    <label className="block text-[9px] font-black text-gray-400 uppercase tracking-wider">
+                    <label className="block text-[9px] font-montserrat font-extrabold text-[#1D3557] uppercase tracking-wider">
                       Plantilla de Mensaje (WhatsApp)
                     </label>
                     <select
                       value={waTemplate}
                       onChange={(e) => setWaTemplate(e.target.value as any)}
-                      className="w-full text-xs font-bold bg-white border border-gray-300 rounded p-1.5 text-[#0F1111] focus:outline-none focus:ring-1 focus:ring-emerald-500 cursor-pointer"
+                      className="w-full text-xs font-bold bg-white border border-gray-300 rounded-xl p-2 text-[#2B2D42] focus:outline-none focus:ring-2 focus:ring-[#00BFFF] cursor-pointer"
                     >
                       <option value="default">1. Predeterminado (Datos + Capture)</option>
                       <option value="availability">2. Disponibilidad de Producto</option>
@@ -6913,7 +6927,7 @@ export default function AdminPanel({
                     </select>
 
                     {/* Simple Message Preview */}
-                    <div className="bg-emerald-50 border border-emerald-100 p-2 rounded text-[10px] text-gray-700 max-h-24 overflow-y-auto whitespace-pre-line font-medium leading-relaxed">
+                    <div className="bg-emerald-50 border border-emerald-100 p-2.5 rounded-xl text-[10px] text-gray-700 max-h-24 overflow-y-auto whitespace-pre-line font-medium leading-relaxed">
                       <span className="font-bold text-emerald-800 text-[9px] block mb-1 uppercase tracking-wide">Vista previa del mensaje:</span>
                       {getWhatsAppMessageText(selectedOrder, waTemplate)}
                     </div>
@@ -6925,7 +6939,7 @@ export default function AdminPanel({
                       target="_blank"
                       referrerPolicy="no-referrer"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center justify-center gap-2 w-full py-2.5 bg-[#25D366] hover:bg-[#128C7E] text-white font-black rounded-full text-xs transition shadow-md hover:shadow-lg cursor-pointer text-center uppercase tracking-wider active:scale-98"
+                      className="inline-flex items-center justify-center gap-2 w-full py-2.5 bg-[#25D366] hover:bg-[#128C7E] text-white font-montserrat font-black rounded-xl text-xs transition shadow-md hover:shadow-lg cursor-pointer text-center uppercase tracking-wider active:scale-98"
                     >
                       <span>💬 Contactar por WhatsApp</span>
                     </a>
@@ -6933,17 +6947,17 @@ export default function AdminPanel({
                 </div>
 
                 {/* Section: Delivery info */}
-                <div className="bg-gray-50 border border-gray-200 rounded-lg p-3.5 space-y-2.5">
-                  <h4 className="font-extrabold text-[#131921] uppercase tracking-wider text-[10px] border-b border-gray-200 pb-1.5 flex items-center gap-1.5">
+                <div className="bg-[#F8F9FA] border border-gray-200 rounded-2xl p-4 space-y-2.5">
+                  <h4 className="font-montserrat font-extrabold text-[#1D3557] uppercase tracking-wider text-[10px] border-b border-gray-200 pb-1.5 flex items-center gap-1.5">
                     Método de Entrega
                   </h4>
 
                   <div className="space-y-1">
                     <p className="text-xs text-gray-400 font-bold uppercase tracking-wide text-[9px]">Tipo de entrega</p>
-                    <span className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-black ${
+                    <span className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-[10px] font-montserrat font-extrabold ${
                       selectedOrder.delivery_method === 'retiro' 
                         ? 'bg-amber-100 text-amber-800' 
-                        : 'bg-sky-100 text-sky-800'
+                        : 'bg-[#1D3557]/10 text-[#1D3557]'
                     }`}>
                       {selectedOrder.delivery_method === 'retiro' ? <Store className="w-3.5 h-3.5" /> : <Truck className="w-3.5 h-3.5" />}
                       {selectedOrder.delivery_method === 'retiro' ? 'Retiro en Tienda' : 'Envío a Domicilio'}
@@ -6953,7 +6967,7 @@ export default function AdminPanel({
                   {selectedOrder.delivery_method !== 'retiro' && (
                     <div className="space-y-1">
                       <p className="text-xs text-gray-400 font-bold uppercase tracking-wide text-[9px]">Dirección de Envío</p>
-                      <p className="font-bold text-gray-800 text-xs bg-white border border-gray-150 p-2 rounded leading-relaxed">
+                      <p className="font-bold text-[#2B2D42] text-xs bg-white border border-gray-150 p-2 rounded-xl leading-relaxed">
                         {selectedOrder.address_text || 'No proporcionada'}
                       </p>
                     </div>
@@ -6962,7 +6976,7 @@ export default function AdminPanel({
                   {selectedOrder.comments && (
                     <div className="space-y-1">
                       <p className="text-xs text-gray-400 font-bold uppercase tracking-wide text-[9px]">Comentarios / Observaciones</p>
-                      <p className="text-xs text-gray-600 bg-amber-50 border border-amber-100 p-2 rounded leading-relaxed italic">
+                      <p className="text-xs text-gray-700 bg-amber-50 border border-amber-100 p-2 rounded-xl leading-relaxed italic">
                         "{selectedOrder.comments}"
                       </p>
                     </div>
@@ -6970,15 +6984,15 @@ export default function AdminPanel({
                 </div>
 
                 {/* Section: Payment Info */}
-                <div className="bg-gray-50 border border-gray-200 rounded-lg p-3.5 space-y-2.5">
-                  <h4 className="font-extrabold text-[#131921] uppercase tracking-wider text-[10px] border-b border-gray-200 pb-1.5 flex items-center gap-1.5">
+                <div className="bg-[#F8F9FA] border border-gray-200 rounded-2xl p-4 space-y-2.5">
+                  <h4 className="font-montserrat font-extrabold text-[#1D3557] uppercase tracking-wider text-[10px] border-b border-gray-200 pb-1.5 flex items-center gap-1.5">
                     Información de Pago
                   </h4>
 
                   <div className="grid grid-cols-2 gap-3">
                     <div className="space-y-1">
                       <p className="text-xs text-gray-400 font-bold uppercase tracking-wide text-[9px]">Método</p>
-                      <p className="font-black text-gray-900 capitalize text-xs">
+                      <p className="font-montserrat font-extrabold text-[#1D3557] capitalize text-xs">
                         {selectedOrder.payment_method || 'N/A'}
                       </p>
                     </div>
@@ -6986,7 +7000,7 @@ export default function AdminPanel({
                     {selectedOrder.payment_amount_with && (
                       <div className="space-y-1">
                         <p className="text-xs text-gray-400 font-bold uppercase tracking-wide text-[9px]">Paga con</p>
-                        <p className="font-black text-gray-900 text-xs">
+                        <p className="font-montserrat font-black text-[#1D3557] text-xs">
                           ${selectedOrder.payment_amount_with.toFixed(2)}
                         </p>
                       </div>
@@ -6994,7 +7008,7 @@ export default function AdminPanel({
                   </div>
 
                   {selectedOrder.points && (
-                    <div className="bg-sky-50 border border-sky-100 p-2 rounded text-sky-800 text-[11px] font-bold flex items-center gap-1.5">
+                    <div className="bg-sky-50 border border-sky-100 p-2 rounded-xl text-sky-900 text-[11px] font-bold flex items-center gap-1.5">
                       <Star className="w-4 h-4 text-[#FF9900] fill-[#FF9900]" />
                       <span>Generó {selectedOrder.points} puntos de fidelidad.</span>
                     </div>
@@ -7004,23 +7018,23 @@ export default function AdminPanel({
               </div>
 
               {/* Right Column: Ordered Items Table (col-span-7) */}
-              <div className="md:col-span-7 border border-gray-200 rounded-xl overflow-hidden flex flex-col h-full bg-white">
-                <div className="bg-[#131921] text-white py-2 px-3 font-extrabold uppercase tracking-wide text-[10px]">
+              <div className="md:col-span-7 border border-gray-200 rounded-2xl overflow-hidden flex flex-col h-full bg-white">
+                <div className="bg-[#1D3557] text-white py-2.5 px-3.5 font-montserrat font-extrabold uppercase tracking-wide text-[10px]">
                   Artículos del Pedido
                 </div>
                 
                 <div className="flex-1 overflow-y-auto divide-y divide-gray-100 max-h-[300px]">
                   {selectedOrder.items && selectedOrder.items.length > 0 ? (
                     selectedOrder.items.map((item, index) => (
-                      <div key={index} className="p-3 flex justify-between items-center hover:bg-gray-50/50 transition gap-2">
+                      <div key={index} className="p-3 flex justify-between items-center hover:bg-[#F8F9FA] transition gap-2">
                         <div className="min-w-0 flex-1">
-                          <p className="font-bold text-gray-900 text-xs truncate" title={item.name}>{item.name}</p>
+                          <p className="font-bold text-[#2B2D42] text-xs truncate" title={item.name}>{item.name}</p>
                           <p className="text-[10px] text-gray-400 font-mono font-bold mt-0.5">SKU: {item.sku}</p>
                         </div>
-                        <div className="text-right flex-shrink-0 font-bold text-xs font-semibold">
+                        <div className="text-right flex-shrink-0 font-bold text-xs">
                           <span className="text-gray-400 font-semibold">{item.quantity} x </span>
-                          <span className="text-gray-900 font-bold">${item.price.toFixed(2)}</span>
-                          <p className="text-[#008296] font-black text-xs mt-0.5">
+                          <span className="text-[#2B2D42] font-bold">${item.price.toFixed(2)}</span>
+                          <p className="text-[#00BFFF] font-black text-xs mt-0.5">
                             ${(item.quantity * item.price).toFixed(2)}
                           </p>
                         </div>
@@ -7034,18 +7048,18 @@ export default function AdminPanel({
                 </div>
 
                 {/* Subtotal & Total summaries */}
-                <div className="bg-gray-50 p-4 border-t border-gray-100 space-y-2">
-                  <div className="flex justify-between font-semibold text-gray-500">
+                <div className="bg-[#F8F9FA] p-4 border-t border-gray-200 space-y-2">
+                  <div className="flex justify-between font-semibold text-gray-500 text-xs">
                     <span>Subtotal</span>
                     <span>${Number(selectedOrder.total_price || 0).toFixed(2)}</span>
                   </div>
-                  <div className="flex justify-between font-semibold text-gray-500">
+                  <div className="flex justify-between font-semibold text-gray-500 text-xs">
                     <span>Cargos de Envío</span>
                     <span>$0.00</span>
                   </div>
-                  <div className="flex justify-between font-black text-gray-950 text-sm border-t border-gray-200 pt-2">
+                  <div className="flex justify-between font-montserrat font-black text-[#1D3557] text-sm border-t border-gray-200 pt-2">
                     <span>TOTAL GENERAL</span>
-                    <span className="text-[#008296] text-base">${Number(selectedOrder.total_price || 0).toFixed(2)} USD</span>
+                    <span className="text-[#1D3557] font-montserrat font-black text-base">${Number(selectedOrder.total_price || 0).toFixed(2)} USD</span>
                   </div>
                 </div>
               </div>
@@ -7053,23 +7067,23 @@ export default function AdminPanel({
             </div>
 
             {/* Quick States Updates in Footer */}
-            <div className="p-4 bg-gray-50 border-t border-gray-200 flex flex-wrap items-center justify-between gap-4 text-xs">
+            <div className="p-4 bg-[#F8F9FA] border-t border-gray-200 flex flex-wrap items-center justify-between gap-4 text-xs">
               
               {/* Quick Status Selects inside modal */}
               <div className="flex flex-wrap items-center gap-4">
                 <div className="flex items-center gap-2">
-                  <span className="font-bold text-gray-500">Estado de la Entrega:</span>
+                  <span className="font-montserrat font-extrabold text-[#1D3557]">Estado de Entrega:</span>
                   <select
                     value={(pendingChanges[selectedOrder.id]?.status ?? (selectedOrder.status || 'recibido')).toLowerCase()}
                     onChange={(e) => handlePendingChange(selectedOrder.id, 'status', e.target.value)}
-                    className={`font-black rounded px-2.5 py-1 text-xs focus:ring-1 focus:ring-[#008296] border cursor-pointer ${
+                    className={`font-black rounded-xl px-2.5 py-1 text-xs focus:ring-2 focus:ring-[#00BFFF] border cursor-pointer ${
                       (pendingChanges[selectedOrder.id]?.status ?? (selectedOrder.status || 'recibido')).toLowerCase() === 'recibido' ? 'bg-gray-100 text-gray-700 border-gray-300' :
                       (pendingChanges[selectedOrder.id]?.status ?? (selectedOrder.status || 'recibido')).toLowerCase() === 'preparando' ? 'bg-amber-50 text-amber-700 border-amber-300' :
-                      (pendingChanges[selectedOrder.id]?.status ?? (selectedOrder.status || 'recibido')).toLowerCase() === 'listo para retirar' ? 'bg-indigo-50 text-indigo-700 border-indigo-300' :
-                      (pendingChanges[selectedOrder.id]?.status ?? (selectedOrder.status || 'recibido')).toLowerCase() === 'en camino' ? 'bg-sky-50 text-sky-700 border-sky-300' :
-                      (pendingChanges[selectedOrder.id]?.status ?? (selectedOrder.status || 'recibido')).toLowerCase() === 'entregado' ? 'bg-emerald-50 text-emerald-700 border-emerald-300' :
-                      'bg-red-50 text-red-700 border-red-300'
-                    } ${(pendingChanges[selectedOrder.id]?.status) ? 'ring-2 ring-emerald-500' : ''}`}
+                      (pendingChanges[selectedOrder.id]?.status ?? (selectedOrder.status || 'recibido')).toLowerCase() === 'listo para retirar' ? 'bg-sky-50 text-sky-700 border-sky-300' :
+                      (pendingChanges[selectedOrder.id]?.status ?? (selectedOrder.status || 'recibido')).toLowerCase() === 'en camino' ? 'bg-[#1D3557]/10 text-[#1D3557] border-[#1D3557]/30' :
+                      (pendingChanges[selectedOrder.id]?.status ?? (selectedOrder.status || 'recibido')).toLowerCase() === 'entregado' ? 'bg-[#40E0D0]/15 text-[#1D3557] border-[#40E0D0]/40' :
+                      'bg-rose-50 text-rose-700 border-rose-300'
+                    } ${(pendingChanges[selectedOrder.id]?.status) ? 'ring-2 ring-[#40E0D0]' : ''}`}
                   >
                     <option value="recibido">Recibido</option>
                     <option value="preparando">Preparando</option>
@@ -7081,15 +7095,15 @@ export default function AdminPanel({
                 </div>
 
                 <div className="flex items-center gap-2">
-                  <span className="font-bold text-gray-500">Estado del Pago:</span>
+                  <span className="font-montserrat font-extrabold text-[#1D3557]">Estado del Pago:</span>
                   <select
                     value={(pendingChanges[selectedOrder.id]?.payment_status ?? (selectedOrder.payment_status || 'pendiente')).toLowerCase()}
                     onChange={(e) => handlePendingChange(selectedOrder.id, 'payment_status', e.target.value)}
-                    className={`font-black rounded px-2.5 py-1 text-xs focus:ring-1 focus:ring-[#008296] border cursor-pointer ${
+                    className={`font-black rounded-xl px-2.5 py-1 text-xs focus:ring-2 focus:ring-[#00BFFF] border cursor-pointer ${
                       (pendingChanges[selectedOrder.id]?.payment_status ?? (selectedOrder.payment_status || 'pendiente')).toLowerCase() === 'pendiente' ? 'bg-amber-100 text-amber-800 border-amber-300' :
                       (pendingChanges[selectedOrder.id]?.payment_status ?? (selectedOrder.payment_status || 'pendiente')).toLowerCase() === 'pagado' ? 'bg-emerald-100 text-emerald-800 border-emerald-300' :
                       'bg-red-100 text-red-800 border-red-300'
-                    } ${(pendingChanges[selectedOrder.id]?.payment_status) ? 'ring-2 ring-emerald-500' : ''}`}
+                    } ${(pendingChanges[selectedOrder.id]?.payment_status) ? 'ring-2 ring-[#40E0D0]' : ''}`}
                   >
                     <option value="pendiente">Pendiente</option>
                     <option value="pagado">Pagado</option>
@@ -7101,7 +7115,7 @@ export default function AdminPanel({
                   <button
                     type="button"
                     onClick={() => handleConfirmOrderChanges(selectedOrder.id)}
-                    className="px-4 py-2 bg-[#059669] hover:bg-[#047857] text-white font-black rounded-full text-xs cursor-pointer shadow-md hover:shadow-lg flex items-center gap-1.5 transition uppercase tracking-wider active:scale-98"
+                    className="px-4 py-2 bg-[#40E0D0] hover:bg-[#36cebe] text-[#1D3557] font-montserrat font-black rounded-xl text-xs cursor-pointer shadow-md hover:shadow-lg flex items-center gap-1.5 transition uppercase tracking-wider active:scale-98 border-b border-[#1D3557]/20"
                   >
                     <Check className="w-4 h-4 stroke-[3]" />
                     <span>Confirmar Cambios</span>
@@ -7114,7 +7128,7 @@ export default function AdminPanel({
                 <button
                   type="button"
                   onClick={() => setSelectedOrder(null)}
-                  className="px-5 py-2 bg-[#1e293b] hover:bg-[#0f172a] text-white font-black rounded-full text-xs cursor-pointer shadow-md hover:shadow-lg uppercase tracking-wider active:scale-98 transition"
+                  className="px-5 py-2 bg-[#1D3557] hover:bg-[#152742] text-white font-montserrat font-extrabold rounded-xl text-xs cursor-pointer shadow-md hover:shadow-lg uppercase tracking-wider active:scale-98 transition"
                 >
                   Cerrar Detalles
                 </button>
@@ -7130,21 +7144,21 @@ export default function AdminPanel({
       {showUserModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4">
           <div className="bg-white rounded-3xl border border-gray-150 w-full max-w-md shadow-2xl overflow-hidden text-left flex flex-col animate-fadeIn">
-            <div className="p-4 bg-gray-50 border-b border-gray-100 flex justify-between items-center">
-              <span className="text-xs font-black text-gray-800 uppercase tracking-wider flex items-center gap-2">
-                <UserCheck className="w-4 h-4 text-[#005da9]" />
+            <div className="p-4 bg-[#1D3557] text-white border-b border-gray-100 flex justify-between items-center">
+              <span className="text-xs font-montserrat font-extrabold uppercase tracking-wider flex items-center gap-2 text-white">
+                <UserCheck className="w-4 h-4 text-[#40E0D0]" />
                 <span>{editingUserId ? 'Editar Usuario del Sistema' : 'Nuevo Usuario del Sistema'}</span>
               </span>
               <button 
                 type="button"
                 onClick={() => setShowUserModal(false)}
-                className="p-1.5 hover:bg-gray-200 text-gray-400 hover:text-gray-600 rounded-lg transition cursor-pointer"
+                className="p-1.5 hover:bg-white/10 text-gray-300 hover:text-white rounded-lg transition cursor-pointer"
               >
                 <X className="w-4 h-4" />
               </button>
             </div>
 
-            <form onSubmit={(e) => { e.preventDefault(); handleSaveStoreUser(); }} className="p-5 space-y-4">
+            <form onSubmit={(e) => { e.preventDefault(); handleSaveStoreUser(); }} className="p-5 space-y-4 font-poppins">
               {userFormError && (
                 <div className="p-3 bg-red-50 border border-red-200 rounded-xl text-red-600 text-xs font-bold flex items-center gap-2">
                   <AlertTriangle className="w-4 h-4 shrink-0" />
@@ -7153,31 +7167,31 @@ export default function AdminPanel({
               )}
 
               <div>
-                <label className="block text-[10px] font-black uppercase text-gray-500 mb-1">Nombre Completo del Usuario *</label>
+                <label className="block text-[10px] font-montserrat font-extrabold uppercase text-[#1D3557] mb-1">Nombre Completo del Usuario *</label>
                 <input
                   type="text"
                   required
                   value={userFormName}
                   onChange={(e) => setUserFormName(e.target.value)}
                   placeholder="Ej: Pedro Pérez"
-                  className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-xs font-bold text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#005da9]"
+                  className="w-full px-3 py-2 bg-[#F8F9FA] border border-gray-200 rounded-xl text-xs font-bold text-[#2B2D42] focus:outline-none focus:ring-2 focus:ring-[#00BFFF]"
                 />
               </div>
 
               <div>
-                <label className="block text-[10px] font-black uppercase text-gray-500 mb-1">Correo Electrónico (Usuario para Login) *</label>
+                <label className="block text-[10px] font-montserrat font-extrabold uppercase text-[#1D3557] mb-1">Correo Electrónico (Usuario para Login) *</label>
                 <input
                   type="email"
                   required
                   value={userFormEmail}
                   onChange={(e) => setUserFormEmail(e.target.value)}
                   placeholder="Ej: pedro@copiasbellavista.com"
-                  className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-xs font-bold text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#005da9]"
+                  className="w-full px-3 py-2 bg-[#F8F9FA] border border-gray-200 rounded-xl text-xs font-bold text-[#2B2D42] focus:outline-none focus:ring-2 focus:ring-[#00BFFF]"
                 />
               </div>
 
               <div>
-                <label className="block text-[10px] font-black uppercase text-gray-500 mb-1">
+                <label className="block text-[10px] font-montserrat font-extrabold uppercase text-[#1D3557] mb-1">
                   Contraseña / Clave de Acceso {editingUserId ? '(Opcional para mantener)' : '*'}
                 </label>
                 <input
@@ -7186,13 +7200,13 @@ export default function AdminPanel({
                   value={userFormPassword}
                   onChange={(e) => setUserFormPassword(e.target.value)}
                   placeholder={editingUserId ? "Dejar en blanco para mantener la clave actual" : "Ej: ClaveSegura123"}
-                  className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-xs font-mono font-bold text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#005da9]"
+                  className="w-full px-3 py-2 bg-[#F8F9FA] border border-gray-200 rounded-xl text-xs font-mono font-bold text-[#2B2D42] focus:outline-none focus:ring-2 focus:ring-[#00BFFF]"
                 />
                 <p className="text-[10px] text-gray-400 mt-1">El usuario usará su correo y esta contraseña para iniciar sesión.</p>
               </div>
 
               <div>
-                <label className="block text-[10px] font-black uppercase text-gray-500 mb-1">Rol de Acceso al Sistema *</label>
+                <label className="block text-[10px] font-montserrat font-extrabold uppercase text-[#1D3557] mb-1">Rol de Acceso al Sistema *</label>
                 <select
                   value={userFormRole}
                   onChange={(e) => {
@@ -7202,7 +7216,7 @@ export default function AdminPanel({
                       setUserFormClientCode('');
                     }
                   }}
-                  className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-xs font-bold text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#005da9]"
+                  className="w-full px-3 py-2 bg-[#F8F9FA] border border-gray-200 rounded-xl text-xs font-bold text-[#2B2D42] focus:outline-none focus:ring-2 focus:ring-[#00BFFF]"
                 >
                   <option value="Admin">Admin (Control Total)</option>
                   <option value="Gerente">Gerente (Gestión General)</option>
@@ -7215,7 +7229,7 @@ export default function AdminPanel({
 
               {userFormRole === 'Cliente' && (
                 <div>
-                  <label className="block text-[10px] font-black uppercase text-gray-500 mb-1">
+                  <label className="block text-[10px] font-montserrat font-extrabold uppercase text-[#1D3557] mb-1">
                     Vincular con Cliente (por Código) *
                   </label>
                   <select
@@ -7234,7 +7248,7 @@ export default function AdminPanel({
                         }
                       }
                     }}
-                    className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-xs font-bold text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#005da9]"
+                    className="w-full px-3 py-2 bg-[#F8F9FA] border border-gray-200 rounded-xl text-xs font-bold text-[#2B2D42] focus:outline-none focus:ring-2 focus:ring-[#00BFFF]"
                   >
                     <option value="">-- Seleccionar Cliente --</option>
                     {dbClients.map(c => (
@@ -7243,25 +7257,25 @@ export default function AdminPanel({
                       </option>
                     ))}
                   </select>
-                  <p className="text-[10px] text-[#005da9] mt-1 font-medium">
+                  <p className="text-[10px] text-[#00BFFF] mt-1 font-medium">
                     El usuario externo se vinculará a la cuenta de este cliente por su código.
                   </p>
                 </div>
               )}
 
-              <div className="flex gap-2 pt-3 border-t border-gray-100">
+              <div className="flex gap-2 pt-3 border-t border-gray-100 font-montserrat font-extrabold">
                 <button
                   type="button"
                   onClick={() => setShowUserModal(false)}
-                  className="flex-1 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-600 font-bold text-xs rounded-xl transition cursor-pointer"
+                  className="flex-1 py-2.5 bg-gray-100 hover:bg-gray-200 text-[#2B2D42] text-xs rounded-xl transition cursor-pointer"
                 >
                   Cancelar
                 </button>
                 <button
                   type="submit"
-                  className="flex-1 py-2.5 bg-[#28a745] hover:bg-[#218838] text-white font-black text-xs uppercase rounded-xl transition cursor-pointer shadow-sm flex items-center justify-center gap-1.5"
+                  className="flex-1 py-2.5 bg-[#40E0D0] hover:bg-[#36cebe] text-[#1D3557] text-xs uppercase rounded-xl transition cursor-pointer shadow-md flex items-center justify-center gap-1.5 border-b-2 border-[#1D3557]/20"
                 >
-                  <Save className="w-4 h-4" />
+                  <Save className="w-4 h-4 stroke-[3]" />
                   <span>Guardar Usuario</span>
                 </button>
               </div>
@@ -7274,9 +7288,9 @@ export default function AdminPanel({
       {showSlideModal && editingSlide && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4">
           <div className="bg-white rounded-3xl border border-gray-150 w-full max-w-lg shadow-2xl overflow-hidden text-left flex flex-col animate-fadeIn">
-            <div className="p-4 bg-gray-50 border-b border-gray-100 flex justify-between items-center">
-              <span className="text-xs font-black text-gray-800 uppercase tracking-wider flex items-center gap-2">
-                <ImageIcon className="w-4 h-4 text-[#005da9]" />
+            <div className="p-4 bg-[#1D3557] text-white border-b border-gray-100 flex justify-between items-center">
+              <span className="text-xs font-montserrat font-extrabold uppercase tracking-wider flex items-center gap-2 text-white">
+                <ImageIcon className="w-4 h-4 text-[#40E0D0]" />
                 <span>{editingSlide.id ? 'Editar Pantalla del Banner' : 'Nueva Pantalla para el Banner'}</span>
               </span>
               <button
@@ -7285,78 +7299,78 @@ export default function AdminPanel({
                   setShowSlideModal(false);
                   setEditingSlide(null);
                 }}
-                className="p-1.5 hover:bg-gray-200 text-gray-400 hover:text-gray-600 rounded-lg transition cursor-pointer"
+                className="p-1.5 hover:bg-white/10 text-gray-300 hover:text-white rounded-lg transition cursor-pointer"
               >
                 <X className="w-4 h-4" />
               </button>
             </div>
 
-            <form onSubmit={handleSaveSlideForm} className="p-5 space-y-4">
+            <form onSubmit={handleSaveSlideForm} className="p-5 space-y-4 font-poppins">
               <div>
-                <label className="block text-[10px] font-black uppercase text-gray-500 mb-1">Título de la Pantalla *</label>
+                <label className="block text-[10px] font-montserrat font-extrabold uppercase text-[#1D3557] mb-1">Título de la Pantalla *</label>
                 <input
                   type="text"
                   required
                   value={editingSlide.title || ''}
                   onChange={(e) => setEditingSlide((prev) => ({ ...prev, title: e.target.value }))}
                   placeholder="Ej: Ofertas Especiales en Papelería"
-                  className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-xs font-bold text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#005da9]"
+                  className="w-full px-3 py-2 bg-[#F8F9FA] border border-gray-200 rounded-xl text-xs font-bold text-[#2B2D42] focus:outline-none focus:ring-2 focus:ring-[#00BFFF]"
                 />
               </div>
 
               <div>
-                <label className="block text-[10px] font-black uppercase text-gray-500 mb-1">Subtítulo / Descripción</label>
+                <label className="block text-[10px] font-montserrat font-extrabold uppercase text-[#1D3557] mb-1">Subtítulo / Descripción</label>
                 <input
                   type="text"
                   value={editingSlide.subtitle || ''}
                   onChange={(e) => setEditingSlide((prev) => ({ ...prev, subtitle: e.target.value }))}
                   placeholder="Ej: Todo en fotocopias y útiles de oficina con 20% OFF"
-                  className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-xs font-medium text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#005da9]"
+                  className="w-full px-3 py-2 bg-[#F8F9FA] border border-gray-200 rounded-xl text-xs font-medium text-[#2B2D42] focus:outline-none focus:ring-2 focus:ring-[#00BFFF]"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-[10px] font-black uppercase text-gray-500 mb-1">Etiqueta / Badge</label>
+                  <label className="block text-[10px] font-montserrat font-extrabold uppercase text-[#1D3557] mb-1">Etiqueta / Badge</label>
                   <input
                     type="text"
                     value={editingSlide.badge || ''}
                     onChange={(e) => setEditingSlide((prev) => ({ ...prev, badge: e.target.value }))}
                     placeholder="Ej: ⚡ Servicio Rápido"
-                    className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-xs font-bold text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#005da9]"
+                    className="w-full px-3 py-2 bg-[#F8F9FA] border border-gray-200 rounded-xl text-xs font-bold text-[#2B2D42] focus:outline-none focus:ring-2 focus:ring-[#00BFFF]"
                   />
                 </div>
                 <div>
-                  <label className="block text-[10px] font-black uppercase text-gray-500 mb-1">Texto del Botón</label>
+                  <label className="block text-[10px] font-montserrat font-extrabold uppercase text-[#1D3557] mb-1">Texto del Botón</label>
                   <input
                     type="text"
                     value={editingSlide.button_text || ''}
                     onChange={(e) => setEditingSlide((prev) => ({ ...prev, button_text: e.target.value }))}
                     placeholder="Ej: Ver Productos"
-                    className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-xs font-bold text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#005da9]"
+                    className="w-full px-3 py-2 bg-[#F8F9FA] border border-gray-200 rounded-xl text-xs font-bold text-[#2B2D42] focus:outline-none focus:ring-2 focus:ring-[#00BFFF]"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-[10px] font-black uppercase text-gray-500 mb-1">URL Imagen del Banner *</label>
+                <label className="block text-[10px] font-montserrat font-extrabold uppercase text-[#1D3557] mb-1">URL Imagen del Banner *</label>
                 <input
                   type="url"
                   required
                   value={editingSlide.image_url || ''}
                   onChange={(e) => setEditingSlide((prev) => ({ ...prev, image_url: e.target.value }))}
                   placeholder="https://images.unsplash.com/..."
-                  className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-xs font-medium text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#005da9]"
+                  className="w-full px-3 py-2 bg-[#F8F9FA] border border-gray-200 rounded-xl text-xs font-medium text-[#2B2D42] focus:outline-none focus:ring-2 focus:ring-[#00BFFF]"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-[10px] font-black uppercase text-gray-500 mb-1">Categoría Destino</label>
+                  <label className="block text-[10px] font-montserrat font-extrabold uppercase text-[#1D3557] mb-1">Categoría Destino</label>
                   <select
                     value={editingSlide.target_category || ''}
                     onChange={(e) => setEditingSlide((prev) => ({ ...prev, target_category: e.target.value }))}
-                    className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-xs font-bold text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#005da9]"
+                    className="w-full px-3 py-2 bg-[#F8F9FA] border border-gray-200 rounded-xl text-xs font-bold text-[#2B2D42] focus:outline-none focus:ring-2 focus:ring-[#00BFFF]"
                   >
                     <option value="">Ninguna / Todo el Catálogo</option>
                     {categories.map((c) => (
@@ -7373,30 +7387,30 @@ export default function AdminPanel({
                     id="chk-target-offer"
                     checked={editingSlide.target_offer === true}
                     onChange={(e) => setEditingSlide((prev) => ({ ...prev, target_offer: e.target.checked }))}
-                    className="w-4 h-4 text-[#005da9] rounded focus:ring-0 cursor-pointer"
+                    className="w-4 h-4 text-[#00BFFF] rounded focus:ring-0 cursor-pointer"
                   />
-                  <label htmlFor="chk-target-offer" className="text-xs font-bold text-gray-700 cursor-pointer">
+                  <label htmlFor="chk-target-offer" className="text-xs font-bold text-[#2B2D42] cursor-pointer">
                     Filtro Ofertas Activo
                   </label>
                 </div>
               </div>
 
-              <div className="pt-3 border-t border-gray-100 flex justify-end gap-2">
+              <div className="pt-3 border-t border-gray-100 flex justify-end gap-2 font-montserrat font-extrabold">
                 <button
                   type="button"
                   onClick={() => {
                     setShowSlideModal(false);
                     setEditingSlide(null);
                   }}
-                  className="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs font-bold rounded-xl transition cursor-pointer"
+                  className="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-[#2B2D42] text-xs rounded-xl transition cursor-pointer"
                 >
                   Cancelar
                 </button>
                 <button
                   type="submit"
-                  className="px-5 py-2 bg-[#005da9] hover:bg-[#004a87] text-[#ffffff] text-xs font-bold rounded-xl transition shadow cursor-pointer flex items-center gap-1.5"
+                  className="px-5 py-2 bg-[#40E0D0] hover:bg-[#36cebe] text-[#1D3557] text-xs font-black rounded-xl transition shadow-md cursor-pointer flex items-center gap-1.5 border-b-2 border-[#1D3557]/20"
                 >
-                  <Check className="w-4 h-4" />
+                  <Check className="w-4 h-4 stroke-[3]" />
                   <span>Guardar Pantalla</span>
                 </button>
               </div>
@@ -7406,17 +7420,17 @@ export default function AdminPanel({
       )}
 
       {/* Fixed Bottom Navigation Bar for Mobile */}
-      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-gray-200 py-2 px-2 flex justify-around items-center shadow-lg">
+      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-gray-200 py-2 px-2 flex justify-around items-center shadow-lg font-montserrat font-bold">
         <button
           onClick={() => {
             handleMenuChange('sales');
             setIsMobileDrawerOpen(false);
           }}
           className={`flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-full min-h-[38px] cursor-pointer transition ${
-            currentMenu === 'sales' ? 'bg-[#005da9] text-white font-black shadow-xs' : 'text-gray-600 hover:bg-gray-100 font-bold'
+            currentMenu === 'sales' ? 'bg-[#1D3557] text-white font-extrabold shadow-xs' : 'text-[#2B2D42] hover:bg-[#F8F9FA]'
           }`}
         >
-          <ShoppingBag className="w-4 h-4 shrink-0" />
+          <ShoppingBag className="w-4 h-4 shrink-0 text-[#00BFFF]" />
           <span className="text-[11px] tracking-tight">Venta Flash</span>
         </button>
 
@@ -7426,10 +7440,10 @@ export default function AdminPanel({
             setIsMobileDrawerOpen(false);
           }}
           className={`flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-full min-h-[38px] cursor-pointer transition ${
-            currentMenu === 'caja' ? 'bg-[#005da9] text-white font-black shadow-xs' : 'text-gray-600 hover:bg-gray-100 font-bold'
+            currentMenu === 'caja' ? 'bg-[#1D3557] text-white font-extrabold shadow-xs' : 'text-[#2B2D42] hover:bg-[#F8F9FA]'
           }`}
         >
-          <Store className="w-4 h-4 shrink-0" />
+          <Store className="w-4 h-4 shrink-0 text-[#00BFFF]" />
           <span className="text-[11px] tracking-tight">Caja</span>
         </button>
 
@@ -7441,12 +7455,12 @@ export default function AdminPanel({
             setIsMobileDrawerOpen(false);
           }}
           className={`flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-full min-h-[38px] cursor-pointer transition relative ${
-            currentMenu === 'orders' ? 'bg-[#005da9] text-white font-black shadow-xs' : 'text-gray-600 hover:bg-gray-100 font-bold'
+            currentMenu === 'orders' ? 'bg-[#1D3557] text-white font-extrabold shadow-xs' : 'text-[#2B2D42] hover:bg-[#F8F9FA]'
           }`}
         >
-          <ClipboardList className="w-4 h-4 shrink-0" />
+          <ClipboardList className="w-4 h-4 shrink-0 text-[#00BFFF]" />
           {pendingOrdersCount > 0 && (
-            <span className="bg-amber-500 text-white font-black text-[9px] w-4 h-4 rounded-full flex items-center justify-center border border-white">
+            <span className="bg-[#40E0D0] text-[#1D3557] font-black text-[9px] w-4 h-4 rounded-full flex items-center justify-center border border-white">
               {pendingOrdersCount}
             </span>
           )}
@@ -7460,18 +7474,18 @@ export default function AdminPanel({
             setIsMobileDrawerOpen(false);
           }}
           className={`flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-full min-h-[38px] cursor-pointer transition ${
-            currentMenu === 'products' ? 'bg-[#005da9] text-white font-black shadow-xs' : 'text-gray-600 hover:bg-gray-100 font-bold'
+            currentMenu === 'products' ? 'bg-[#1D3557] text-white font-extrabold shadow-xs' : 'text-[#2B2D42] hover:bg-[#F8F9FA]'
           }`}
         >
-          <Package className="w-4 h-4 shrink-0" />
+          <Package className="w-4 h-4 shrink-0 text-[#00BFFF]" />
           <span className="text-[11px] tracking-tight">Productos</span>
         </button>
 
         <button
           onClick={() => setIsMobileDrawerOpen(true)}
-          className="flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-full min-h-[38px] cursor-pointer text-gray-600 hover:bg-gray-100 font-bold transition"
+          className="flex items-center justify-center gap-1.5 px-3 py-1.5 rounded-full min-h-[38px] cursor-pointer text-[#2B2D42] hover:bg-[#F8F9FA] transition"
         >
-          <Menu className="w-4 h-4 shrink-0" />
+          <Menu className="w-4 h-4 shrink-0 text-[#00BFFF]" />
           <span className="text-[11px] tracking-tight">Menú</span>
         </button>
       </div>
@@ -7533,17 +7547,17 @@ export default function AdminPanel({
       {showPedidosFacturadosModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4 overflow-y-auto animate-fade-in">
           <div className="bg-white rounded-3xl border border-gray-100 w-full max-w-5xl shadow-2xl overflow-hidden relative text-left my-8 flex flex-col max-h-[90vh]">
-            {/* Header matching Image 1 */}
-            <div className="bg-[#005da9] p-5 text-white flex items-center justify-between shrink-0">
+            {/* Header matching corporate identity */}
+            <div className="bg-[#1D3557] p-5 text-white flex items-center justify-between shrink-0">
               <div className="flex items-center gap-3">
-                <div className="p-2.5 bg-white/10 rounded-2xl">
-                  <FileText className="w-6 h-6 text-white" />
+                <div className="p-2.5 bg-[#40E0D0]/20 rounded-2xl">
+                  <FileText className="w-6 h-6 text-[#40E0D0]" />
                 </div>
                 <div>
-                  <h3 className="font-extrabold text-base tracking-tight text-white uppercase">
+                  <h3 className="font-montserrat font-extrabold text-base tracking-tight text-white uppercase">
                     HISTORIAL Y BÚSQUEDA DE PEDIDOS
                   </h3>
-                  <p className="text-xs text-sky-100 font-medium">
+                  <p className="text-xs text-gray-200 font-medium">
                     Consulta, filtra y busca pedidos registrados ({orders.length} registros en total)
                   </p>
                 </div>
@@ -7552,66 +7566,66 @@ export default function AdminPanel({
                 <button
                   type="button"
                   onClick={() => fetchOrders()}
-                  className="px-3.5 py-2 bg-white/10 hover:bg-white/20 text-white rounded-xl text-xs font-black transition flex items-center gap-1.5 cursor-pointer active:scale-95"
+                  className="px-3.5 py-2 bg-white/10 hover:bg-white/20 text-white rounded-xl text-xs font-montserrat font-bold transition flex items-center gap-1.5 cursor-pointer active:scale-95"
                 >
-                  <RefreshCw className={`w-3.5 h-3.5 ${loadingOrders ? 'animate-spin' : ''}`} />
+                  <RefreshCw className={`w-3.5 h-3.5 ${loadingOrders ? 'animate-spin text-[#00BFFF]' : ''}`} />
                   <span>Actualizar</span>
                 </button>
                 <button
                   type="button"
                   onClick={() => setShowPedidosFacturadosModal(false)}
-                  className="p-2 text-white/80 hover:text-white hover:bg-white/10 rounded-xl transition cursor-pointer"
+                  className="p-2 text-gray-300 hover:text-white hover:bg-white/10 rounded-xl transition cursor-pointer"
                 >
                   <X className="w-5 h-5" />
                 </button>
               </div>
             </div>
 
-            {/* Filter Toolbar matching Image 1 */}
-            <div className="p-4 bg-gray-50 border-b border-gray-200 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4 shrink-0">
+            {/* Filter Toolbar matching corporate identity */}
+            <div className="p-4 bg-[#F8F9FA] border-b border-gray-200 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-4 shrink-0">
               {/* Search input */}
               <div className="relative flex-1 max-w-md">
-                <Search className="w-4 h-4 text-gray-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+                <Search className="w-4 h-4 text-[#00BFFF] absolute left-3.5 top-1/2 -translate-y-1/2" />
                 <input
                   type="text"
                   placeholder="Buscar por N° pedido, cliente o RIF/C.I..."
                   value={pedidosFacturadosSearch}
                   onChange={(e) => setPedidosFacturadosSearch(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2 bg-white border border-gray-200 rounded-2xl text-xs font-bold text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#005da9] shadow-2xs"
+                  className="w-full pl-10 pr-4 py-2 bg-white border border-gray-200 rounded-2xl text-xs font-bold text-[#2B2D42] focus:outline-none focus:ring-2 focus:ring-[#00BFFF] shadow-2xs"
                 />
               </div>
 
-              {/* Tabs matching Image 1 pills */}
-              <div className="flex items-center gap-1.5 bg-gray-200/70 p-1 rounded-2xl text-xs font-black overflow-x-auto">
+              {/* Tabs matching corporate identity */}
+              <div className="flex items-center gap-1.5 bg-gray-200/60 p-1 rounded-2xl text-xs font-montserrat font-extrabold overflow-x-auto">
                 <button
                   type="button"
                   onClick={() => setPedidosFacturadosTab('todos')}
-                  className={`px-3.5 py-1.5 rounded-xl transition cursor-pointer whitespace-nowrap ${
+                  className={`px-3.5 py-1.5 rounded-xl transition cursor-pointer whitespace-nowrap uppercase tracking-wider ${
                     pedidosFacturadosTab === 'todos'
-                      ? 'bg-[#005da9] text-white shadow-xs'
-                      : 'text-gray-600 hover:text-gray-900'
+                      ? 'bg-[#1D3557] text-white shadow-xs'
+                      : 'text-[#2B2D42] hover:text-[#1D3557]'
                   }`}
                 >
-                  Todos <span className="ml-1 px-1.5 py-0.5 bg-black/10 rounded-md text-[10px]">{orders.length}</span>
+                  Todos <span className="ml-1 px-1.5 py-0.5 bg-white/20 rounded-md text-[10px]">{orders.length}</span>
                 </button>
                 <button
                   type="button"
                   onClick={() => setPedidosFacturadosTab('facturados')}
-                  className={`px-3.5 py-1.5 rounded-xl transition cursor-pointer whitespace-nowrap ${
+                  className={`px-3.5 py-1.5 rounded-xl transition cursor-pointer whitespace-nowrap uppercase tracking-wider ${
                     pedidosFacturadosTab === 'facturados'
-                      ? 'bg-[#005da9] text-white shadow-xs'
-                      : 'text-gray-600 hover:text-gray-900'
+                      ? 'bg-[#1D3557] text-white shadow-xs'
+                      : 'text-[#2B2D42] hover:text-[#1D3557]'
                   }`}
                 >
-                  Facturados / Entregados <span className="ml-1 px-1.5 py-0.5 bg-emerald-100 text-emerald-800 rounded-md text-[10px]">{orders.filter(o => (o.status || '').toLowerCase() === 'entregado').length}</span>
+                  Facturados / Entregados <span className="ml-1 px-1.5 py-0.5 bg-[#40E0D0]/20 text-[#1D3557] rounded-md text-[10px]">{orders.filter(o => (o.status || '').toLowerCase() === 'entregado').length}</span>
                 </button>
                 <button
                   type="button"
                   onClick={() => setPedidosFacturadosTab('pendientes')}
-                  className={`px-3.5 py-1.5 rounded-xl transition cursor-pointer whitespace-nowrap ${
+                  className={`px-3.5 py-1.5 rounded-xl transition cursor-pointer whitespace-nowrap uppercase tracking-wider ${
                     pedidosFacturadosTab === 'pendientes'
-                      ? 'bg-[#005da9] text-white shadow-xs'
-                      : 'text-gray-600 hover:text-gray-900'
+                      ? 'bg-[#1D3557] text-white shadow-xs'
+                      : 'text-[#2B2D42] hover:text-[#1D3557]'
                   }`}
                 >
                   Pendientes <span className="ml-1 px-1.5 py-0.5 bg-amber-100 text-amber-800 rounded-md text-[10px]">{pendingOrdersCount}</span>
@@ -7619,10 +7633,10 @@ export default function AdminPanel({
                 <button
                   type="button"
                   onClick={() => setPedidosFacturadosTab('cancelados')}
-                  className={`px-3.5 py-1.5 rounded-xl transition cursor-pointer whitespace-nowrap ${
+                  className={`px-3.5 py-1.5 rounded-xl transition cursor-pointer whitespace-nowrap uppercase tracking-wider ${
                     pedidosFacturadosTab === 'cancelados'
-                      ? 'bg-[#005da9] text-white shadow-xs'
-                      : 'text-gray-600 hover:text-gray-900'
+                      ? 'bg-[#1D3557] text-white shadow-xs'
+                      : 'text-[#2B2D42] hover:text-[#1D3557]'
                   }`}
                 >
                   Cancelados <span className="ml-1 px-1.5 py-0.5 bg-rose-100 text-rose-800 rounded-md text-[10px]">{orders.filter(o => (o.status || '').toLowerCase() === 'cancelado').length}</span>
@@ -7641,27 +7655,27 @@ export default function AdminPanel({
                 <div className="overflow-x-auto bg-white border border-gray-100 rounded-2xl shadow-2xs">
                   <table className="w-full text-left border-collapse">
                     <thead>
-                      <tr className="bg-gray-50 border-b border-gray-100 text-gray-400 text-[10px] uppercase font-black tracking-wider">
-                        <th className="px-5 py-3">N° Pedido / Cliente</th>
-                        <th className="px-5 py-3">Fecha</th>
-                        <th className="px-5 py-3">Pago</th>
-                        <th className="px-5 py-3">Entrega / Estado</th>
-                        <th className="px-5 py-3">Total USD</th>
-                        <th className="px-5 py-3 text-center">Acciones</th>
+                      <tr className="bg-[#1D3557] text-white text-[10px] uppercase font-montserrat font-extrabold tracking-wider">
+                        <th className="px-5 py-3.5">N° Pedido / Cliente</th>
+                        <th className="px-5 py-3.5">Fecha</th>
+                        <th className="px-5 py-3.5">Pago</th>
+                        <th className="px-5 py-3.5">Entrega / Estado</th>
+                        <th className="px-5 py-3.5">Total USD</th>
+                        <th className="px-5 py-3.5 text-center">Acciones</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-gray-100 text-xs text-gray-800 font-medium">
+                    <tbody className="divide-y divide-gray-100 text-xs text-[#2B2D42] font-medium">
                       {filteredPedidosFacturadosList.map((order) => {
                         const orderNum = String(order.order_number || order.id || '').padStart(6, '0');
                         const isEntregado = (order.status || '').toLowerCase() === 'entregado';
                         const isCancelado = (order.status || '').toLowerCase() === 'cancelado';
                         const isPaid = (order.payment_status || '').toLowerCase() === 'pagado';
                         return (
-                          <tr key={order.id} className="hover:bg-gray-50/60 transition">
+                          <tr key={order.id} className="hover:bg-[#F8F9FA] transition">
                             <td className="px-5 py-3.5">
                               <div>
-                                <span className="font-black text-gray-900">#{orderNum}</span>
-                                <p className="font-bold text-gray-800">{order.customer_name || 'Cliente'}</p>
+                                <span className="font-mono font-black text-[#1D3557]">#{orderNum}</span>
+                                <p className="font-montserrat font-bold text-[#2B2D42]">{order.customer_name || 'Cliente'}</p>
                                 <p className="text-[10px] text-gray-400">{order.phone_number || 'Sin teléfono'}</p>
                               </div>
                             </td>
@@ -7669,20 +7683,20 @@ export default function AdminPanel({
                               {order.created_at ? new Date(order.created_at).toLocaleDateString() : 'N/A'}
                             </td>
                             <td className="px-5 py-3.5 whitespace-nowrap">
-                              <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-black border ${
-                                isPaid ? 'bg-emerald-50 border-emerald-200 text-emerald-700' : 'bg-amber-50 border-amber-200 text-amber-700'
+                              <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-montserrat font-extrabold border ${
+                                isPaid ? 'bg-emerald-50 border-emerald-200 text-emerald-800' : 'bg-amber-50 border-amber-200 text-amber-800'
                               }`}>
                                 {isPaid ? 'Pagado' : 'Pendiente Pago'}
                               </span>
                             </td>
                             <td className="px-5 py-3.5 whitespace-nowrap">
-                              <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-black border ${
-                                isEntregado ? 'bg-blue-50 border-blue-200 text-blue-700' : isCancelado ? 'bg-rose-50 border-rose-200 text-rose-700' : 'bg-amber-50 border-amber-200 text-amber-700'
+                              <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-montserrat font-extrabold border ${
+                                isEntregado ? 'bg-[#40E0D0]/15 border-[#40E0D0]/30 text-[#1D3557]' : isCancelado ? 'bg-rose-50 border-rose-200 text-rose-700' : 'bg-amber-50 border-amber-200 text-amber-700'
                               }`}>
                                 {isEntregado ? 'Facturado / Entregado' : isCancelado ? 'Cancelado' : (order.status || 'Recibido')}
                               </span>
                             </td>
-                            <td className="px-5 py-3.5 font-mono font-black text-gray-900 whitespace-nowrap">
+                            <td className="px-5 py-3.5 font-mono font-black text-[#1D3557] whitespace-nowrap">
                               ${Number(order.total_price || 0).toFixed(2)}
                             </td>
                             <td className="px-5 py-3.5 text-center whitespace-nowrap">
@@ -7691,10 +7705,10 @@ export default function AdminPanel({
                                 <button
                                   type="button"
                                   onClick={() => setSelectedPedidoDigitalView(order)}
-                                  className="px-3 py-1.5 bg-[#005da9] hover:bg-[#004b87] text-white rounded-xl text-xs font-black transition flex items-center gap-1.5 cursor-pointer shadow-2xs"
+                                  className="px-3.5 py-1.5 bg-[#1D3557] hover:bg-[#152742] text-white rounded-xl text-xs font-montserrat font-extrabold transition flex items-center gap-1.5 cursor-pointer shadow-2xs uppercase tracking-wider"
                                   title="Ver Vista Digital de Pedido"
                                 >
-                                  <FileText className="w-3.5 h-3.5" />
+                                  <FileText className="w-3.5 h-3.5 text-[#00BFFF]" />
                                   <span>Ver Detalle</span>
                                 </button>
                               </div>

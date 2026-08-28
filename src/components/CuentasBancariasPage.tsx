@@ -920,31 +920,34 @@ export default function CuentasBancariasPage({
       {/* ==========================================
           HEADER PANEL DE CONTROL 
           ========================================== */}
+      {/* ==========================================
+          HEADER PANEL DE CONTROL 
+          ========================================== */}
       {!selectedAccount ? (
         <div>
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6 bg-white p-5 rounded-2xl border border-gray-200 shadow-sm">
             <div>
               <div className="flex items-center gap-2">
-                <Coins className="w-6 h-6 text-violet-700" />
-                <h1 className="text-xl font-extrabold text-gray-900 tracking-tight">CUENTAS BANCARIAS</h1>
+                <Coins className="w-6 h-6 text-[#1D3557]" />
+                <h1 className="text-xl font-montserrat font-extrabold text-[#1D3557] tracking-tight">CUENTAS BANCARIAS</h1>
               </div>
-              <p className="text-gray-500 text-xs mt-1">
+              <p className="text-[#2B2D42]/70 text-xs mt-1">
                 Gestión de cuentas bancarias y métodos de cobro fijados exclusivamente a cada cuenta.
               </p>
             </div>
             <div className="flex items-center gap-3">
               <button 
                 onClick={handleOpenNewAccount}
-                className="px-4 py-2 bg-[#005da9] text-white font-extrabold text-xs rounded-xl hover:bg-opacity-95 shadow-sm transition flex items-center gap-1.5 cursor-pointer"
+                className="px-4 py-2 bg-[#1D3557] text-white font-montserrat font-extrabold text-xs rounded-xl hover:bg-[#152843] shadow-sm transition flex items-center gap-1.5 cursor-pointer"
               >
-                <Plus className="w-4 h-4" />
+                <Plus className="w-4 h-4 text-[#40E0D0]" />
                 <span>+ Nueva cuenta</span>
               </button>
               <button 
                 onClick={() => setShowPaymentMethodsModal(true)}
-                className="px-4 py-2 bg-violet-700 text-white font-extrabold text-xs rounded-xl hover:bg-violet-800 shadow-sm transition flex items-center gap-1.5 cursor-pointer"
+                className="px-4 py-2 bg-[#40E0D0] hover:bg-[#36cebe] text-[#1D3557] font-montserrat font-extrabold text-xs rounded-xl shadow-sm transition flex items-center gap-1.5 cursor-pointer"
               >
-                <CreditCard className="w-4 h-4" />
+                <CreditCard className="w-4 h-4 text-[#1D3557]" />
                 <span>Métodos de pago del sistema</span>
               </button>
             </div>
@@ -953,16 +956,16 @@ export default function CuentasBancariasPage({
           {/* ==========================================
               BARRA DE ACCIONES FINANCIERAS
               ========================================== */}
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6 bg-white p-4 rounded-xl border border-gray-100 shadow-xs">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6 bg-[#F8F9FA] p-4 rounded-xl border border-gray-200 shadow-xs">
             <div className="flex flex-wrap items-center gap-3">
               <button 
                 onClick={() => {
                   resetTransferForm();
                   setShowTransferModal(true);
                 }}
-                className="px-4 py-2 bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600 text-white font-black text-xs rounded-xl transition flex items-center gap-2 cursor-pointer shadow-xs"
+                className="px-4 py-2 bg-[#1D3557] hover:bg-[#152843] text-white font-montserrat font-extrabold text-xs rounded-xl transition flex items-center gap-2 cursor-pointer shadow-xs"
               >
-                <ArrowLeftRight className="w-4 h-4" />
+                <ArrowLeftRight className="w-4 h-4 text-[#40E0D0]" />
                 <span>Transferir entre cuentas</span>
               </button>
               
@@ -971,9 +974,9 @@ export default function CuentasBancariasPage({
                   resetTransactionForm();
                   setShowWithdrawModal(true);
                 }}
-                className="px-4 py-2 bg-white hover:bg-gray-50 text-violet-700 border border-violet-200 font-extrabold text-xs rounded-xl transition flex items-center gap-2 cursor-pointer shadow-2xs"
+                className="px-4 py-2 bg-white hover:bg-gray-100 text-[#1D3557] border border-gray-300 font-montserrat font-extrabold text-xs rounded-xl transition flex items-center gap-2 cursor-pointer shadow-2xs"
               >
-                <Minus className="w-4 h-4" />
+                <Minus className="w-4 h-4 text-rose-600" />
                 <span>- Retirar Saldo</span>
               </button>
 
@@ -982,16 +985,16 @@ export default function CuentasBancariasPage({
                   resetTransactionForm();
                   setShowDepositModal(true);
                 }}
-                className="px-4 py-2 bg-white hover:bg-gray-50 text-violet-700 border border-violet-200 font-extrabold text-xs rounded-xl transition flex items-center gap-2 cursor-pointer shadow-2xs"
+                className="px-4 py-2 bg-white hover:bg-gray-100 text-[#1D3557] border border-gray-300 font-montserrat font-extrabold text-xs rounded-xl transition flex items-center gap-2 cursor-pointer shadow-2xs"
               >
-                <Plus className="w-4 h-4" />
+                <Plus className="w-4 h-4 text-[#00BFFF]" />
                 <span>+ Ingresar saldo</span>
               </button>
             </div>
 
-            <div className="bg-violet-50 text-violet-800 px-4 py-2 rounded-xl font-bold text-xs border border-violet-100 shadow-2xs flex items-center gap-2">
+            <div className="bg-[#1D3557]/10 text-[#1D3557] px-4 py-2 rounded-xl font-bold text-xs border border-[#1D3557]/20 shadow-2xs flex items-center gap-2">
               <span>Total consolidado:</span>
-              <strong className="text-sm font-black text-violet-900">
+              <strong className="text-sm font-black text-[#1D3557]">
                 ${getTotalBalanceUSD().toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
               </strong>
             </div>
@@ -1009,35 +1012,35 @@ export default function CuentasBancariasPage({
                 <div 
                   key={acc.id}
                   onClick={() => setSelectedAccount(acc)}
-                  className="bg-white rounded-2xl border border-gray-200 shadow-xs hover:shadow-md transition p-5 flex flex-col justify-between cursor-pointer group hover:border-[#005da9]"
+                  className="bg-white rounded-2xl border border-gray-200 shadow-xs hover:shadow-md transition p-5 flex flex-col justify-between cursor-pointer group hover:border-[#1D3557]"
                 >
                   <div>
                     <div className="flex items-center justify-between mb-4">
                       <div className="flex items-center gap-2.5">
-                        <div className="w-9 h-9 rounded-full bg-violet-100 flex items-center justify-center">
-                          <Landmark className="w-4 h-4 text-violet-700" />
+                        <div className="w-9 h-9 rounded-full bg-[#1D3557]/10 flex items-center justify-center">
+                          <Landmark className="w-4 h-4 text-[#1D3557]" />
                         </div>
                         <div>
-                          <h3 className="font-extrabold text-gray-800 text-sm group-hover:text-[#005da9]">{acc.name}</h3>
-                          <p className="text-[10px] text-gray-400 font-medium">{acc.bank_name}</p>
+                          <h3 className="font-montserrat font-extrabold text-[#2B2D42] text-sm group-hover:text-[#1D3557]">{acc.name}</h3>
+                          <p className="text-[10px] text-[#2B2D42]/60 font-medium">{acc.bank_name}</p>
                         </div>
                       </div>
-                      <span className={`text-[10px] font-black uppercase px-2 py-0.5 rounded-full ${acc.currency === 'USD' ? 'bg-amber-50 text-amber-700 border border-amber-200' : 'bg-emerald-50 text-emerald-700 border border-emerald-200'}`}>
+                      <span className={`text-[10px] font-montserrat font-extrabold uppercase px-2 py-0.5 rounded-full ${acc.currency === 'USD' ? 'bg-amber-50 text-amber-700 border border-amber-200' : 'bg-emerald-50 text-emerald-700 border border-emerald-200'}`}>
                         {acc.currency}
                       </span>
                     </div>
 
                     <div className="my-4">
                       {acc.currency === 'USD' ? (
-                        <p className="text-2xl font-black text-gray-900">
+                        <p className="text-2xl font-black font-mono text-[#1D3557]">
                           ${acc.balance.toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                         </p>
                       ) : (
                         <div>
-                          <p className="text-2xl font-black text-gray-900">
+                          <p className="text-2xl font-black font-mono text-[#1D3557]">
                             Bs. {acc.balance.toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                           </p>
-                          <p className="text-xs font-bold text-gray-400 mt-0.5">
+                          <p className="text-xs font-bold font-mono text-[#2B2D42]/60 mt-0.5">
                             Ref: ${equivalentUSD.toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                           </p>
                         </div>
@@ -1047,8 +1050,8 @@ export default function CuentasBancariasPage({
                     {/* MÉTODOS DE COBRO FIJADOS A ESTA CUENTA */}
                     <div className="border-t border-gray-100 pt-3">
                       <div className="flex items-center justify-between mb-1.5">
-                        <span className="text-[10px] font-black text-gray-400 uppercase tracking-wider flex items-center gap-1">
-                          <Lock className="w-3 h-3 text-violet-600" />
+                        <span className="text-[10px] font-montserrat font-extrabold text-[#2B2D42]/60 uppercase tracking-wider flex items-center gap-1">
+                          <Lock className="w-3 h-3 text-[#1D3557]" />
                           Métodos fijados ({pms.length})
                         </span>
                       </div>
@@ -1058,7 +1061,7 @@ export default function CuentasBancariasPage({
                           {pms.map((pm, i) => (
                             <span 
                               key={i}
-                              className="inline-flex items-center gap-1 text-[10px] font-extrabold bg-violet-50 text-violet-800 px-2 py-0.5 rounded-md border border-violet-100"
+                              className="inline-flex items-center gap-1 text-[10px] font-extrabold bg-[#1D3557]/10 text-[#1D3557] px-2 py-0.5 rounded-md border border-[#1D3557]/20"
                             >
                               {renderMethodIcon(pm.type)}
                               <span>{pm.name}</span>
@@ -1075,7 +1078,7 @@ export default function CuentasBancariasPage({
                   </div>
 
                   <div className="mt-5 pt-3 border-t border-gray-100 flex items-center justify-between">
-                    <span className="text-xs font-bold text-violet-700 group-hover:underline flex items-center gap-1">
+                    <span className="text-xs font-montserrat font-extrabold text-[#00BFFF] group-hover:underline flex items-center gap-1">
                       Ver movimientos
                       <ExternalLink className="w-3 h-3" />
                     </span>
@@ -1085,7 +1088,7 @@ export default function CuentasBancariasPage({
                         e.stopPropagation();
                         handleOpenEditAccount(acc);
                       }}
-                      className="p-1.5 hover:bg-gray-100 rounded-lg text-gray-400 hover:text-gray-700 transition"
+                      className="p-1.5 hover:bg-gray-100 rounded-lg text-gray-400 hover:text-[#1D3557] transition"
                       title="Editar cuenta y métodos asociados"
                     >
                       <Edit2 className="w-3.5 h-3.5" />
@@ -1132,25 +1135,25 @@ export default function CuentasBancariasPage({
           {/* Account Detail Header */}
           <div className="bg-white rounded-2xl border border-gray-200 p-6 shadow-sm mb-6 flex flex-col md:flex-row md:items-center justify-between gap-6">
             <div className="flex items-center gap-4">
-              <div className="w-14 h-14 rounded-2xl bg-violet-100 flex items-center justify-center">
-                <Landmark className="w-7 h-7 text-violet-700" />
+              <div className="w-14 h-14 rounded-2xl bg-[#1D3557]/10 flex items-center justify-center">
+                <Landmark className="w-7 h-7 text-[#1D3557]" />
               </div>
               <div>
                 <div className="flex items-center gap-2">
-                  <h1 className="text-xl font-black text-gray-900">{selectedAccount.name}</h1>
-                  <span className={`text-[10px] font-black uppercase px-2.5 py-0.5 rounded-full ${selectedAccount.currency === 'USD' ? 'bg-amber-50 text-amber-700 border border-amber-200' : 'bg-emerald-50 text-emerald-700 border border-emerald-200'}`}>
+                  <h1 className="text-xl font-montserrat font-extrabold text-[#1D3557]">{selectedAccount.name}</h1>
+                  <span className={`text-[10px] font-montserrat font-extrabold uppercase px-2.5 py-0.5 rounded-full ${selectedAccount.currency === 'USD' ? 'bg-amber-50 text-amber-700 border border-amber-200' : 'bg-emerald-50 text-emerald-700 border border-emerald-200'}`}>
                     {selectedAccount.currency}
                   </span>
                 </div>
-                <p className="text-xs font-semibold text-gray-500 mt-0.5">{selectedAccount.bank_name}</p>
+                <p className="text-xs font-semibold text-[#2B2D42]/70 mt-0.5">{selectedAccount.bank_name}</p>
                 
                 {/* Methods locked to this account */}
                 <div className="flex items-center gap-1.5 mt-2">
-                  <span className="text-[10px] font-black text-gray-400 uppercase">Métodos fijados:</span>
+                  <span className="text-[10px] font-montserrat font-extrabold text-[#2B2D42]/60 uppercase">Métodos fijados:</span>
                   <div className="flex flex-wrap gap-1">
                     {parseAccountPaymentMethods(selectedAccount).map((m, i) => (
-                      <span key={i} className="text-[10px] font-extrabold bg-violet-50 text-violet-800 px-2 py-0.5 rounded border border-violet-100 flex items-center gap-1">
-                        <Lock className="w-2.5 h-2.5" />
+                      <span key={i} className="text-[10px] font-extrabold bg-[#1D3557]/10 text-[#1D3557] px-2 py-0.5 rounded border border-[#1D3557]/20 flex items-center gap-1">
+                        <Lock className="w-2.5 h-2.5 text-[#1D3557]" />
                         {m.name}
                       </span>
                     ))}
@@ -1160,17 +1163,17 @@ export default function CuentasBancariasPage({
             </div>
 
             <div className="text-right border-t md:border-t-0 md:border-l border-gray-150 pt-4 md:pt-0 md:pl-8">
-              <span className="text-[10px] font-black text-gray-400 uppercase tracking-wider block mb-1">Saldo Actual</span>
+              <span className="text-[10px] font-montserrat font-extrabold text-[#2B2D42]/60 uppercase tracking-wider block mb-1">Saldo Actual</span>
               {selectedAccount.currency === 'USD' ? (
-                <p className="text-3xl font-black text-gray-900">
+                <p className="text-3xl font-black font-mono text-[#1D3557]">
                   ${selectedAccount.balance.toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                 </p>
               ) : (
                 <div>
-                  <p className="text-3xl font-black text-gray-900">
+                  <p className="text-3xl font-black font-mono text-[#1D3557]">
                     Bs. {selectedAccount.balance.toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                   </p>
-                  <p className="text-xs font-bold text-gray-400 mt-1">
+                  <p className="text-xs font-bold font-mono text-[#2B2D42]/60 mt-1">
                     Equivalente: ${(selectedAccount.balance / (bcvRate || 1)).toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                   </p>
                 </div>
@@ -1179,34 +1182,34 @@ export default function CuentasBancariasPage({
           </div>
 
           {/* Movements Filters */}
-          <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-2xs mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div className="bg-[#F8F9FA] p-4 rounded-xl border border-gray-200 shadow-2xs mb-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div className="flex flex-wrap items-center gap-3">
               <div className="flex items-center gap-2">
-                <label className="text-xs font-black text-gray-500">Desde:</label>
+                <label className="text-xs font-montserrat font-extrabold text-[#2B2D42]">Desde:</label>
                 <input 
                   type="date"
                   value={startDate}
                   onChange={(e) => setStartDate(e.target.value)}
-                  className="px-3 py-1.5 border border-gray-200 rounded-lg text-xs font-bold text-gray-700 bg-gray-50"
+                  className="px-3 py-1.5 border border-gray-200 rounded-lg text-xs font-bold text-[#2B2D42] bg-white focus:outline-none focus:border-[#1D3557]"
                 />
               </div>
 
               <div className="flex items-center gap-2">
-                <label className="text-xs font-black text-gray-500">Hasta:</label>
+                <label className="text-xs font-montserrat font-extrabold text-[#2B2D42]">Hasta:</label>
                 <input 
                   type="date"
                   value={endDate}
                   onChange={(e) => setEndDate(e.target.value)}
-                  className="px-3 py-1.5 border border-gray-200 rounded-lg text-xs font-bold text-gray-700 bg-gray-50"
+                  className="px-3 py-1.5 border border-gray-200 rounded-lg text-xs font-bold text-[#2B2D42] bg-white focus:outline-none focus:border-[#1D3557]"
                 />
               </div>
             </div>
 
             <button 
               onClick={() => window.print()}
-              className="px-4 py-2 bg-white text-gray-700 hover:bg-gray-50 border border-gray-200 text-xs font-black rounded-xl transition flex items-center gap-2 cursor-pointer shadow-3xs"
+              className="px-4 py-2 bg-white text-[#1D3557] hover:bg-gray-100 border border-gray-200 text-xs font-montserrat font-extrabold rounded-xl transition flex items-center gap-2 cursor-pointer shadow-3xs"
             >
-              <Download className="w-4 h-4 text-gray-500" />
+              <Download className="w-4 h-4 text-[#1D3557]" />
               <span>Exportar PDF</span>
             </button>
           </div>
@@ -1215,7 +1218,7 @@ export default function CuentasBancariasPage({
           <div className="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
             <table className="w-full text-left text-xs border-collapse">
               <thead>
-                <tr className="bg-gray-50 border-b border-gray-200 text-[10px] font-black text-gray-500 uppercase tracking-wider">
+                <tr className="bg-[#1D3557] text-white text-[10px] font-montserrat font-extrabold uppercase tracking-wider">
                   <th className="py-3.5 px-4">Cuenta</th>
                   <th className="py-3.5 px-4">Fecha</th>
                   <th className="py-3.5 px-4">Usuario</th>
@@ -1240,20 +1243,20 @@ export default function CuentasBancariasPage({
 
                     return (
                       <tr key={t.id || idx} className="hover:bg-gray-50/50 transition">
-                        <td className="py-3 px-4 font-extrabold text-gray-700">{selectedAccount.name}</td>
-                        <td className="py-3 px-4 text-gray-500 font-semibold">
+                        <td className="py-3 px-4 font-extrabold text-[#2B2D42]">{selectedAccount.name}</td>
+                        <td className="py-3 px-4 text-[#2B2D42]/80 font-semibold">
                           {t.created_at ? new Date(t.created_at).toLocaleString('es-VE', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' }) : 'Reciente'}
                         </td>
-                        <td className="py-3 px-4 text-gray-600 font-bold">{t.created_by || 'Cajero'}</td>
+                        <td className="py-3 px-4 text-[#2B2D42] font-bold">{t.created_by || 'Cajero'}</td>
                         <td className="py-3 px-4">
-                          <span className={`inline-flex items-center px-2 py-0.5 rounded-full font-black text-[9px] uppercase tracking-wider ${isIncoming ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' : 'bg-rose-50 text-rose-700 border border-rose-200'}`}>
+                          <span className={`inline-flex items-center px-2 py-0.5 rounded-full font-extrabold text-[9px] uppercase tracking-wider ${isIncoming ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' : 'bg-rose-50 text-rose-700 border border-rose-200'}`}>
                             {isIncoming ? 'Entrada' : 'Salida'}
                           </span>
                         </td>
-                        <td className="py-3 px-4 text-gray-600 max-w-xs truncate font-medium">{t.notes} {t.reference ? `(Ref: ${t.reference})` : ''}</td>
-                        <td className="py-3 px-4 text-gray-500 font-bold">{t.exchange_rate ? `${t.exchange_rate.toFixed(2)} Bs/$` : '-'}</td>
-                        <td className="py-3 px-4 text-gray-500 font-semibold">Bs 0.00</td>
-                        <td className={`py-3 px-4 text-right font-black ${isIncoming ? 'text-emerald-700' : 'text-rose-700'}`}>
+                        <td className="py-3 px-4 text-[#2B2D42] max-w-xs truncate font-medium">{t.notes} {t.reference ? `(Ref: ${t.reference})` : ''}</td>
+                        <td className="py-3 px-4 text-[#2B2D42]/80 font-bold font-mono">{t.exchange_rate ? `${t.exchange_rate.toFixed(2)} Bs/$` : '-'}</td>
+                        <td className="py-3 px-4 text-[#2B2D42]/80 font-semibold font-mono">Bs 0.00</td>
+                        <td className={`py-3 px-4 text-right font-black font-mono ${isIncoming ? 'text-emerald-700' : 'text-rose-700'}`}>
                           {isIncoming ? '+' : '-'}{amountVal.toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} {selectedAccount.currency}
                         </td>
                       </tr>
@@ -1274,8 +1277,8 @@ export default function CuentasBancariasPage({
           <div className="bg-white rounded-2xl max-w-lg w-full shadow-xl border border-gray-100 overflow-hidden my-8 animate-fadeIn">
             <div className="px-6 py-4 bg-gray-50 border-b border-gray-150 flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <Landmark className="w-4 h-4 text-[#005da9]" />
-                <h3 className="font-extrabold text-gray-800 text-sm">
+                <Landmark className="w-4 h-4 text-[#1D3557]" />
+                <h3 className="font-montserrat font-extrabold text-[#2B2D42] text-sm">
                   {editingAccountId ? 'Editar cuenta bancaria' : 'Nueva cuenta bancaria'}
                 </h3>
               </div>
@@ -1294,7 +1297,7 @@ export default function CuentasBancariasPage({
                     value={accountName}
                     onChange={(e) => setAccountName(e.target.value)}
                     placeholder="Ej: Banesco, Mercantil, Cuenta Dólares, BNC"
-                    className="w-full px-3.5 py-2 border border-gray-200 rounded-xl focus:outline-none focus:border-[#005da9] text-xs font-semibold"
+                    className="w-full px-3.5 py-2 border border-gray-200 rounded-xl focus:outline-none focus:border-[#1D3557] text-xs font-semibold"
                   />
                   {accountName && <Check className="absolute right-3 top-2.5 w-4 h-4 text-emerald-500" />}
                 </div>
@@ -1308,7 +1311,7 @@ export default function CuentasBancariasPage({
                   value={bankName}
                   onChange={(e) => setBankName(e.target.value)}
                   placeholder="Ej: Banesco Banco Universal, BNC, Zelle, Mercantil"
-                  className="w-full px-3.5 py-2 border border-gray-200 rounded-xl focus:outline-none focus:border-[#005da9] text-xs font-semibold"
+                  className="w-full px-3.5 py-2 border border-gray-200 rounded-xl focus:outline-none focus:border-[#1D3557] text-xs font-semibold"
                 />
               </div>
 
@@ -1318,7 +1321,7 @@ export default function CuentasBancariasPage({
                   <select 
                     value={accountCurrency}
                     onChange={(e) => setAccountCurrency(e.target.value as 'USD' | 'VES')}
-                    className="w-full px-3 py-2 bg-white border border-gray-200 rounded-xl focus:outline-none focus:border-[#005da9] text-xs font-semibold"
+                    className="w-full px-3 py-2 bg-white border border-gray-200 rounded-xl focus:outline-none focus:border-[#1D3557] text-xs font-semibold"
                   >
                     <option value="VES">Bolívar venezolano (VES)</option>
                     <option value="USD">Dólar estadounidense (USD)</option>
@@ -1336,7 +1339,7 @@ export default function CuentasBancariasPage({
                       disabled={!!editingAccountId}
                       onChange={(e) => setInitialBalance(e.target.value)}
                       placeholder="0.00"
-                      className="w-full pl-3 pr-10 py-2 border border-gray-200 rounded-xl focus:outline-none focus:border-[#005da9] text-xs font-bold"
+                      className="w-full pl-3 pr-10 py-2 border border-gray-200 rounded-xl focus:outline-none focus:border-[#1D3557] text-xs font-bold"
                     />
                     <span className="absolute right-3 top-2.5 text-[10px] font-black text-gray-400">{accountCurrency}</span>
                   </div>
@@ -1349,8 +1352,8 @@ export default function CuentasBancariasPage({
               <div className="border-t border-gray-200 pt-4">
                 <div className="flex items-center justify-between mb-1.5">
                   <div className="flex items-center gap-1.5">
-                    <Lock className="w-3.5 h-3.5 text-violet-700" />
-                    <label className="block text-[11px] font-black text-gray-800 uppercase">
+                    <Lock className="w-3.5 h-3.5 text-[#1D3557]" />
+                    <label className="block text-[11px] font-black text-gray-800 uppercase font-montserrat">
                       Crear y Asociar Nuevo Método de Pago
                     </label>
                   </div>
@@ -1370,7 +1373,7 @@ export default function CuentasBancariasPage({
                       value={newCustomMethodName}
                       onChange={(e) => setNewCustomMethodName(e.target.value)}
                       placeholder="Ej: Pago móvil Mercantil, Transferencia BNC..."
-                      className="w-full px-3 py-1.5 bg-white border border-gray-200 rounded-lg text-xs font-semibold focus:outline-none focus:border-[#005da9]"
+                      className="w-full px-3 py-1.5 bg-white border border-gray-200 rounded-lg text-xs font-semibold focus:outline-none focus:border-[#1D3557]"
                     />
                   </div>
 
@@ -1407,7 +1410,7 @@ export default function CuentasBancariasPage({
                     <button 
                       type="button"
                       onClick={handleCreateAndAssociateNewMethod}
-                      className="w-full py-1.5 bg-[#005da9] text-white font-black text-xs rounded-lg hover:bg-opacity-90 transition cursor-pointer"
+                      className="w-full py-1.5 bg-[#1D3557] text-white font-montserrat font-black text-xs rounded-lg hover:bg-opacity-90 transition cursor-pointer"
                     >
                       Guardar y fijar a esta cuenta
                     </button>
@@ -1465,7 +1468,7 @@ export default function CuentasBancariasPage({
                 </button>
                 <button 
                   type="submit"
-                  className="px-5 py-2 bg-[#005da9] text-white text-xs font-black rounded-xl hover:bg-opacity-95 shadow-sm cursor-pointer"
+                  className="px-5 py-2 bg-[#1D3557] text-white font-montserrat text-xs font-black rounded-xl hover:bg-opacity-95 shadow-sm cursor-pointer"
                 >
                   {editingAccountId ? 'Guardar Cambios' : 'Confirmar ingreso'}
                 </button>
@@ -1481,8 +1484,8 @@ export default function CuentasBancariasPage({
       {showTransferModal && (
         <div className="fixed inset-0 bg-black/55 backdrop-blur-xs flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-2xl max-w-md w-full shadow-xl border border-gray-100 overflow-hidden">
-            <div className="px-6 py-4 bg-gray-50 border-b border-gray-150 flex items-center justify-between">
-              <h3 className="font-extrabold text-gray-800 text-sm">Transferencia entre cuentas</h3>
+            <div className="px-6 py-4 bg-[#F8F9FA] border-b border-gray-150 flex items-center justify-between">
+              <h3 className="font-montserrat font-extrabold text-[#1D3557] text-sm">Transferencia entre cuentas</h3>
               <button onClick={() => setShowTransferModal(false)} className="p-1 hover:bg-gray-200 rounded-lg transition cursor-pointer">
                 <X className="w-4 h-4 text-gray-500" />
               </button>
@@ -1490,12 +1493,12 @@ export default function CuentasBancariasPage({
 
             <form onSubmit={handleExecuteTransfer} className="p-6 space-y-4">
               <div>
-                <label className="block text-[10px] font-black text-gray-600 uppercase mb-1">Cuenta de origen *</label>
+                <label className="block text-[10px] font-montserrat font-extrabold text-[#2B2D42]/70 uppercase mb-1">Cuenta de origen *</label>
                 <select 
                   required
                   value={transferFromId}
                   onChange={(e) => setTransferFromId(e.target.value)}
-                  className="w-full px-3 py-2 bg-white border border-gray-200 rounded-xl focus:outline-none focus:border-violet-500 text-xs font-semibold"
+                  className="w-full px-3 py-2 bg-white border border-gray-200 rounded-xl focus:outline-none focus:border-[#1D3557] text-xs font-semibold text-[#2B2D42]"
                 >
                   <option value="">Seleccione...</option>
                   {accounts.map(acc => (
@@ -1505,12 +1508,12 @@ export default function CuentasBancariasPage({
               </div>
 
               <div>
-                <label className="block text-[10px] font-black text-gray-600 uppercase mb-1">Cuenta de destino *</label>
+                <label className="block text-[10px] font-montserrat font-extrabold text-[#2B2D42]/70 uppercase mb-1">Cuenta de destino *</label>
                 <select 
                   required
                   value={transferToId}
                   onChange={(e) => setTransferToId(e.target.value)}
-                  className="w-full px-3 py-2 bg-white border border-gray-200 rounded-xl focus:outline-none focus:border-violet-500 text-xs font-semibold"
+                  className="w-full px-3 py-2 bg-white border border-gray-200 rounded-xl focus:outline-none focus:border-[#1D3557] text-xs font-semibold text-[#2B2D42]"
                 >
                   <option value="">Seleccione...</option>
                   {accounts.map(acc => (
@@ -1520,7 +1523,7 @@ export default function CuentasBancariasPage({
               </div>
 
               <div>
-                <label className="block text-[10px] font-black text-gray-600 uppercase mb-1">Monto a transferir *</label>
+                <label className="block text-[10px] font-montserrat font-extrabold text-[#2B2D42]/70 uppercase mb-1">Monto a transferir *</label>
                 <input 
                   type="number"
                   step="any"
@@ -1528,54 +1531,54 @@ export default function CuentasBancariasPage({
                   value={transferAmount}
                   onChange={(e) => setTransferAmount(e.target.value)}
                   placeholder="0.00"
-                  className="w-full px-3.5 py-2 border border-gray-200 rounded-xl focus:outline-none focus:border-violet-500 text-xs font-bold"
+                  className="w-full px-3.5 py-2 border border-gray-200 rounded-xl focus:outline-none focus:border-[#1D3557] text-xs font-bold font-mono text-[#2B2D42]"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-[10px] font-black text-gray-600 uppercase mb-1">Tasa de Cambio Oficial *</label>
+                  <label className="block text-[10px] font-montserrat font-extrabold text-[#2B2D42]/70 uppercase mb-1">Tasa de Cambio Oficial *</label>
                   <input 
                     type="number"
                     step="any"
                     required
                     value={customExchangeRate}
                     onChange={(e) => setCustomExchangeRate(e.target.value)}
-                    className="w-full px-3.5 py-2 border border-gray-200 rounded-xl focus:outline-none focus:border-violet-500 text-xs font-bold text-gray-700 bg-gray-50"
+                    className="w-full px-3.5 py-2 border border-gray-200 rounded-xl focus:outline-none focus:border-[#1D3557] text-xs font-bold font-mono text-[#2B2D42] bg-[#F8F9FA]"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-[10px] font-black text-gray-600 uppercase mb-1">Comisión de origen</label>
+                  <label className="block text-[10px] font-montserrat font-extrabold text-[#2B2D42]/70 uppercase mb-1">Comisión de origen</label>
                   <input 
                     type="number"
                     step="any"
                     value={transferCommission}
                     onChange={(e) => setTransferCommission(e.target.value)}
-                    className="w-full px-3.5 py-2 border border-gray-200 rounded-xl focus:outline-none focus:border-violet-500 text-xs font-bold text-gray-700"
+                    className="w-full px-3.5 py-2 border border-gray-200 rounded-xl focus:outline-none focus:border-[#1D3557] text-xs font-bold font-mono text-[#2B2D42]"
                   />
                 </div>
               </div>
 
               <div className="flex items-center gap-4">
-                <span className="text-[10px] font-black text-gray-600 uppercase">Tipo de comisión:</span>
-                <label className="inline-flex items-center gap-1.5 text-xs font-bold text-gray-700 cursor-pointer">
+                <span className="text-[10px] font-montserrat font-extrabold text-[#2B2D42]/70 uppercase">Tipo de comisión:</span>
+                <label className="inline-flex items-center gap-1.5 text-xs font-bold text-[#2B2D42] cursor-pointer">
                   <input 
                     type="radio"
                     name="commType"
                     checked={transferCommissionType === 'fixed'}
                     onChange={() => setTransferCommissionType('fixed')}
-                    className="text-violet-600 focus:ring-violet-500"
+                    className="text-[#1D3557] focus:ring-[#1D3557]"
                   />
                   <span>Fija</span>
                 </label>
-                <label className="inline-flex items-center gap-1.5 text-xs font-bold text-gray-700 cursor-pointer">
+                <label className="inline-flex items-center gap-1.5 text-xs font-bold text-[#2B2D42] cursor-pointer">
                   <input 
                     type="radio"
                     name="commType"
                     checked={transferCommissionType === 'percent'}
                     onChange={() => setTransferCommissionType('percent')}
-                    className="text-violet-600 focus:ring-violet-500"
+                    className="text-[#1D3557] focus:ring-[#1D3557]"
                   />
                   <span>Porcentual (%)</span>
                 </label>
@@ -1583,19 +1586,19 @@ export default function CuentasBancariasPage({
 
               {/* SIMULACIÓN DE CONVERSIÓN CON LA REGLA DE DIVISIÓN */}
               {simulation && (
-                <div className="bg-violet-50 rounded-xl p-4 border border-violet-100 space-y-1.5 text-xs font-bold text-violet-900 shadow-3xs">
-                  <p>Cantidad a debitar en cuenta origen: <strong className="text-violet-950 font-black">{simulation.debitAmount.toFixed(2)} {simulation.fromCurrency}</strong></p>
-                  <p>Cantidad a acreditar en cuenta destino: <strong className="text-emerald-700 font-black">{simulation.creditAmount.toFixed(2)} {simulation.toCurrency}</strong></p>
+                <div className="bg-[#1D3557]/5 rounded-xl p-4 border border-[#1D3557]/15 space-y-1.5 text-xs font-bold text-[#1D3557] shadow-3xs">
+                  <p>Cantidad a debitar en cuenta origen: <strong className="text-[#1D3557] font-black font-mono">{simulation.debitAmount.toFixed(2)} {simulation.fromCurrency}</strong></p>
+                  <p>Cantidad a acreditar en cuenta destino: <strong className="text-emerald-700 font-black font-mono">{simulation.creditAmount.toFixed(2)} {simulation.toCurrency}</strong></p>
                   {simulation.commissionAmount > 0 && (
-                    <p className="text-[10px] text-violet-500">Comisión aplicada: {simulation.commissionAmount.toFixed(2)} {simulation.fromCurrency}</p>
+                    <p className="text-[10px] text-[#2B2D42]/70">Comisión aplicada: {simulation.commissionAmount.toFixed(2)} {simulation.fromCurrency}</p>
                   )}
                   {simulation.fromCurrency === 'USD' && simulation.toCurrency === 'VES' && (
-                    <p className="text-[9px] text-violet-600 italic font-medium mt-1">
+                    <p className="text-[9px] text-[#1D3557]/80 italic font-medium mt-1">
                       ℹ️ Tasa aplicada: se multiplicó el monto en dólares por {parseFloat(customExchangeRate) || bcvRate} Bs/$ para acreditar bolívares.
                     </p>
                   )}
                   {simulation.fromCurrency === 'VES' && simulation.toCurrency === 'USD' && (
-                    <p className="text-[9px] text-violet-600 italic font-medium mt-1">
+                    <p className="text-[9px] text-[#1D3557]/80 italic font-medium mt-1">
                       ℹ️ Tasa aplicada: se dividió el monto en bolívares entre {parseFloat(customExchangeRate) || bcvRate} Bs/$ para acreditar dólares.
                     </p>
                   )}
@@ -1603,24 +1606,24 @@ export default function CuentasBancariasPage({
               )}
 
               <div>
-                <label className="block text-[10px] font-black text-gray-600 uppercase mb-1">Referencia / Comprobante</label>
+                <label className="block text-[10px] font-montserrat font-extrabold text-[#2B2D42]/70 uppercase mb-1">Referencia / Comprobante</label>
                 <input 
                   type="text"
                   value={transferReference}
                   onChange={(e) => setTransferReference(e.target.value)}
                   placeholder="Ej: Ref 492042"
-                  className="w-full px-3.5 py-2 border border-gray-200 rounded-xl focus:outline-none focus:border-violet-500 text-xs font-semibold"
+                  className="w-full px-3.5 py-2 border border-gray-200 rounded-xl focus:outline-none focus:border-[#1D3557] text-xs font-semibold text-[#2B2D42]"
                 />
               </div>
 
               <div>
-                <label className="block text-[10px] font-black text-gray-600 uppercase mb-1">Concepto / Notas</label>
+                <label className="block text-[10px] font-montserrat font-extrabold text-[#2B2D42]/70 uppercase mb-1">Concepto / Notas</label>
                 <textarea 
                   value={transferNotes}
                   onChange={(e) => setTransferNotes(e.target.value)}
                   placeholder="Ingrese una nota descriptiva de la operación"
                   rows={2}
-                  className="w-full px-3.5 py-2 border border-gray-200 rounded-xl focus:outline-none focus:border-violet-500 text-xs font-semibold"
+                  className="w-full px-3.5 py-2 border border-gray-200 rounded-xl focus:outline-none focus:border-[#1D3557] text-xs font-semibold text-[#2B2D42]"
                 />
               </div>
 
@@ -1628,13 +1631,13 @@ export default function CuentasBancariasPage({
                 <button 
                   type="button" 
                   onClick={() => setShowTransferModal(false)}
-                  className="px-4 py-2 bg-white border border-gray-200 text-gray-600 text-xs font-extrabold rounded-xl hover:bg-gray-50 cursor-pointer"
+                  className="px-4 py-2 bg-white border border-gray-200 text-[#2B2D42] text-xs font-montserrat font-extrabold rounded-xl hover:bg-gray-50 cursor-pointer"
                 >
                   Cancelar
                 </button>
                 <button 
                   type="submit"
-                  className="px-5 py-2 bg-gradient-to-r from-pink-500 to-rose-500 text-white text-xs font-black rounded-xl shadow-xs cursor-pointer"
+                  className="px-5 py-2 bg-[#1D3557] hover:bg-[#152843] text-white text-xs font-montserrat font-extrabold rounded-xl shadow-xs cursor-pointer"
                 >
                   Confirmar transferencia
                 </button>
@@ -1650,8 +1653,8 @@ export default function CuentasBancariasPage({
       {showDepositModal && (
         <div className="fixed inset-0 bg-black/55 backdrop-blur-xs flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-2xl max-w-md w-full shadow-xl border border-gray-100 overflow-hidden">
-            <div className="px-6 py-4 bg-gray-50 border-b border-gray-150 flex items-center justify-between">
-              <h3 className="font-extrabold text-gray-800 text-sm">Ingresar Saldo</h3>
+            <div className="px-6 py-4 bg-[#F8F9FA] border-b border-gray-150 flex items-center justify-between">
+              <h3 className="font-montserrat font-extrabold text-[#1D3557] text-sm">Ingresar Saldo</h3>
               <button onClick={() => setShowDepositModal(false)} className="p-1 hover:bg-gray-200 rounded-lg transition cursor-pointer">
                 <X className="w-4 h-4 text-gray-500" />
               </button>
@@ -1659,12 +1662,12 @@ export default function CuentasBancariasPage({
 
             <form onSubmit={handleExecuteDeposit} className="p-6 space-y-4">
               <div>
-                <label className="block text-[10px] font-black text-gray-600 uppercase mb-1">Cuenta de Destino *</label>
+                <label className="block text-[10px] font-montserrat font-extrabold text-[#2B2D42]/70 uppercase mb-1">Cuenta de Destino *</label>
                 <select 
                   required
                   value={transactionAccountId}
                   onChange={(e) => setTransactionAccountId(e.target.value)}
-                  className="w-full px-3 py-2 bg-white border border-gray-200 rounded-xl focus:outline-none focus:border-violet-500 text-xs font-semibold"
+                  className="w-full px-3 py-2 bg-white border border-gray-200 rounded-xl focus:outline-none focus:border-[#1D3557] text-xs font-semibold text-[#2B2D42]"
                 >
                   <option value="">Seleccione...</option>
                   {accounts.map(acc => (
@@ -1674,7 +1677,7 @@ export default function CuentasBancariasPage({
               </div>
 
               <div>
-                <label className="block text-[10px] font-black text-gray-600 uppercase mb-1">Monto a Ingresar *</label>
+                <label className="block text-[10px] font-montserrat font-extrabold text-[#2B2D42]/70 uppercase mb-1">Monto a Ingresar *</label>
                 <input 
                   type="number"
                   step="any"
@@ -1682,29 +1685,29 @@ export default function CuentasBancariasPage({
                   value={transactionAmount}
                   onChange={(e) => setTransactionAmount(e.target.value)}
                   placeholder="0.00"
-                  className="w-full px-3.5 py-2 border border-gray-200 rounded-xl focus:outline-none focus:border-violet-500 text-xs font-bold"
+                  className="w-full px-3.5 py-2 border border-gray-200 rounded-xl focus:outline-none focus:border-[#1D3557] text-xs font-bold font-mono text-[#2B2D42]"
                 />
               </div>
 
               <div>
-                <label className="block text-[10px] font-black text-gray-600 uppercase mb-1">Referencia / Comprobante</label>
+                <label className="block text-[10px] font-montserrat font-extrabold text-[#2B2D42]/70 uppercase mb-1">Referencia / Comprobante</label>
                 <input 
                   type="text"
                   value={transactionReference}
                   onChange={(e) => setTransactionReference(e.target.value)}
                   placeholder="Ej: Depósito #0294"
-                  className="w-full px-3.5 py-2 border border-gray-200 rounded-xl focus:outline-none focus:border-violet-500 text-xs font-semibold"
+                  className="w-full px-3.5 py-2 border border-gray-200 rounded-xl focus:outline-none focus:border-[#1D3557] text-xs font-semibold text-[#2B2D42]"
                 />
               </div>
 
               <div>
-                <label className="block text-[10px] font-black text-gray-600 uppercase mb-1">Concepto / Notas</label>
+                <label className="block text-[10px] font-montserrat font-extrabold text-[#2B2D42]/70 uppercase mb-1">Concepto / Notas</label>
                 <textarea 
                   value={transactionNotes}
                   onChange={(e) => setTransactionNotes(e.target.value)}
                   placeholder="Ej: Aporte de capital, ingresos por ventas externas"
                   rows={2}
-                  className="w-full px-3.5 py-2 border border-gray-200 rounded-xl focus:outline-none focus:border-violet-500 text-xs font-semibold"
+                  className="w-full px-3.5 py-2 border border-gray-200 rounded-xl focus:outline-none focus:border-[#1D3557] text-xs font-semibold text-[#2B2D42]"
                 />
               </div>
 
@@ -1712,13 +1715,13 @@ export default function CuentasBancariasPage({
                 <button 
                   type="button" 
                   onClick={() => setShowDepositModal(false)}
-                  className="px-4 py-2 bg-white border border-gray-200 text-gray-600 text-xs font-extrabold rounded-xl hover:bg-gray-50 cursor-pointer"
+                  className="px-4 py-2 bg-white border border-gray-200 text-[#2B2D42] text-xs font-montserrat font-extrabold rounded-xl hover:bg-gray-50 cursor-pointer"
                 >
                   Cancelar
                 </button>
                 <button 
                   type="submit"
-                  className="px-5 py-2 bg-[#005da9] text-white text-xs font-black rounded-xl hover:bg-opacity-95 shadow-sm cursor-pointer"
+                  className="px-5 py-2 bg-[#1D3557] hover:bg-[#152843] text-white font-montserrat text-xs font-black rounded-xl shadow-sm cursor-pointer"
                 >
                   Confirmar ingreso
                 </button>
@@ -1734,8 +1737,8 @@ export default function CuentasBancariasPage({
       {showWithdrawModal && (
         <div className="fixed inset-0 bg-black/55 backdrop-blur-xs flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-2xl max-w-md w-full shadow-xl border border-gray-100 overflow-hidden">
-            <div className="px-6 py-4 bg-gray-50 border-b border-gray-150 flex items-center justify-between">
-              <h3 className="font-extrabold text-gray-800 text-sm">Retirar Saldo</h3>
+            <div className="px-6 py-4 bg-[#F8F9FA] border-b border-gray-150 flex items-center justify-between">
+              <h3 className="font-montserrat font-extrabold text-[#1D3557] text-sm">Retirar Saldo</h3>
               <button onClick={() => setShowWithdrawModal(false)} className="p-1 hover:bg-gray-200 rounded-lg transition cursor-pointer">
                 <X className="w-4 h-4 text-gray-500" />
               </button>
@@ -1743,12 +1746,12 @@ export default function CuentasBancariasPage({
 
             <form onSubmit={handleExecuteWithdrawal} className="p-6 space-y-4">
               <div>
-                <label className="block text-[10px] font-black text-gray-600 uppercase mb-1">Cuenta de Origen *</label>
+                <label className="block text-[10px] font-montserrat font-extrabold text-[#2B2D42]/70 uppercase mb-1">Cuenta de Origen *</label>
                 <select 
                   required
                   value={transactionAccountId}
                   onChange={(e) => setTransactionAccountId(e.target.value)}
-                  className="w-full px-3 py-2 bg-white border border-gray-200 rounded-xl focus:outline-none focus:border-violet-500 text-xs font-semibold"
+                  className="w-full px-3 py-2 bg-white border border-gray-200 rounded-xl focus:outline-none focus:border-[#1D3557] text-xs font-semibold text-[#2B2D42]"
                 >
                   <option value="">Seleccione...</option>
                   {accounts.map(acc => (
@@ -1758,7 +1761,7 @@ export default function CuentasBancariasPage({
               </div>
 
               <div>
-                <label className="block text-[10px] font-black text-gray-600 uppercase mb-1">Monto a Retirar *</label>
+                <label className="block text-[10px] font-montserrat font-extrabold text-[#2B2D42]/70 uppercase mb-1">Monto a Retirar *</label>
                 <input 
                   type="number"
                   step="any"
@@ -1766,29 +1769,29 @@ export default function CuentasBancariasPage({
                   value={transactionAmount}
                   onChange={(e) => setTransactionAmount(e.target.value)}
                   placeholder="0.00"
-                  className="w-full px-3.5 py-2 border border-gray-200 rounded-xl focus:outline-none focus:border-violet-500 text-xs font-bold"
+                  className="w-full px-3.5 py-2 border border-gray-200 rounded-xl focus:outline-none focus:border-[#1D3557] text-xs font-bold font-mono text-[#2B2D42]"
                 />
               </div>
 
               <div>
-                <label className="block text-[10px] font-black text-gray-600 uppercase mb-1">Referencia / Comprobante</label>
+                <label className="block text-[10px] font-montserrat font-extrabold text-[#2B2D42]/70 uppercase mb-1">Referencia / Comprobante</label>
                 <input 
                   type="text"
                   value={transactionReference}
                   onChange={(e) => setTransactionReference(e.target.value)}
                   placeholder="Ej: Pago de nómina, gastos operativos"
-                  className="w-full px-3.5 py-2 border border-gray-200 rounded-xl focus:outline-none focus:border-violet-500 text-xs font-semibold"
+                  className="w-full px-3.5 py-2 border border-gray-200 rounded-xl focus:outline-none focus:border-[#1D3557] text-xs font-semibold text-[#2B2D42]"
                 />
               </div>
 
               <div>
-                <label className="block text-[10px] font-black text-gray-600 uppercase mb-1">Concepto / Notas</label>
+                <label className="block text-[10px] font-montserrat font-extrabold text-[#2B2D42]/70 uppercase mb-1">Concepto / Notas</label>
                 <textarea 
                   value={transactionNotes}
                   onChange={(e) => setTransactionNotes(e.target.value)}
                   placeholder="Ej: Pago de servicios, retiro personal, etc."
                   rows={2}
-                  className="w-full px-3.5 py-2 border border-gray-200 rounded-xl focus:outline-none focus:border-violet-500 text-xs font-semibold"
+                  className="w-full px-3.5 py-2 border border-gray-200 rounded-xl focus:outline-none focus:border-[#1D3557] text-xs font-semibold text-[#2B2D42]"
                 />
               </div>
 
@@ -1796,13 +1799,13 @@ export default function CuentasBancariasPage({
                 <button 
                   type="button" 
                   onClick={() => setShowWithdrawModal(false)}
-                  className="px-4 py-2 bg-white border border-gray-200 text-gray-600 text-xs font-extrabold rounded-xl hover:bg-gray-50 cursor-pointer"
+                  className="px-4 py-2 bg-white border border-gray-200 text-[#2B2D42] text-xs font-montserrat font-extrabold rounded-xl hover:bg-gray-50 cursor-pointer"
                 >
                   Cancelar
                 </button>
                 <button 
                   type="submit"
-                  className="px-5 py-2 bg-rose-600 text-white text-xs font-black rounded-xl hover:bg-rose-700 shadow-sm cursor-pointer"
+                  className="px-5 py-2 bg-rose-600 hover:bg-rose-700 text-white text-xs font-montserrat font-black rounded-xl shadow-sm cursor-pointer"
                 >
                   Confirmar retiro
                 </button>
@@ -1818,10 +1821,10 @@ export default function CuentasBancariasPage({
       {showPaymentMethodsModal && (
         <div className="fixed inset-0 bg-black/55 backdrop-blur-xs flex items-center justify-center z-50 p-4 overflow-y-auto">
           <div className="bg-white rounded-2xl max-w-xl w-full shadow-xl border border-gray-100 overflow-hidden my-8 animate-fadeIn">
-            <div className="px-6 py-4 bg-gray-50 border-b border-gray-150 flex items-center justify-between">
+            <div className="px-6 py-4 bg-[#F8F9FA] border-b border-gray-150 flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <CreditCard className="w-5 h-5 text-violet-700" />
-                <h3 className="font-extrabold text-gray-800 text-sm">Métodos de Pago del Sistema</h3>
+                <CreditCard className="w-5 h-5 text-[#1D3557]" />
+                <h3 className="font-montserrat font-extrabold text-[#1D3557] text-sm">Métodos de Pago del Sistema</h3>
               </div>
               <button onClick={() => setShowPaymentMethodsModal(false)} className="p-1 hover:bg-gray-200 rounded-lg transition cursor-pointer">
                 <X className="w-4 h-4 text-gray-500" />
@@ -1829,33 +1832,33 @@ export default function CuentasBancariasPage({
             </div>
 
             <div className="p-6 space-y-5">
-              <p className="text-xs text-gray-600 font-medium">
+              <p className="text-xs text-[#2B2D42]/80 font-medium">
                 Aquí puede ver todos los métodos de cobro registrados en el sistema y a cuál cuenta bancaria están fijados actualmente.
               </p>
 
               {/* Form to create system level payment method */}
-              <form onSubmit={handleCreateManagerPaymentMethod} className="bg-violet-50/70 rounded-xl border border-violet-200 p-4 space-y-3">
-                <span className="text-[10px] font-black text-violet-900 uppercase tracking-wider block">Registrar nuevo método de pago:</span>
+              <form onSubmit={handleCreateManagerPaymentMethod} className="bg-[#1D3557]/5 rounded-xl border border-[#1D3557]/20 p-4 space-y-3">
+                <span className="text-[10px] font-montserrat font-extrabold text-[#1D3557] uppercase tracking-wider block">Registrar nuevo método de pago:</span>
                 
                 <div>
-                  <label className="block text-[9px] font-black text-gray-700 uppercase mb-1">Nombre del método *</label>
+                  <label className="block text-[9px] font-montserrat font-extrabold text-[#2B2D42]/70 uppercase mb-1">Nombre del método *</label>
                   <input 
                     type="text"
                     required
                     value={mgrNewName}
                     onChange={(e) => setMgrNewName(e.target.value)}
                     placeholder="Ej: Pago móvil Banesco, Zelle Empresa"
-                    className="w-full px-3 py-1.5 bg-white border border-gray-200 rounded-lg text-xs font-semibold focus:outline-none focus:border-violet-600"
+                    className="w-full px-3 py-1.5 bg-white border border-gray-200 rounded-lg text-xs font-semibold text-[#2B2D42] focus:outline-none focus:border-[#1D3557]"
                   />
                 </div>
 
                 <div className="grid grid-cols-3 gap-2">
                   <div>
-                    <label className="block text-[9px] font-black text-gray-700 uppercase mb-1">Moneda</label>
+                    <label className="block text-[9px] font-montserrat font-extrabold text-[#2B2D42]/70 uppercase mb-1">Moneda</label>
                     <select 
                       value={mgrNewCurrency}
                       onChange={(e) => setMgrNewCurrency(e.target.value as any)}
-                      className="w-full px-2 py-1.5 bg-white border border-gray-200 rounded-lg text-xs font-semibold"
+                      className="w-full px-2 py-1.5 bg-white border border-gray-200 rounded-lg text-xs font-semibold text-[#2B2D42]"
                     >
                       <option value="VES">Bolívares (VES)</option>
                       <option value="USD">Dólares (USD)</option>
@@ -1863,11 +1866,11 @@ export default function CuentasBancariasPage({
                   </div>
 
                   <div>
-                    <label className="block text-[9px] font-black text-gray-700 uppercase mb-1">Tipo</label>
+                    <label className="block text-[9px] font-montserrat font-extrabold text-[#2B2D42]/70 uppercase mb-1">Tipo</label>
                     <select 
                       value={mgrNewType}
                       onChange={(e) => setMgrNewType(e.target.value as any)}
-                      className="w-full px-2 py-1.5 bg-white border border-gray-200 rounded-lg text-xs font-semibold"
+                      className="w-full px-2 py-1.5 bg-white border border-gray-200 rounded-lg text-xs font-semibold text-[#2B2D42]"
                     >
                       <option value="movil">Pago Móvil</option>
                       <option value="transferencia">Transferencia</option>
@@ -1879,11 +1882,11 @@ export default function CuentasBancariasPage({
                   </div>
 
                   <div>
-                    <label className="block text-[9px] font-black text-gray-700 uppercase mb-1">Fijar a cuenta</label>
+                    <label className="block text-[9px] font-montserrat font-extrabold text-[#2B2D42]/70 uppercase mb-1">Fijar a cuenta</label>
                     <select 
                       value={mgrTargetAccountId}
                       onChange={(e) => setMgrTargetAccountId(e.target.value)}
-                      className="w-full px-2 py-1.5 bg-white border border-gray-200 rounded-lg text-xs font-semibold"
+                      className="w-full px-2 py-1.5 bg-white border border-gray-200 rounded-lg text-xs font-semibold text-[#2B2D42]"
                     >
                       <option value="">-- Sin fijar aún --</option>
                       {accounts.map(acc => (
@@ -1895,7 +1898,7 @@ export default function CuentasBancariasPage({
 
                 <button 
                   type="submit"
-                  className="w-full py-2 bg-violet-700 text-white font-black text-xs rounded-lg hover:bg-violet-800 transition cursor-pointer shadow-2xs"
+                  className="w-full py-2 bg-[#1D3557] hover:bg-[#152843] text-white font-montserrat font-black text-xs rounded-lg transition cursor-pointer shadow-2xs"
                 >
                   Registrar método en el sistema
                 </button>
@@ -1903,7 +1906,7 @@ export default function CuentasBancariasPage({
 
               {/* List of existing payment methods with their locked accounts */}
               <div>
-                <p className="text-[10px] font-black text-gray-500 uppercase mb-2">Métodos y Cuentas Vinculadas</p>
+                <p className="text-[10px] font-montserrat font-extrabold text-[#2B2D42]/60 uppercase mb-2">Métodos y Cuentas Vinculadas</p>
                 <div className="space-y-2 max-h-60 overflow-y-auto">
                   {systemPaymentMethods.map((pm) => {
                     const bound = getMethodBoundAccount(pm);
@@ -1914,15 +1917,15 @@ export default function CuentasBancariasPage({
                             {renderMethodIcon(pm.type)}
                           </div>
                           <div>
-                            <p className="text-xs font-black text-gray-900">{pm.name}</p>
-                            <p className="text-[10px] text-gray-400 font-bold uppercase">{pm.currency} • {pm.type}</p>
+                            <p className="text-xs font-black text-[#2B2D42]">{pm.name}</p>
+                            <p className="text-[10px] text-[#2B2D42]/60 font-bold uppercase">{pm.currency} • {pm.type}</p>
                           </div>
                         </div>
 
                         <div className="text-right">
                           {bound.isBound ? (
-                            <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-black bg-violet-50 text-violet-800 border border-violet-200">
-                              <Lock className="w-3 h-3 text-violet-600" />
+                            <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-extrabold bg-[#1D3557]/10 text-[#1D3557] border border-[#1D3557]/20">
+                              <Lock className="w-3 h-3 text-[#1D3557]" />
                               Fijado a: {bound.accountName}
                             </span>
                           ) : (
@@ -1942,7 +1945,7 @@ export default function CuentasBancariasPage({
                 <button 
                   type="button" 
                   onClick={() => setShowPaymentMethodsModal(false)}
-                  className="px-5 py-2 bg-white border border-gray-200 text-gray-600 text-xs font-extrabold rounded-xl hover:bg-gray-50 cursor-pointer"
+                  className="px-5 py-2 bg-white border border-gray-200 text-[#2B2D42] text-xs font-montserrat font-extrabold rounded-xl hover:bg-gray-50 cursor-pointer"
                 >
                   Cerrar
                 </button>

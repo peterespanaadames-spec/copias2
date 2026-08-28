@@ -474,14 +474,14 @@ export default function ComprasModule({
         <title>Comprobante de Compra #${purchase.invoice_number}</title>
         <style>
           body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; font-size: 13px; color: #222; padding: 24px; max-width: 700px; margin: auto; }
-          .header { border-bottom: 2px solid #005da9; padding-bottom: 12px; margin-bottom: 16px; display: flex; justify-content: space-between; align-items: flex-start; }
-          .title { font-size: 20px; font-weight: bold; color: #005da9; text-transform: uppercase; margin: 0; }
+          .header { border-bottom: 2px solid #1D3557; padding-bottom: 12px; margin-bottom: 16px; display: flex; justify-content: space-between; align-items: flex-start; }
+          .title { font-size: 20px; font-weight: bold; color: #1D3557; text-transform: uppercase; margin: 0; }
           .meta { margin-top: 4px; font-size: 12px; color: #555; }
           table { width: 100%; border-collapse: collapse; margin: 16px 0; }
           th { background: #f4f6f8; text-align: left; padding: 8px; font-size: 11px; text-transform: uppercase; border-bottom: 2px solid #ccc; }
           .totals { margin-top: 16px; text-align: right; font-size: 14px; }
           .totals-row { margin-bottom: 4px; }
-          .grand-total { font-size: 18px; font-weight: bold; color: #005da9; margin-top: 8px; }
+          .grand-total { font-size: 18px; font-weight: bold; color: #1D3557; margin-top: 8px; }
           .footer { margin-top: 30px; font-size: 11px; color: #888; text-align: center; border-top: 1px dashed #ccc; padding-top: 12px; }
         </style>
       </head>
@@ -563,13 +563,13 @@ export default function ComprasModule({
       {/* HEADER SECTION WITH TITLE & ACTION BUTTON */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white p-5 rounded-2xl border border-gray-200 shadow-xs">
         <div>
-          <h2 className="text-xl font-black text-[#131921] uppercase tracking-tight flex items-center gap-2.5">
-            <div className="p-2 bg-blue-50 text-[#005da9] rounded-xl">
-              <ShoppingBag className="w-6 h-6" />
+          <h2 className="text-xl font-montserrat font-extrabold text-[#1D3557] uppercase tracking-tight flex items-center gap-2.5">
+            <div className="p-2 bg-[#1D3557]/10 text-[#1D3557] rounded-xl">
+              <ShoppingBag className="w-6 h-6 text-[#1D3557]" />
             </div>
             <span>Compras e Ingreso de Inventario</span>
           </h2>
-          <p className="text-xs text-gray-500 font-medium mt-1">
+          <p className="text-xs text-[#2B2D42]/70 font-medium mt-1">
             Registra facturas de proveedores, abastece el inventario con incremento de stock automático y actualiza costos.
           </p>
         </div>
@@ -578,10 +578,10 @@ export default function ComprasModule({
           <button
             onClick={() => loadPurchases()}
             disabled={loading}
-            className="p-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl transition cursor-pointer border border-gray-200"
+            className="p-2.5 bg-[#F8F9FA] hover:bg-gray-200 text-[#2B2D42] rounded-xl transition cursor-pointer border border-gray-200"
             title="Refrescar Compras"
           >
-            <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin text-[#005da9]' : ''}`} />
+            <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin text-[#1D3557]' : 'text-[#1D3557]'}`} />
           </button>
 
           <button
@@ -589,9 +589,9 @@ export default function ComprasModule({
               resetForm();
               setShowNewModal(true);
             }}
-            className="px-4 py-2.5 bg-[#005da9] hover:bg-[#004a87] text-white text-xs font-black rounded-xl transition shadow-md hover:shadow-lg uppercase tracking-wider flex items-center gap-2 shrink-0 cursor-pointer active:scale-98"
+            className="px-4 py-2.5 bg-[#40E0D0] hover:bg-[#36cebe] text-[#1D3557] text-xs font-montserrat font-extrabold rounded-xl transition shadow-md hover:shadow-lg uppercase tracking-wider flex items-center gap-2 shrink-0 cursor-pointer active:scale-98"
           >
-            <Plus className="w-4 h-4 stroke-[3]" />
+            <Plus className="w-4 h-4 stroke-[3] text-[#1D3557]" />
             <span>Nueva Compra</span>
           </button>
         </div>
@@ -600,99 +600,99 @@ export default function ComprasModule({
       {/* TOP KPI / STAT CARDS */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         {/* Total Invertido */}
-        <div className="bg-white p-4 rounded-2xl border border-gray-200 shadow-xs flex items-center gap-3.5 relative overflow-hidden group hover:border-blue-300 transition">
-          <div className="p-3 bg-blue-50 text-blue-700 rounded-xl">
-            <DollarSign className="w-6 h-6" />
+        <div className="bg-white p-4 rounded-2xl border border-gray-200 shadow-xs flex items-center gap-3.5 relative overflow-hidden group hover:border-[#00BFFF] transition">
+          <div className="p-3 bg-[#1D3557]/10 text-[#1D3557] rounded-xl">
+            <DollarSign className="w-6 h-6 text-[#1D3557]" />
           </div>
           <div>
-            <span className="text-[10px] font-black uppercase text-gray-400 tracking-wider block">Total Comprado (Histórico)</span>
-            <span className="text-lg font-black text-gray-900 block font-mono">
+            <span className="text-[10px] font-montserrat font-extrabold uppercase text-gray-400 tracking-wider block">Total Comprado (Histórico)</span>
+            <span className="text-lg font-montserrat font-extrabold text-[#1D3557] block font-mono">
               ${stats.totalPurchasedUsd.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })} USD
             </span>
             {bcvRate > 0 && (
-              <span className="text-[10px] font-bold text-gray-500 block">
+              <span className="text-[10px] font-bold text-[#2B2D42]/70 block">
                 ≈ Bs. {stats.totalPurchasedBs.toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
               </span>
             )}
           </div>
           <div className="absolute -right-2 -bottom-2 opacity-5 pointer-events-none group-hover:scale-110 transition duration-300">
-            <DollarSign className="w-20 h-20 text-blue-900" />
+            <DollarSign className="w-20 h-20 text-[#1D3557]" />
           </div>
         </div>
 
         {/* Total Compras Registradas */}
-        <div className="bg-white p-4 rounded-2xl border border-gray-200 shadow-xs flex items-center gap-3.5 relative overflow-hidden group hover:border-emerald-300 transition">
-          <div className="p-3 bg-emerald-50 text-emerald-700 rounded-xl">
-            <FileText className="w-6 h-6" />
+        <div className="bg-white p-4 rounded-2xl border border-gray-200 shadow-xs flex items-center gap-3.5 relative overflow-hidden group hover:border-[#40E0D0] transition">
+          <div className="p-3 bg-[#40E0D0]/20 text-[#1D3557] rounded-xl">
+            <FileText className="w-6 h-6 text-[#1D3557]" />
           </div>
           <div>
-            <span className="text-[10px] font-black uppercase text-gray-400 tracking-wider block">Compras Realizadas</span>
-            <span className="text-lg font-black text-gray-900 block font-mono">
+            <span className="text-[10px] font-montserrat font-extrabold uppercase text-gray-400 tracking-wider block">Compras Realizadas</span>
+            <span className="text-lg font-montserrat font-extrabold text-[#1D3557] block font-mono">
               {stats.totalPurchasesCount} {stats.totalPurchasesCount === 1 ? 'Factura' : 'Facturas'}
             </span>
-            <span className="text-[10px] font-bold text-emerald-600 flex items-center gap-1">
-              <Check className="w-3 h-3" /> Transacciones validadas
+            <span className="text-[10px] font-bold text-[#1D3557] flex items-center gap-1">
+              <Check className="w-3 h-3 text-[#40E0D0]" /> Transacciones validadas
             </span>
           </div>
           <div className="absolute -right-2 -bottom-2 opacity-5 pointer-events-none group-hover:scale-110 transition duration-300">
-            <FileText className="w-20 h-20 text-emerald-900" />
+            <FileText className="w-20 h-20 text-[#1D3557]" />
           </div>
         </div>
 
         {/* Unidades Ingresadas al Stock */}
-        <div className="bg-white p-4 rounded-2xl border border-gray-200 shadow-xs flex items-center gap-3.5 relative overflow-hidden group hover:border-amber-300 transition">
-          <div className="p-3 bg-amber-50 text-amber-700 rounded-xl">
-            <Layers className="w-6 h-6" />
+        <div className="bg-white p-4 rounded-2xl border border-gray-200 shadow-xs flex items-center gap-3.5 relative overflow-hidden group hover:border-[#00BFFF] transition">
+          <div className="p-3 bg-[#00BFFF]/15 text-[#00BFFF] rounded-xl">
+            <Layers className="w-6 h-6 text-[#1D3557]" />
           </div>
           <div>
-            <span className="text-[10px] font-black uppercase text-gray-400 tracking-wider block">Unidades Ingresadas</span>
-            <span className="text-lg font-black text-gray-900 block font-mono">
+            <span className="text-[10px] font-montserrat font-extrabold uppercase text-gray-400 tracking-wider block">Unidades Ingresadas</span>
+            <span className="text-lg font-montserrat font-extrabold text-[#1D3557] block font-mono">
               {stats.totalUnitsBought} {stats.totalUnitsBought === 1 ? 'unidad' : 'unidades'}
             </span>
-            <span className="text-[10px] font-bold text-amber-700 flex items-center gap-1">
-              <ArrowUpRight className="w-3 h-3" /> Incremento en inventario
+            <span className="text-[10px] font-bold text-[#1D3557] flex items-center gap-1">
+              <ArrowUpRight className="w-3 h-3 text-[#00BFFF]" /> Incremento en inventario
             </span>
           </div>
           <div className="absolute -right-2 -bottom-2 opacity-5 pointer-events-none group-hover:scale-110 transition duration-300">
-            <Layers className="w-20 h-20 text-amber-900" />
+            <Layers className="w-20 h-20 text-[#1D3557]" />
           </div>
         </div>
 
         {/* Proveedores Activos */}
-        <div className="bg-white p-4 rounded-2xl border border-gray-200 shadow-xs flex items-center gap-3.5 relative overflow-hidden group hover:border-purple-300 transition">
-          <div className="p-3 bg-purple-50 text-purple-700 rounded-xl">
-            <Truck className="w-6 h-6" />
+        <div className="bg-white p-4 rounded-2xl border border-gray-200 shadow-xs flex items-center gap-3.5 relative overflow-hidden group hover:border-[#1D3557] transition">
+          <div className="p-3 bg-[#1D3557]/10 text-[#1D3557] rounded-xl">
+            <Truck className="w-6 h-6 text-[#1D3557]" />
           </div>
           <div>
-            <span className="text-[10px] font-black uppercase text-gray-400 tracking-wider block">Proveedores Registrados</span>
-            <span className="text-lg font-black text-gray-900 block font-mono">
+            <span className="text-[10px] font-montserrat font-extrabold uppercase text-gray-400 tracking-wider block">Proveedores Registrados</span>
+            <span className="text-lg font-montserrat font-extrabold text-[#1D3557] block font-mono">
               {stats.activeProvidersCount} {stats.activeProvidersCount === 1 ? 'Proveedor' : 'Proveedores'}
             </span>
-            <span className="text-[10px] font-bold text-purple-700 block">
+            <span className="text-[10px] font-bold text-[#2B2D42]/70 block">
               Red de distribución activa
             </span>
           </div>
           <div className="absolute -right-2 -bottom-2 opacity-5 pointer-events-none group-hover:scale-110 transition duration-300">
-            <Truck className="w-20 h-20 text-purple-900" />
+            <Truck className="w-20 h-20 text-[#1D3557]" />
           </div>
         </div>
       </div>
 
       {/* FILTER & SEARCH BAR */}
-      <div className="bg-white p-4 rounded-2xl border border-gray-200 shadow-xs flex flex-col md:flex-row items-center justify-between gap-3">
+      <div className="bg-[#F8F9FA] p-4 rounded-2xl border border-gray-200 shadow-xs flex flex-col md:flex-row items-center justify-between gap-3">
         <div className="relative w-full md:w-96">
-          <Search className="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />
+          <Search className="w-4 h-4 text-[#00BFFF] absolute left-3 top-1/2 -translate-y-1/2" />
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Buscar por N° Factura, proveedor, producto o fecha..."
-            className="w-full pl-9 pr-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-xs font-bold text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#005da9]"
+            className="w-full pl-9 pr-3 py-2 bg-white border border-gray-200 rounded-xl text-xs font-bold text-[#2B2D42] placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#00BFFF]"
           />
           {searchQuery && (
             <button 
               onClick={() => setSearchQuery('')}
-              className="absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+              className="absolute right-2.5 top-1/2 -translate-y-1/2 text-gray-400 hover:text-[#2B2D42]"
             >
               <X className="w-3.5 h-3.5" />
             </button>
@@ -700,34 +700,34 @@ export default function ComprasModule({
         </div>
 
         <div className="flex items-center gap-2 w-full md:w-auto justify-end">
-          <div className="flex items-center bg-gray-100 p-1 rounded-xl border border-gray-200">
+          <div className="flex items-center bg-gray-200/60 p-1 rounded-xl border border-gray-200">
             <button
               onClick={() => setDateFilter('all')}
-              className={`px-3 py-1 text-xs font-bold rounded-lg transition ${
-                dateFilter === 'all' ? 'bg-white text-gray-900 shadow-xs' : 'text-gray-500 hover:text-gray-700'
+              className={`px-3 py-1 text-xs font-montserrat font-bold rounded-lg transition ${
+                dateFilter === 'all' ? 'bg-[#1D3557] text-white shadow-xs' : 'text-[#2B2D42]/70 hover:text-[#1D3557]'
               }`}
             >
               Todas
             </button>
             <button
               onClick={() => setDateFilter('this_month')}
-              className={`px-3 py-1 text-xs font-bold rounded-lg transition ${
-                dateFilter === 'this_month' ? 'bg-white text-gray-900 shadow-xs' : 'text-gray-500 hover:text-gray-700'
+              className={`px-3 py-1 text-xs font-montserrat font-bold rounded-lg transition ${
+                dateFilter === 'this_month' ? 'bg-[#1D3557] text-white shadow-xs' : 'text-[#2B2D42]/70 hover:text-[#1D3557]'
               }`}
             >
               Este Mes
             </button>
             <button
               onClick={() => setDateFilter('today')}
-              className={`px-3 py-1 text-xs font-bold rounded-lg transition ${
-                dateFilter === 'today' ? 'bg-white text-gray-900 shadow-xs' : 'text-gray-500 hover:text-gray-700'
+              className={`px-3 py-1 text-xs font-montserrat font-bold rounded-lg transition ${
+                dateFilter === 'today' ? 'bg-[#1D3557] text-white shadow-xs' : 'text-[#2B2D42]/70 hover:text-[#1D3557]'
               }`}
             >
               Hoy
             </button>
           </div>
 
-          <span className="text-[11px] font-bold text-gray-400 ml-2 hidden sm:inline">
+          <span className="text-[11px] font-bold text-[#2B2D42]/60 ml-2 hidden sm:inline">
             Mostrando {filteredPurchases.length} de {purchases.length}
           </span>
         </div>
@@ -736,18 +736,18 @@ export default function ComprasModule({
       {/* PURCHASES TABLE / HISTORY */}
       <div className="bg-white border border-gray-200 rounded-2xl shadow-xs overflow-hidden">
         <div className="p-4 border-b border-gray-100 flex items-center justify-between">
-          <h3 className="text-xs font-black text-gray-800 uppercase tracking-wider flex items-center gap-2">
-            <FileText className="w-4 h-4 text-[#005da9]" />
+          <h3 className="text-xs font-montserrat font-extrabold text-[#1D3557] uppercase tracking-wider flex items-center gap-2">
+            <FileText className="w-4 h-4 text-[#00BFFF]" />
             <span>Historial de Compras Recientes ({filteredPurchases.length})</span>
           </h3>
-          <span className="text-[11px] text-gray-500 font-medium">
-            Tasa BCV del día: <strong className="font-mono text-[#005da9]">Bs. {bcvRate.toFixed(2)}/USD</strong>
+          <span className="text-[11px] text-[#2B2D42]/70 font-medium">
+            Tasa BCV del día: <strong className="font-mono text-[#00BFFF]">Bs. {bcvRate.toFixed(2)}/USD</strong>
           </span>
         </div>
 
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs border-collapse">
-            <thead className="bg-gray-50 border-b border-gray-200 text-gray-500 font-bold uppercase tracking-wider text-[11px]">
+            <thead className="bg-[#1D3557] text-white font-montserrat font-extrabold uppercase tracking-wider text-[11px]">
               <tr>
                 <th className="p-3.5">Factura N° / Código</th>
                 <th className="p-3.5">Fecha</th>
@@ -759,11 +759,11 @@ export default function ComprasModule({
                 <th className="p-3.5 text-center">Acciones</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-100 font-medium text-gray-700">
+            <tbody className="divide-y divide-gray-100 font-medium text-[#2B2D42]">
               {loading ? (
                 <tr>
                   <td colSpan={8} className="p-12 text-center text-gray-400">
-                    <RefreshCw className="w-6 h-6 animate-spin mx-auto mb-2 text-[#005da9]" />
+                    <RefreshCw className="w-6 h-6 animate-spin mx-auto mb-2 text-[#00BFFF]" />
                     <span>Cargando historial de compras...</span>
                   </td>
                 </tr>
@@ -771,11 +771,11 @@ export default function ComprasModule({
                 <tr>
                   <td colSpan={8} className="p-12 text-center">
                     <div className="max-w-sm mx-auto space-y-3">
-                      <div className="p-4 bg-gray-50 text-gray-400 rounded-full w-16 h-16 flex items-center justify-center mx-auto">
-                        <ShoppingBag className="w-8 h-8" />
+                      <div className="p-4 bg-[#F8F9FA] text-[#1D3557] rounded-full w-16 h-16 flex items-center justify-center mx-auto">
+                        <ShoppingBag className="w-8 h-8 text-[#1D3557]" />
                       </div>
-                      <h4 className="font-black text-gray-800 text-sm">No se encontraron registros de compra</h4>
-                      <p className="text-xs text-gray-500 leading-relaxed">
+                      <h4 className="font-montserrat font-extrabold text-[#1D3557] text-sm">No se encontraron registros de compra</h4>
+                      <p className="text-xs text-[#2B2D42]/70 leading-relaxed">
                         {searchQuery ? 'No hay resultados que coincidan con la búsqueda.' : 'Aún no has registrado compras para reabastecer el inventario.'}
                       </p>
                       <button
@@ -783,7 +783,7 @@ export default function ComprasModule({
                           resetForm();
                           setShowNewModal(true);
                         }}
-                        className="px-4 py-2 bg-[#005da9] hover:bg-[#004a87] text-white font-black text-xs rounded-xl transition inline-flex items-center gap-1.5 shadow-sm"
+                        className="px-4 py-2 bg-[#40E0D0] hover:bg-[#36cebe] text-[#1D3557] font-montserrat font-extrabold text-xs rounded-xl transition inline-flex items-center gap-1.5 shadow-xs"
                       >
                         <Plus className="w-4 h-4 stroke-[3]" />
                         <span>Registrar Primera Compra</span>
@@ -798,10 +798,10 @@ export default function ComprasModule({
                   const itemsCount = purchase.total_items || (purchase.items?.reduce((s, it) => s + Number(it.quantity || 0), 0)) || 0;
 
                   return (
-                    <tr key={purchase.id} className="hover:bg-gray-50/80 transition group">
+                    <tr key={purchase.id} className="hover:bg-[#F8F9FA] transition group">
                       <td className="p-3.5">
-                        <div className="font-mono font-black text-gray-900 text-xs flex items-center gap-1.5">
-                          <Hash className="w-3.5 h-3.5 text-[#005da9]" />
+                        <div className="font-mono font-black text-[#1D3557] text-xs flex items-center gap-1.5">
+                          <Hash className="w-3.5 h-3.5 text-[#00BFFF]" />
                           <span>{purchase.invoice_number}</span>
                         </div>
                         {purchase.purchase_number && purchase.purchase_number !== purchase.invoice_number && (
@@ -812,20 +812,20 @@ export default function ComprasModule({
                       </td>
 
                       <td className="p-3.5 whitespace-nowrap">
-                        <div className="flex items-center gap-1.5 text-gray-600 font-medium">
-                          <Calendar className="w-3.5 h-3.5 text-gray-400" />
+                        <div className="flex items-center gap-1.5 text-[#2B2D42] font-medium">
+                          <Calendar className="w-3.5 h-3.5 text-[#00BFFF]" />
                           <span>{purchase.date}</span>
                         </div>
                       </td>
 
                       <td className="p-3.5">
-                        <div className="font-bold text-gray-900">{purchase.provider_name || 'Proveedor General'}</div>
+                        <div className="font-bold text-[#1D3557]">{purchase.provider_name || 'Proveedor General'}</div>
                         <div className="flex flex-wrap gap-1 mt-0.5 items-center">
                           {purchase.provider_rif && (
-                            <span className="text-[10px] text-gray-400 font-mono">RIF: {purchase.provider_rif}</span>
+                            <span className="text-[10px] text-[#2B2D42]/60 font-mono">RIF: {purchase.provider_rif}</span>
                           )}
                           {purchase.payment_method && (
-                            <span className="text-[8px] bg-slate-100 text-slate-700 border border-slate-200 font-black px-1.5 py-0.5 rounded uppercase">
+                            <span className="text-[8px] bg-[#1D3557]/10 text-[#1D3557] border border-[#1D3557]/20 font-black px-1.5 py-0.5 rounded uppercase">
                               {purchase.payment_method}
                             </span>
                           )}
@@ -834,20 +834,20 @@ export default function ComprasModule({
 
                       <td className="p-3.5">
                         <div className="flex items-center gap-2">
-                          <span className="px-2 py-0.5 bg-blue-50 text-[#005da9] rounded-md font-black text-[11px]">
+                          <span className="px-2 py-0.5 bg-[#1D3557]/10 text-[#1D3557] rounded-md font-black text-[11px]">
                             {itemsCount} {itemsCount === 1 ? 'ud.' : 'uds.'}
                           </span>
-                          <span className="text-[11px] text-gray-500 truncate max-w-[180px]" title={purchase.items?.map(it => `${it.quantity}x ${it.product_name}`).join(', ')}>
+                          <span className="text-[11px] text-[#2B2D42]/70 truncate max-w-[180px]" title={purchase.items?.map(it => `${it.quantity}x ${it.product_name}`).join(', ')}>
                             {purchase.items?.length || 0} {purchase.items?.length === 1 ? 'producto' : 'productos'}
                           </span>
                         </div>
                       </td>
 
-                      <td className="p-3.5 text-right font-mono font-black text-gray-900 text-xs">
+                      <td className="p-3.5 text-right font-mono font-black text-[#1D3557] text-xs">
                         ${totalUsd.toFixed(2)}
                       </td>
 
-                      <td className="p-3.5 text-right font-mono font-bold text-gray-600 text-xs">
+                      <td className="p-3.5 text-right font-mono font-bold text-[#2B2D42] text-xs">
                         Bs. {totalBs.toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                       </td>
 
@@ -858,8 +858,8 @@ export default function ComprasModule({
                             <span>Pendiente CXP</span>
                           </span>
                         ) : (
-                          <span className="px-2.5 py-0.5 bg-emerald-50 border border-emerald-200 text-emerald-800 text-[10px] font-black rounded-full uppercase tracking-wider inline-flex items-center gap-1">
-                            <Check className="w-3 h-3" />
+                          <span className="px-2.5 py-0.5 bg-[#40E0D0]/20 border border-[#40E0D0]/40 text-[#1D3557] text-[10px] font-montserrat font-extrabold rounded-full uppercase tracking-wider inline-flex items-center gap-1">
+                            <Check className="w-3 h-3 text-[#1D3557]" />
                             <span>Completada</span>
                           </span>
                         )}
@@ -869,14 +869,14 @@ export default function ComprasModule({
                         <div className="flex items-center justify-center gap-1.5">
                           <button
                             onClick={() => setSelectedPurchaseDetail(purchase)}
-                            className="p-1.5 text-gray-500 hover:text-[#005da9] hover:bg-blue-50 rounded-lg transition"
+                            className="p-1.5 text-[#2B2D42]/70 hover:text-[#1D3557] hover:bg-[#1D3557]/10 rounded-lg transition"
                             title="Ver Detalle de la Compra"
                           >
                             <Eye className="w-4 h-4" />
                           </button>
                           <button
                             onClick={() => handlePrintVoucher(purchase)}
-                            className="p-1.5 text-gray-500 hover:text-emerald-700 hover:bg-emerald-50 rounded-lg transition"
+                            className="p-1.5 text-[#2B2D42]/70 hover:text-[#1D3557] hover:bg-[#40E0D0]/30 rounded-lg transition"
                             title="Imprimir Comprobante"
                           >
                             <Printer className="w-4 h-4" />
@@ -906,14 +906,14 @@ export default function ComprasModule({
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-3 sm:p-4 overflow-y-auto">
           <div className="bg-white rounded-3xl border border-gray-100 w-full max-w-4xl shadow-2xl overflow-hidden text-left flex flex-col my-auto max-h-[92vh]">
             {/* Modal Header */}
-            <div className="p-4 sm:p-5 bg-linear-to-r from-[#005da9] to-[#0077d9] text-white flex justify-between items-center shrink-0">
+            <div className="p-4 sm:p-5 bg-[#1D3557] text-white flex justify-between items-center shrink-0">
               <div className="flex items-center gap-3">
-                <div className="p-2 bg-white/20 rounded-xl backdrop-blur-xs">
-                  <ShoppingBag className="w-5 h-5 text-white" />
+                <div className="p-2 bg-white/10 rounded-xl backdrop-blur-xs">
+                  <ShoppingBag className="w-5 h-5 text-[#40E0D0]" />
                 </div>
                 <div>
-                  <h3 className="text-sm sm:text-base font-black uppercase tracking-tight">Registrar Nueva Compra</h3>
-                  <p className="text-[11px] text-blue-100 font-medium">
+                  <h3 className="text-sm sm:text-base font-montserrat font-extrabold uppercase tracking-tight">Registrar Nueva Compra</h3>
+                  <p className="text-[11px] text-[#40E0D0] font-medium">
                     Ingresa los datos de la factura y abastece el stock de tus productos
                   </p>
                 </div>
@@ -932,16 +932,16 @@ export default function ComprasModule({
             {/* Modal Body / Form */}
             <form onSubmit={handleSavePurchase} className="p-4 sm:p-6 overflow-y-auto space-y-6 flex-1">
               {/* SECTION 1: CABECERA DE FACTURA Y PROVEEDOR */}
-              <div className="bg-gray-50/80 p-4 rounded-2xl border border-gray-200/80 space-y-4">
-                <h4 className="text-xs font-black text-gray-800 uppercase tracking-wider flex items-center gap-2">
-                  <Truck className="w-4 h-4 text-[#005da9]" />
+              <div className="bg-[#F8F9FA] p-4 rounded-2xl border border-gray-200/80 space-y-4">
+                <h4 className="text-xs font-montserrat font-extrabold text-[#1D3557] uppercase tracking-wider flex items-center gap-2">
+                  <Truck className="w-4 h-4 text-[#00BFFF]" />
                   <span>1. Datos del Proveedor y Factura</span>
                 </h4>
 
                 <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                   {/* Selector de Proveedor */}
                   <div>
-                    <label className="block text-[10px] font-black uppercase text-gray-500 mb-1">
+                    <label className="block text-[10px] font-montserrat font-extrabold uppercase text-[#2B2D42]/70 mb-1">
                       Proveedor *
                     </label>
                     <select
@@ -956,7 +956,7 @@ export default function ComprasModule({
                           }
                         }
                       }}
-                      className="w-full px-3 py-2 bg-white border border-gray-300 rounded-xl text-xs font-bold text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#005da9]"
+                      className="w-full px-3 py-2 bg-white border border-gray-300 rounded-xl text-xs font-bold text-[#2B2D42] focus:outline-none focus:ring-2 focus:ring-[#00BFFF]"
                     >
                       <option value="">-- Seleccionar Proveedor --</option>
                       {providers.map((p) => (
@@ -970,7 +970,7 @@ export default function ComprasModule({
 
                   {/* Factura N° */}
                   <div>
-                    <label className="block text-[10px] font-black uppercase text-gray-500 mb-1">
+                    <label className="block text-[10px] font-montserrat font-extrabold uppercase text-[#2B2D42]/70 mb-1">
                       Factura N° / Control *
                     </label>
                     <input
@@ -979,13 +979,13 @@ export default function ComprasModule({
                       value={invoiceNumber}
                       onChange={(e) => setInvoiceNumber(e.target.value)}
                       placeholder="Ej: FAC-009842"
-                      className="w-full px-3 py-2 bg-white border border-gray-300 rounded-xl text-xs font-bold text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#005da9]"
+                      className="w-full px-3 py-2 bg-white border border-gray-300 rounded-xl text-xs font-bold text-[#2B2D42] focus:outline-none focus:ring-2 focus:ring-[#00BFFF]"
                     />
                   </div>
 
                   {/* Fecha de Compra */}
                   <div>
-                    <label className="block text-[10px] font-black uppercase text-gray-500 mb-1">
+                    <label className="block text-[10px] font-montserrat font-extrabold uppercase text-[#2B2D42]/70 mb-1">
                       Fecha de la Factura *
                     </label>
                     <input
@@ -993,23 +993,23 @@ export default function ComprasModule({
                       required
                       value={purchaseDate}
                       onChange={(e) => setPurchaseDate(e.target.value)}
-                      className="w-full px-3 py-2 bg-white border border-gray-300 rounded-xl text-xs font-bold text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#005da9]"
+                      className="w-full px-3 py-2 bg-white border border-gray-300 rounded-xl text-xs font-bold text-[#2B2D42] focus:outline-none focus:ring-2 focus:ring-[#00BFFF]"
                     />
                   </div>
                 </div>
 
                 {/* Método de Pago y Financiación */}
-                <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 pt-2 border-t border-gray-150">
+                <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 pt-2 border-t border-gray-200">
                   {/* Método de Pago */}
                   <div className="sm:col-span-2 text-left">
-                    <label className="block text-[10px] font-black uppercase text-gray-500 mb-1">
+                    <label className="block text-[10px] font-montserrat font-extrabold uppercase text-[#2B2D42]/70 mb-1">
                       Método de Pago *
                     </label>
                     <select
                       value={paymentMethod}
                       onChange={(e) => setPaymentMethod(e.target.value)}
                       required
-                      className="w-full px-3 py-2 bg-white border border-gray-300 rounded-xl text-xs font-bold text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#005da9]"
+                      className="w-full px-3 py-2 bg-white border border-gray-300 rounded-xl text-xs font-bold text-[#2B2D42] focus:outline-none focus:ring-2 focus:ring-[#00BFFF]"
                     >
                       <option value="Efectivo USD">💵 Efectivo USD</option>
                       <option value="Efectivo Bs">💵 Efectivo Bs</option>
@@ -1023,14 +1023,14 @@ export default function ComprasModule({
 
                   {paymentMethod === 'Crédito / CXP' && (
                     <div className="sm:col-span-2 text-left">
-                      <label className="block text-[10px] font-black uppercase text-gray-500 mb-1">
+                      <label className="block text-[10px] font-montserrat font-extrabold uppercase text-[#2B2D42]/70 mb-1">
                         Cantidad de Cuotas * (Máximo 6)
                       </label>
                       <select
                         value={installmentsCount}
                         onChange={(e) => setInstallmentsCount(Number(e.target.value))}
                         required
-                        className="w-full px-3 py-2 bg-white border border-gray-300 rounded-xl text-xs font-bold text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#005da9]"
+                        className="w-full px-3 py-2 bg-white border border-gray-300 rounded-xl text-xs font-bold text-[#2B2D42] focus:outline-none focus:ring-2 focus:ring-[#00BFFF]"
                       >
                         {[1, 2, 3, 4, 5, 6].map(num => (
                           <option key={num} value={num}>{num} {num === 1 ? 'Cuota' : 'Cuotas'}</option>
@@ -1042,22 +1042,22 @@ export default function ComprasModule({
 
                 {/* DYNAMIC INSTALLMENTS GRID */}
                 {paymentMethod === 'Crédito / CXP' && installments.length > 0 && (
-                  <div className="bg-blue-50/50 border border-blue-100 rounded-2xl p-4 space-y-3 pt-2 text-left">
-                    <h5 className="text-[10px] font-black uppercase text-blue-800 tracking-wider flex items-center gap-1.5">
-                      <Calendar className="w-3.5 h-3.5 text-blue-700" />
+                  <div className="bg-[#1D3557]/5 border border-[#1D3557]/20 rounded-2xl p-4 space-y-3 pt-2 text-left">
+                    <h5 className="text-[10px] font-montserrat font-extrabold uppercase text-[#1D3557] tracking-wider flex items-center gap-1.5">
+                      <Calendar className="w-3.5 h-3.5 text-[#00BFFF]" />
                       <span>Calendario de Vencimientos de Cuotas (CXP)</span>
                     </h5>
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
                       {installments.map((inst, index) => (
                         <div key={inst.number} className="bg-white border border-gray-200 p-3 rounded-xl space-y-1.5 shadow-2xs">
                           <div className="flex items-center justify-between">
-                            <span className="text-[9px] bg-blue-50 text-blue-700 border border-blue-100 px-1.5 py-0.5 rounded-md font-black">
+                            <span className="text-[9px] bg-[#1D3557]/10 text-[#1D3557] border border-[#1D3557]/20 px-1.5 py-0.5 rounded-md font-black">
                               Cuota #{inst.number}
                             </span>
-                            <span className="text-[9px] text-gray-400 font-bold">Vence en {index * 15 + 15} días</span>
+                            <span className="text-[9px] text-[#2B2D42]/60 font-bold">Vence en {index * 15 + 15} días</span>
                           </div>
                           <div className="space-y-1">
-                            <label className="block text-[9px] font-bold text-gray-400 uppercase">Fecha de Vencimiento</label>
+                            <label className="block text-[9px] font-bold text-[#2B2D42]/60 uppercase">Fecha de Vencimiento</label>
                             <input
                               type="date"
                               required
@@ -1066,11 +1066,11 @@ export default function ComprasModule({
                                 const newDate = e.target.value;
                                 setInstallments(prev => prev.map(p => p.number === inst.number ? { ...p, due_date: newDate } : p));
                               }}
-                              className="w-full px-2 py-1 bg-gray-50 border border-gray-200 rounded-lg text-xs font-bold text-gray-800 focus:outline-none focus:ring-1 focus:ring-[#005da9]"
+                              className="w-full px-2 py-1 bg-[#F8F9FA] border border-gray-200 rounded-lg text-xs font-bold text-[#2B2D42] focus:outline-none focus:ring-1 focus:ring-[#00BFFF]"
                             />
                           </div>
                           <div className="space-y-1">
-                            <label className="block text-[9px] font-bold text-gray-400 uppercase">Monto (USD)</label>
+                            <label className="block text-[9px] font-bold text-[#2B2D42]/60 uppercase">Monto (USD)</label>
                             <input
                               type="number"
                               required
@@ -1081,13 +1081,13 @@ export default function ComprasModule({
                                 const val = Number(e.target.value);
                                 setInstallments(prev => prev.map(p => p.number === inst.number ? { ...p, amount: val } : p));
                               }}
-                              className="w-full px-2 py-1 bg-gray-50 border border-gray-200 rounded-lg text-xs font-bold text-gray-800 focus:outline-none focus:ring-1 focus:ring-[#005da9]"
+                              className="w-full px-2 py-1 bg-[#F8F9FA] border border-gray-200 rounded-lg text-xs font-bold text-[#2B2D42] focus:outline-none focus:ring-1 focus:ring-[#00BFFF]"
                             />
                           </div>
                         </div>
                       ))}
                     </div>
-                    <div className="flex items-center justify-between text-[11px] font-bold text-blue-900 border-t border-blue-100 pt-2 bg-blue-50/20 px-1 rounded-md">
+                    <div className="flex items-center justify-between text-[11px] font-bold text-[#1D3557] border-t border-[#1D3557]/20 pt-2 bg-[#1D3557]/5 px-1 rounded-md">
                       <span>Total de cuotas de Crédito:</span>
                       <span className="font-mono font-black text-xs">
                         ${installments.reduce((sum, item) => sum + (Number(item.amount) || 0), 0).toFixed(2)} USD
@@ -1100,7 +1100,7 @@ export default function ComprasModule({
                 {(selectedProviderId === 'otro' || (providers.length === 0 && !selectedProviderId)) && (
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2 border-t border-gray-200">
                     <div>
-                      <label className="block text-[10px] font-black uppercase text-gray-500 mb-1">
+                      <label className="block text-[10px] font-montserrat font-extrabold uppercase text-[#2B2D42]/70 mb-1">
                         Nombre / Razón Social del Proveedor *
                       </label>
                       <input
@@ -1109,11 +1109,11 @@ export default function ComprasModule({
                         value={customProviderName}
                         onChange={(e) => setCustomProviderName(e.target.value)}
                         placeholder="Ej: Distribuidora Central C.A."
-                        className="w-full px-3 py-2 bg-white border border-gray-300 rounded-xl text-xs font-bold text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#005da9]"
+                        className="w-full px-3 py-2 bg-white border border-gray-300 rounded-xl text-xs font-bold text-[#2B2D42] focus:outline-none focus:ring-2 focus:ring-[#00BFFF]"
                       />
                     </div>
                     <div>
-                      <label className="block text-[10px] font-black uppercase text-gray-500 mb-1">
+                      <label className="block text-[10px] font-montserrat font-extrabold uppercase text-[#2B2D42]/70 mb-1">
                         RIF / Cédula del Proveedor
                       </label>
                       <input
@@ -1121,7 +1121,7 @@ export default function ComprasModule({
                         value={customProviderRif}
                         onChange={(e) => setCustomProviderRif(e.target.value)}
                         placeholder="Ej: J-12345678-0"
-                        className="w-full px-3 py-2 bg-white border border-gray-300 rounded-xl text-xs font-bold text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#005da9]"
+                        className="w-full px-3 py-2 bg-white border border-gray-300 rounded-xl text-xs font-bold text-[#2B2D42] focus:outline-none focus:ring-2 focus:ring-[#00BFFF]"
                       />
                     </div>
                   </div>
@@ -1134,10 +1134,10 @@ export default function ComprasModule({
                       type="checkbox"
                       checked={updateProductCost}
                       onChange={(e) => setUpdateProductCost(e.target.checked)}
-                      className="w-4 h-4 text-[#005da9] rounded focus:ring-blue-500"
+                      className="w-4 h-4 text-[#1D3557] rounded focus:ring-[#00BFFF]"
                     />
-                    <span className="text-xs font-bold text-gray-700">
-                      Actualizar automáticamente el costo unitario (<code className="text-blue-700">cost_price</code>) en la ficha del producto si varió.
+                    <span className="text-xs font-bold text-[#2B2D42]">
+                      Actualizar automáticamente el costo unitario (<code className="text-[#1D3557]">cost_price</code>) en la ficha del producto si varió.
                     </span>
                   </label>
 
@@ -1150,14 +1150,14 @@ export default function ComprasModule({
               {/* SECTION 2: LISTA DINÁMICA DE PRODUCTOS A INGRESAR */}
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
-                  <h4 className="text-xs font-black text-gray-800 uppercase tracking-wider flex items-center gap-2">
-                    <Package className="w-4 h-4 text-[#005da9]" />
+                  <h4 className="text-xs font-montserrat font-extrabold text-[#1D3557] uppercase tracking-wider flex items-center gap-2">
+                    <Package className="w-4 h-4 text-[#00BFFF]" />
                     <span>2. Productos e Incremento de Inventario ({formItems.length})</span>
                   </h4>
                   <button
                     type="button"
                     onClick={handleAddItemRow}
-                    className="px-3 py-1.5 bg-blue-50 hover:bg-blue-100 text-[#005da9] font-black text-xs rounded-xl transition flex items-center gap-1.5 border border-blue-200 cursor-pointer"
+                    className="px-3 py-1.5 bg-[#1D3557]/10 hover:bg-[#1D3557]/20 text-[#1D3557] font-montserrat font-extrabold text-xs rounded-xl transition flex items-center gap-1.5 border border-[#1D3557]/20 cursor-pointer"
                   >
                     <Plus className="w-3.5 h-3.5 stroke-[3]" />
                     <span>+ Agregar Producto</span>
@@ -1185,7 +1185,7 @@ export default function ComprasModule({
                               required
                               value={item.product_id}
                               onChange={(e) => handleProductSelect(item.id, e.target.value)}
-                              className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-xs font-bold text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#005da9]"
+                              className="w-full px-3 py-2 bg-[#F8F9FA] border border-gray-200 rounded-xl text-xs font-bold text-[#2B2D42] focus:outline-none focus:ring-2 focus:ring-[#00BFFF]"
                             >
                               <option value="">-- Selecciona un producto del catálogo --</option>
                               {products.map((prod) => (
@@ -1208,7 +1208,7 @@ export default function ComprasModule({
                               required
                               value={item.quantity}
                               onChange={(e) => handleItemFieldChange(item.id, 'quantity', Math.max(1, parseInt(e.target.value, 10) || 1))}
-                              className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-xs font-mono font-black text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#005da9] text-center"
+                              className="w-full px-3 py-2 bg-[#F8F9FA] border border-gray-200 rounded-xl text-xs font-mono font-black text-[#1D3557] focus:outline-none focus:ring-2 focus:ring-[#00BFFF] text-center"
                             />
                           </div>
 
@@ -1226,7 +1226,7 @@ export default function ComprasModule({
                                 required
                                 value={item.unit_cost}
                                 onChange={(e) => handleItemFieldChange(item.id, 'unit_cost', parseFloat(e.target.value) || 0)}
-                                className="w-full pl-6 pr-2 py-2 bg-gray-50 border border-gray-200 rounded-xl text-xs font-mono font-black text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#005da9]"
+                                className="w-full pl-6 pr-2 py-2 bg-[#F8F9FA] border border-gray-200 rounded-xl text-xs font-mono font-black text-[#1D3557] focus:outline-none focus:ring-2 focus:ring-[#00BFFF]"
                               />
                             </div>
                           </div>
@@ -1236,7 +1236,7 @@ export default function ComprasModule({
                             <label className="block text-[9px] font-black uppercase text-gray-400 mb-1">
                               Subtotal
                             </label>
-                            <div className="font-mono font-black text-gray-900 text-xs py-2">
+                            <div className="font-mono font-black text-[#1D3557] text-xs py-2">
                               ${rowSubtotal.toFixed(2)}
                             </div>
                           </div>
@@ -1256,19 +1256,19 @@ export default function ComprasModule({
 
                         {/* IMPACTO EN EL STOCK (INDICADOR VISUAL OBLIGATORIO) */}
                         {item.product_id && (
-                          <div className="bg-blue-50/70 p-2 rounded-xl flex items-center justify-between text-[11px] border border-blue-100">
+                          <div className="bg-[#1D3557]/5 p-2 rounded-xl flex items-center justify-between text-[11px] border border-[#1D3557]/10">
                             <div className="flex items-center gap-2">
-                              <span className="text-gray-500 font-medium">Actualización de Inventario:</span>
-                              <span className="font-mono font-bold text-gray-700 bg-white px-2 py-0.5 rounded border border-gray-200">
+                              <span className="text-[#2B2D42]/70 font-medium">Actualización de Inventario:</span>
+                              <span className="font-mono font-bold text-[#2B2D42] bg-white px-2 py-0.5 rounded border border-gray-200">
                                 Stock Actual: {item.current_stock}
                               </span>
-                              <span className="text-blue-700 font-bold">+</span>
-                              <span className="font-mono font-bold text-blue-700 bg-blue-100 px-2 py-0.5 rounded">
+                              <span className="text-[#1D3557] font-bold">+</span>
+                              <span className="font-mono font-bold text-[#1D3557] bg-[#1D3557]/10 px-2 py-0.5 rounded">
                                 Comprado: {item.quantity}
                               </span>
                               <span className="text-gray-400 font-bold">➔</span>
-                              <span className="font-mono font-black text-emerald-700 bg-emerald-100 px-2.5 py-0.5 rounded flex items-center gap-1">
-                                <Check className="w-3 h-3" />
+                              <span className="font-mono font-black text-[#1D3557] bg-[#40E0D0]/30 px-2.5 py-0.5 rounded flex items-center gap-1">
+                                <Check className="w-3 h-3 text-[#1D3557]" />
                                 Stock Nuevo: {calculatedNewStock}
                               </span>
                             </div>
@@ -1289,7 +1289,7 @@ export default function ComprasModule({
               {/* SECTION 3: NOTAS Y RESUMEN TOTAL */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
                 <div>
-                  <label className="block text-[10px] font-black uppercase text-gray-500 mb-1">
+                  <label className="block text-[10px] font-montserrat font-extrabold uppercase text-[#2B2D42]/70 mb-1">
                     Notas u Observaciones (Opcional)
                   </label>
                   <textarea
@@ -1297,36 +1297,36 @@ export default function ComprasModule({
                     value={notes}
                     onChange={(e) => setNotes(e.target.value)}
                     placeholder="Detalles sobre entrega, crédito, forma de pago u observaciones..."
-                    className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-xs font-medium text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#005da9]"
+                    className="w-full px-3 py-2 bg-[#F8F9FA] border border-gray-200 rounded-xl text-xs font-medium text-[#2B2D42] focus:outline-none focus:ring-2 focus:ring-[#00BFFF]"
                   />
                 </div>
 
-                <div className="bg-slate-900 text-white p-4 rounded-2xl flex flex-col justify-between shadow-md">
+                <div className="bg-[#1D3557] text-white p-4 rounded-2xl flex flex-col justify-between shadow-md">
                   <div className="space-y-1.5 text-xs">
-                    <div className="flex justify-between text-slate-300">
+                    <div className="flex justify-between text-gray-200">
                       <span>Artículos Totales a Ingresar:</span>
-                      <span className="font-mono font-black text-white">{formCalculations.totalItemsCount} unidades</span>
+                      <span className="font-mono font-black text-[#40E0D0]">{formCalculations.totalItemsCount} unidades</span>
                     </div>
                     {bcvRate > 0 && (
-                      <div className="flex justify-between text-slate-400 text-[11px]">
+                      <div className="flex justify-between text-gray-300 text-[11px]">
                         <span>Tasa BCV Aplicable:</span>
                         <span className="font-mono">Bs. {bcvRate.toFixed(2)}</span>
                       </div>
                     )}
                   </div>
 
-                  <div className="border-t border-slate-700 pt-2.5 mt-2 flex items-baseline justify-between">
+                  <div className="border-t border-white/20 pt-2.5 mt-2 flex items-baseline justify-between">
                     <div>
-                      <span className="text-[10px] font-black uppercase tracking-wider text-slate-400 block">
+                      <span className="text-[10px] font-montserrat font-extrabold uppercase tracking-wider text-gray-300 block">
                         TOTAL FACTURA DE COMPRA
                       </span>
-                      <span className="text-xl font-black font-mono text-emerald-400">
+                      <span className="text-xl font-black font-mono text-[#40E0D0]">
                         ${formCalculations.totalAmountUsd.toFixed(2)} USD
                       </span>
                     </div>
                     {bcvRate > 0 && (
                       <div className="text-right">
-                        <span className="text-xs font-mono font-bold text-slate-300 block">
+                        <span className="text-xs font-mono font-bold text-gray-200 block">
                           Bs. {formCalculations.totalAmountBs.toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                         </span>
                       </div>
@@ -1341,7 +1341,7 @@ export default function ComprasModule({
                   type="button"
                   onClick={() => setShowNewModal(false)}
                   disabled={isSubmitting}
-                  className="px-4 py-2.5 bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs font-black rounded-xl transition cursor-pointer"
+                  className="px-4 py-2.5 bg-gray-100 hover:bg-gray-200 text-[#2B2D42] text-xs font-montserrat font-extrabold rounded-xl transition cursor-pointer"
                 >
                   Cancelar
                 </button>
@@ -1349,16 +1349,16 @@ export default function ComprasModule({
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="px-6 py-2.5 bg-[#005da9] hover:bg-[#004a87] text-white text-xs font-black rounded-xl transition shadow-lg hover:shadow-xl uppercase tracking-wider flex items-center gap-2 cursor-pointer disabled:opacity-50"
+                  className="px-6 py-2.5 bg-[#40E0D0] hover:bg-[#36cebe] text-[#1D3557] text-xs font-montserrat font-extrabold rounded-xl transition shadow-lg hover:shadow-xl uppercase tracking-wider flex items-center gap-2 cursor-pointer disabled:opacity-50"
                 >
                   {isSubmitting ? (
                     <>
-                      <RefreshCw className="w-4 h-4 animate-spin" />
+                      <RefreshCw className="w-4 h-4 animate-spin text-[#1D3557]" />
                       <span>Actualizando Inventario...</span>
                     </>
                   ) : (
                     <>
-                      <Check className="w-4 h-4 stroke-[3]" />
+                      <Check className="w-4 h-4 stroke-[3] text-[#1D3557]" />
                       <span>Guardar Compra e Incrementar Stock</span>
                     </>
                   )}
@@ -1376,23 +1376,23 @@ export default function ComprasModule({
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4 overflow-y-auto">
           <div className="bg-white rounded-3xl border border-gray-150 w-full max-w-2xl shadow-2xl overflow-hidden text-left flex flex-col my-auto">
             {/* Header */}
-            <div className="p-4 bg-gray-50 border-b border-gray-200 flex justify-between items-center">
+            <div className="p-4 bg-[#1D3557] text-white flex justify-between items-center">
               <div className="flex items-center gap-2.5">
-                <div className="p-2 bg-blue-50 text-[#005da9] rounded-xl">
-                  <FileText className="w-5 h-5" />
+                <div className="p-2 bg-white/10 text-[#40E0D0] rounded-xl">
+                  <FileText className="w-5 h-5 text-[#40E0D0]" />
                 </div>
                 <div>
-                  <h3 className="text-xs font-black text-gray-900 uppercase tracking-tight">
+                  <h3 className="text-xs font-montserrat font-extrabold text-white uppercase tracking-tight">
                     Detalle de Compra: Factura #{selectedPurchaseDetail.invoice_number}
                   </h3>
-                  <span className="text-[10px] text-gray-500 font-mono">
+                  <span className="text-[10px] text-[#40E0D0] font-mono">
                     Fecha: {selectedPurchaseDetail.date} | Ref: {selectedPurchaseDetail.purchase_number || selectedPurchaseDetail.id}
                   </span>
                 </div>
               </div>
               <button
                 onClick={() => setSelectedPurchaseDetail(null)}
-                className="p-1.5 hover:bg-gray-200 text-gray-400 hover:text-gray-600 rounded-lg transition"
+                className="p-1.5 hover:bg-white/20 text-white rounded-lg transition"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -1401,21 +1401,21 @@ export default function ComprasModule({
             {/* Content */}
             <div className="p-5 space-y-4 max-h-[70vh] overflow-y-auto">
               {/* Provider info card */}
-              <div className="bg-blue-50/50 p-3.5 rounded-2xl border border-blue-100 flex items-center justify-between">
+              <div className="bg-[#1D3557]/5 p-3.5 rounded-2xl border border-[#1D3557]/10 flex items-center justify-between">
                 <div>
-                  <span className="text-[9px] font-black uppercase text-gray-400 block">Proveedor</span>
-                  <h4 className="font-bold text-xs text-gray-900">{selectedPurchaseDetail.provider_name}</h4>
+                  <span className="text-[9px] font-montserrat font-extrabold uppercase text-[#2B2D42]/60 block">Proveedor</span>
+                  <h4 className="font-bold text-xs text-[#1D3557]">{selectedPurchaseDetail.provider_name}</h4>
                   {selectedPurchaseDetail.provider_rif && (
-                    <span className="text-[10px] text-gray-500 font-mono">RIF: {selectedPurchaseDetail.provider_rif}</span>
+                    <span className="text-[10px] text-[#2B2D42]/70 font-mono">RIF: {selectedPurchaseDetail.provider_rif}</span>
                   )}
                 </div>
 
                 <div className="text-right">
-                  <span className="text-[9px] font-black uppercase text-gray-400 block">Estado</span>
-                  <span className={`px-2.5 py-0.5 text-[10px] font-black rounded-full uppercase ${
+                  <span className="text-[9px] font-montserrat font-extrabold uppercase text-[#2B2D42]/60 block">Estado</span>
+                  <span className={`px-2.5 py-0.5 text-[10px] font-montserrat font-extrabold rounded-full uppercase ${
                     selectedPurchaseDetail.status === 'pendiente' 
                       ? 'bg-amber-100 text-amber-800 border border-amber-200' 
-                      : 'bg-emerald-100 text-emerald-800 border border-emerald-200'
+                      : 'bg-[#40E0D0]/20 text-[#1D3557] border border-[#40E0D0]/40'
                   }`}>
                     {selectedPurchaseDetail.status || 'Completada'}
                   </span>
@@ -1423,19 +1423,19 @@ export default function ComprasModule({
               </div>
 
               {/* Payment Method & CXP Installments Info */}
-              <div className="bg-gray-50 border border-gray-150 p-3.5 rounded-2xl text-left space-y-2">
+              <div className="bg-[#F8F9FA] border border-gray-150 p-3.5 rounded-2xl text-left space-y-2">
                 <div className="flex justify-between items-center text-xs">
                   <div>
-                    <span className="text-[9px] font-black uppercase text-gray-400 block">Método de Pago</span>
-                    <span className="font-bold text-gray-800">{selectedPurchaseDetail.payment_method || 'Efectivo USD'}</span>
+                    <span className="text-[9px] font-montserrat font-extrabold uppercase text-[#2B2D42]/60 block">Método de Pago</span>
+                    <span className="font-bold text-[#1D3557]">{selectedPurchaseDetail.payment_method || 'Efectivo USD'}</span>
                   </div>
                   {selectedPurchaseDetail.payment_status && (
                     <div className="text-right">
-                      <span className="text-[9px] font-black uppercase text-gray-400 block">Pago de Compra</span>
-                      <span className={`px-2 py-0.5 rounded-md text-[9px] font-black uppercase ${
+                      <span className="text-[9px] font-montserrat font-extrabold uppercase text-[#2B2D42]/60 block">Pago de Compra</span>
+                      <span className={`px-2 py-0.5 rounded-md text-[9px] font-montserrat font-extrabold uppercase ${
                         selectedPurchaseDetail.payment_status === 'pendiente'
                           ? 'bg-amber-100 text-amber-800 border border-amber-200'
-                          : 'bg-emerald-100 text-emerald-800 border border-emerald-200'
+                          : 'bg-[#40E0D0]/20 text-[#1D3557] border border-[#40E0D0]/40'
                       }`}>
                         {selectedPurchaseDetail.payment_status === 'pendiente' ? 'Pendiente / Crédito' : 'Pagado'}
                       </span>
@@ -1446,20 +1446,20 @@ export default function ComprasModule({
                 {/* List of installments if credit */}
                 {selectedPurchaseDetail.payment_method === 'Crédito / CXP' && selectedPurchaseDetail.installments && selectedPurchaseDetail.installments.length > 0 && (
                   <div className="pt-2 border-t border-gray-200 space-y-2">
-                    <span className="text-[9px] font-black uppercase text-blue-700 block">Calendario de Cuotas (Cuentas por Pagar)</span>
+                    <span className="text-[9px] font-montserrat font-extrabold uppercase text-[#1D3557] block">Calendario de Cuotas (Cuentas por Pagar)</span>
                     <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
                       {selectedPurchaseDetail.installments.map((inst: any, idx: number) => (
                         <div key={idx} className="bg-white p-2 border border-gray-150 rounded-xl space-y-1 text-[11px]">
                           <div className="flex justify-between items-center">
-                            <span className="font-black text-slate-800">Cuota #{inst.number}</span>
+                            <span className="font-bold text-[#1D3557]">Cuota #{inst.number}</span>
                             <span className={`text-[8px] font-black px-1.5 rounded-full uppercase ${
-                              inst.status === 'pagado' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'
+                              inst.status === 'pagado' ? 'bg-[#40E0D0]/30 text-[#1D3557]' : 'bg-amber-100 text-amber-800'
                             }`}>
                               {inst.status}
                             </span>
                           </div>
-                          <div className="text-gray-500 font-medium font-mono text-[10px]">Vence: {inst.due_date}</div>
-                          <div className="font-mono font-black text-gray-900">${Number(inst.amount).toFixed(2)} USD</div>
+                          <div className="text-[#2B2D42]/70 font-medium font-mono text-[10px]">Vence: {inst.due_date}</div>
+                          <div className="font-mono font-black text-[#1D3557]">${Number(inst.amount).toFixed(2)} USD</div>
                         </div>
                       ))}
                     </div>
@@ -1469,12 +1469,12 @@ export default function ComprasModule({
 
               {/* Items Breakdown Table */}
               <div>
-                <h4 className="text-xs font-black text-gray-800 uppercase tracking-wider mb-2">
+                <h4 className="text-xs font-montserrat font-extrabold text-[#1D3557] uppercase tracking-wider mb-2">
                   Productos y Cantidades Compradas
                 </h4>
                 <div className="border border-gray-200 rounded-xl overflow-hidden">
                   <table className="w-full text-left text-xs border-collapse">
-                    <thead className="bg-gray-50 border-b border-gray-200 text-gray-500 font-bold uppercase text-[10px]">
+                    <thead className="bg-[#1D3557] text-white font-montserrat font-extrabold uppercase text-[10px]">
                       <tr>
                         <th className="p-2.5">Producto</th>
                         <th className="p-2.5 text-center">Cant.</th>
@@ -1484,18 +1484,18 @@ export default function ComprasModule({
                     </thead>
                     <tbody className="divide-y divide-gray-100 font-medium">
                       {(selectedPurchaseDetail.items || []).map((it, idx) => (
-                        <tr key={idx} className="hover:bg-gray-50/50">
+                        <tr key={idx} className="hover:bg-[#F8F9FA]">
                           <td className="p-2.5">
-                            <div className="font-bold text-gray-800">{it.product_name}</div>
-                            {it.sku && <div className="text-[10px] text-gray-400 font-mono">SKU: {it.sku}</div>}
+                            <div className="font-bold text-[#1D3557]">{it.product_name}</div>
+                            {it.sku && <div className="text-[10px] text-[#2B2D42]/60 font-mono">SKU: {it.sku}</div>}
                           </td>
-                          <td className="p-2.5 text-center font-mono font-black text-blue-700">
+                          <td className="p-2.5 text-center font-mono font-black text-[#00BFFF]">
                             +{it.quantity}
                           </td>
-                          <td className="p-2.5 text-right font-mono font-bold text-gray-700">
+                          <td className="p-2.5 text-right font-mono font-bold text-[#2B2D42]">
                             ${Number(it.unit_cost || 0).toFixed(2)}
                           </td>
-                          <td className="p-2.5 text-right font-mono font-black text-gray-900">
+                          <td className="p-2.5 text-right font-mono font-black text-[#1D3557]">
                             ${Number(it.subtotal || (it.quantity * it.unit_cost) || 0).toFixed(2)}
                           </td>
                         </tr>
@@ -1507,22 +1507,22 @@ export default function ComprasModule({
 
               {/* Notes if any */}
               {selectedPurchaseDetail.notes && (
-                <div className="bg-gray-50 p-3 rounded-xl border border-gray-200 text-xs text-gray-600">
+                <div className="bg-[#F8F9FA] p-3 rounded-xl border border-gray-200 text-xs text-[#2B2D42]">
                   <strong>Notas:</strong> {selectedPurchaseDetail.notes}
                 </div>
               )}
 
               {/* Total Card */}
-              <div className="bg-slate-900 text-white p-4 rounded-2xl flex items-center justify-between">
+              <div className="bg-[#1D3557] text-white p-4 rounded-2xl flex items-center justify-between">
                 <div>
-                  <span className="text-[10px] font-black uppercase text-slate-400 block">Total de la Compra</span>
-                  <span className="text-xl font-mono font-black text-emerald-400">
+                  <span className="text-[10px] font-montserrat font-extrabold uppercase text-gray-300 block">Total de la Compra</span>
+                  <span className="text-xl font-mono font-black text-[#40E0D0]">
                     ${Number(selectedPurchaseDetail.total_amount || 0).toFixed(2)} USD
                   </span>
                 </div>
                 {bcvRate > 0 && (
                   <div className="text-right">
-                    <span className="text-xs font-mono font-bold text-slate-300 block">
+                    <span className="text-xs font-mono font-bold text-gray-200 block">
                       Bs. {(Number(selectedPurchaseDetail.total_amount || 0) * bcvRate).toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                     </span>
                   </div>
@@ -1531,18 +1531,18 @@ export default function ComprasModule({
             </div>
 
             {/* Footer */}
-            <div className="p-4 bg-gray-50 border-t border-gray-100 flex justify-between items-center">
+            <div className="p-4 bg-[#F8F9FA] border-t border-gray-100 flex justify-between items-center">
               <button
                 onClick={() => handlePrintVoucher(selectedPurchaseDetail)}
-                className="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-black rounded-xl transition flex items-center gap-1.5 shadow-xs cursor-pointer"
+                className="px-4 py-2 bg-[#40E0D0] hover:bg-[#36cebe] text-[#1D3557] text-xs font-montserrat font-extrabold rounded-xl transition flex items-center gap-1.5 shadow-xs cursor-pointer"
               >
-                <Printer className="w-4 h-4" />
+                <Printer className="w-4 h-4 text-[#1D3557]" />
                 <span>Imprimir Comprobante</span>
               </button>
 
               <button
                 onClick={() => setSelectedPurchaseDetail(null)}
-                className="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-800 text-xs font-black rounded-xl transition cursor-pointer"
+                className="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-[#2B2D42] text-xs font-montserrat font-extrabold rounded-xl transition cursor-pointer"
               >
                 Cerrar
               </button>

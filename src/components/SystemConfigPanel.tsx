@@ -918,13 +918,13 @@ export const SystemConfigPanel: React.FC<SystemConfigPanelProps> = ({
   return (
     <div className="bg-white border border-gray-200 rounded-3xl p-6 shadow-xs text-left" id="general_system_configuration_center">
       {/* HEADER SECTION */}
-      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-b border-gray-100 pb-5 mb-6">
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-b border-gray-200 pb-5 mb-6 font-poppins">
         <div>
-          <h3 className="text-lg font-black text-gray-900 uppercase tracking-tight flex items-center gap-2">
-            <Settings className="w-5 h-5 text-[#005da9]" />
+          <h3 className="text-lg font-montserrat font-extrabold text-[#1D3557] uppercase tracking-tight flex items-center gap-2">
+            <Settings className="w-5 h-5 text-[#1D3557]" />
             <span>{t('config.control_center_title', 'Centro de Control de Configuraciones')}</span>
           </h3>
-          <p className="text-xs text-gray-500 font-medium">
+          <p className="text-xs text-[#2B2D42]/80 font-medium">
             {t('config.control_center_subtitle', 'Personalice y administre el comportamiento global de su plataforma. Cada cambio se aplica inmediatamente.')}
           </p>
         </div>
@@ -932,9 +932,9 @@ export const SystemConfigPanel: React.FC<SystemConfigPanelProps> = ({
         <div className="flex items-center gap-2">
           <button
             onClick={handleSaveAll}
-            className="px-5 py-2.5 bg-[#005da9] hover:bg-[#004a87] text-white text-xs font-extrabold rounded-xl flex items-center gap-2 transition shadow-md cursor-pointer"
+            className="px-5 py-2.5 bg-[#1D3557] hover:bg-[#152742] text-white font-montserrat text-xs font-extrabold rounded-xl flex items-center gap-2 transition shadow-md cursor-pointer border-b-2 border-[#40E0D0]"
           >
-            <Save className="w-4 h-4" />
+            <Save className="w-4 h-4 text-[#40E0D0]" />
             <span>{t('app.save_changes', 'Guardar Cambios')}</span>
           </button>
         </div>
@@ -947,22 +947,22 @@ export const SystemConfigPanel: React.FC<SystemConfigPanelProps> = ({
         </div>
       )}
 
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 font-poppins">
         {/* SIDE BAR BUTTONS FOR LAYOUT */}
-        <div className="lg:col-span-1 space-y-1.5 border-r border-gray-100 pr-0 lg:pr-4">
-          <span className="text-[10px] font-black text-gray-400 uppercase tracking-wider block mb-2 px-3">Menú de Ajustes</span>
+        <div className="lg:col-span-1 space-y-1.5 border-r border-gray-150 pr-0 lg:pr-4">
+          <span className="text-[10px] font-black text-[#1D3557] uppercase tracking-wider block mb-2 px-3 font-montserrat">Menú de Ajustes</span>
           {menuItems.map(item => (
             <button
               key={item.id}
               onClick={() => setConfigSubTab(item.id as any)}
-              className={`w-full text-left px-3.5 py-3 rounded-xl transition-all flex flex-col gap-0.5 cursor-pointer border ${
+              className={`w-full text-left px-3.5 py-3 rounded-xl transition-all flex flex-col gap-0.5 cursor-pointer border font-poppins ${
                 configSubTab === item.id
-                  ? 'bg-gradient-to-r from-blue-50 to-[#005da9]/5 border-[#005da9]/20 text-[#005da9]'
-                  : 'bg-white hover:bg-gray-50 border-transparent text-gray-700'
+                  ? 'bg-[#1D3557] border-[#1D3557] text-white shadow-sm'
+                  : 'bg-white hover:bg-gray-50 border-transparent text-[#2B2D42]'
               }`}
             >
-              <span className="font-extrabold text-xs">{item.label}</span>
-              <span className="text-[10px] text-gray-400 font-medium">{item.desc}</span>
+              <span className={`font-extrabold text-xs font-montserrat ${configSubTab === item.id ? 'text-white' : 'text-[#2B2D42]'}`}>{item.label}</span>
+              <span className={`text-[10px] font-medium ${configSubTab === item.id ? 'text-[#40E0D0]' : 'text-gray-400'}`}>{item.desc}</span>
             </button>
           ))}
         </div>

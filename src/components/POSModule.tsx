@@ -1901,25 +1901,46 @@ export default function POSModule({
         COP: parseFloat((total * ratesSnapshot.COP).toFixed(0))
       };
 
-      const detailedSplitPayments = splitPayments.map(sp => {
-        const paymentCurr: CurrencyCode = getMethodCurrency(sp.method);
-        const rateUsed = ratesSnapshot[paymentCurr] || 1;
-        const normUsd = paymentCurr === 'USD' ? sp.amount : sp.amount / rateUsed;
-        const normVes = paymentCurr === 'VES' ? sp.amount : normUsd * ratesSnapshot.VES;
-        const normEur = paymentCurr === 'EUR' ? sp.amount : normUsd * (ratesSnapshot.EUR || 0.92);
-        const normCop = paymentCurr === 'COP' ? sp.amount : normUsd * (ratesSnapshot.COP || 4100);
+      const detailedSplitPayments = paymentCount > 1 
+        ? splitPayments.map(sp => {
+            const paymentCurr: CurrencyCode = getMethodCurrency(sp.method);
+            const rateUsed = ratesSnapshot[paymentCurr] || 1;
+            const normUsd = paymentCurr === 'USD' ? sp.amount : sp.amount / rateUsed;
+            const normVes = paymentCurr === 'VES' ? sp.amount : normUsd * ratesSnapshot.VES;
+            const normEur = paymentCurr === 'EUR' ? sp.amount : normUsd * (ratesSnapshot.EUR || 0.92);
+            const normCop = paymentCurr === 'COP' ? sp.amount : normUsd * (ratesSnapshot.COP || 4100);
 
-        return {
-          method: sp.method,
-          currency: paymentCurr,
-          amount: sp.amount,
-          amount_usd: parseFloat(normUsd.toFixed(2)),
-          amount_ves: parseFloat(normVes.toFixed(2)),
-          amount_eur: parseFloat(normEur.toFixed(2)),
-          amount_cop: parseFloat(normCop.toFixed(0)),
-          rate: rateUsed
-        };
-      });
+            return {
+              method: sp.method,
+              currency: paymentCurr,
+              amount: sp.amount,
+              amount_usd: parseFloat(normUsd.toFixed(2)),
+              amount_ves: parseFloat(normVes.toFixed(2)),
+              amount_eur: parseFloat(normEur.toFixed(2)),
+              amount_cop: parseFloat(normCop.toFixed(0)),
+              rate: rateUsed
+            };
+          })
+        : (() => {
+            const paymentCurr: CurrencyCode = getMethodCurrency(paymentMethod);
+            const rateUsed = ratesSnapshot[paymentCurr] || rateForThisInvoice;
+            const normUsd = total;
+            const normVes = total * ratesSnapshot.VES;
+            const normEur = total * (ratesSnapshot.EUR || 0.92);
+            const normCop = total * (ratesSnapshot.COP || 4100);
+            const amtInMethodCurr = paymentCurr === 'USD' ? normUsd : paymentCurr === 'VES' ? normVes : paymentCurr === 'EUR' ? normEur : normCop;
+
+            return [{
+              method: paymentMethod,
+              currency: paymentCurr,
+              amount: parseFloat(amtInMethodCurr.toFixed(2)),
+              amount_usd: parseFloat(normUsd.toFixed(2)),
+              amount_ves: parseFloat(normVes.toFixed(2)),
+              amount_eur: parseFloat(normEur.toFixed(2)),
+              amount_cop: parseFloat(normCop.toFixed(0)),
+              rate: rateUsed
+            }];
+          })();
 
       const finalPaymentMethod = paymentCount > 1 
         ? `Multimétodo: ${splitPayments.map(p => `${p.method} (${p.amount} ${getMethodCurrency(p.method)})`).join(' + ')}`
@@ -2072,14 +2093,14 @@ export default function POSModule({
   const activeClientObj = clients.find(c => (c.name || '').toLowerCase() === selectedClient.toLowerCase());
 
   return (
-    <div className="relative text-left p-4 md:p-6 bg-gray-50/50 min-h-screen">
+    <div className="relative text-left p-4 md:p-6 bg-[#F8F9FA] min-h-screen font-poppins text-[#2B2D42]">
       
       {/* Modal: Agregar Cargo Extra */}
       {showExtraChargeModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4">
-          <div className="bg-white rounded-3xl border border-gray-100 w-full max-w-sm shadow-2xl p-5 space-y-4 text-left">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4 font-poppins">
+          <div className="bg-white rounded-3xl border border-[#1D3557]/20 w-full max-w-sm shadow-2xl p-5 space-y-4 text-left">
             <div className="flex justify-between items-center pb-2 border-b border-gray-100">
-              <h3 className="text-sm font-black text-gray-800">Agregar Cargo Extra</h3>
+              <h3 className="text-sm font-montserrat font-extrabold text-[#1D3557]">Agregar Cargo Extra</h3>
               <button
                 type="button"
                 onClick={() => setShowExtraChargeModal(false)}
@@ -2091,25 +2112,25 @@ export default function POSModule({
 
             <div className="space-y-3">
               <div>
-                <label className="block text-xs font-bold text-gray-600 mb-1">Concepto del cargo</label>
+                <label className="block text-xs font-bold text-[#2B2D42] mb-1">Concepto del cargo</label>
                 <input
                   type="text"
                   value={extraChargeName}
                   onChange={(e) => setExtraChargeName(e.target.value)}
                   placeholder="Ej: Delivery, Empaque, Servicio"
-                  className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-xs font-bold text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#005da9]"
+                  className="w-full px-3 py-2 bg-[#F8F9FA] border border-gray-200 rounded-xl text-xs font-bold text-[#2B2D42] focus:outline-none focus:ring-2 focus:ring-[#00BFFF]"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-bold text-gray-600 mb-1">Monto en Dólares ($)</label>
+                <label className="block text-xs font-bold text-[#2B2D42] mb-1">Monto en Dólares ($)</label>
                 <input
                   type="number"
                   step="0.01"
                   value={extraChargeAmount}
                   onChange={(e) => setExtraChargeAmount(e.target.value)}
                   placeholder="0.00"
-                  className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-xs font-mono font-bold text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#005da9]"
+                  className="w-full px-3 py-2 bg-[#F8F9FA] border border-gray-200 rounded-xl text-xs font-mono font-bold text-[#2B2D42] focus:outline-none focus:ring-2 focus:ring-[#00BFFF]"
                 />
               </div>
             </div>
@@ -2118,7 +2139,7 @@ export default function POSModule({
               <button
                 type="button"
                 onClick={() => setShowExtraChargeModal(false)}
-                className="flex-1 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold text-xs rounded-xl transition"
+                className="flex-1 py-2 bg-gray-100 hover:bg-gray-200 text-[#2B2D42] font-bold text-xs rounded-xl transition cursor-pointer"
               >
                 Cancelar
               </button>
@@ -2133,7 +2154,7 @@ export default function POSModule({
                   setShowExtraChargeModal(false);
                   setExtraChargeAmount('');
                 }}
-                className="flex-1 py-2 bg-[#005da9] hover:bg-[#004b88] text-white font-black text-xs rounded-xl transition shadow-xs"
+                className="flex-1 py-2 bg-[#40E0D0] hover:bg-[#36cebe] text-[#1D3557] font-montserrat font-extrabold text-xs rounded-xl transition shadow-xs cursor-pointer"
               >
                 Agregar
               </button>
@@ -2149,28 +2170,28 @@ export default function POSModule({
             ? 'bg-emerald-50 border-emerald-200 text-emerald-800' 
             : 'bg-rose-50 border-rose-200 text-rose-800'
         }`}>
-          {toast.type === 'success' ? <CheckCircle className="w-4 h-4" /> : <AlertCircle className="w-4 h-4" />}
+          {toast.type === 'success' ? <CheckCircle className="w-4 h-4 text-emerald-600" /> : <AlertCircle className="w-4 h-4 text-rose-600" />}
           <span>{toast.message}</span>
         </div>
       )}
 
       {/* TOP HEADER CARD WITH QUICK ACTION BUTTONS */}
-      <div className="bg-white border border-gray-100 rounded-2xl shadow-xs p-4 mb-6">
+      <div className="bg-white border border-[#1D3557]/15 rounded-2xl shadow-xs p-4 mb-6">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div className="flex items-center gap-3">
-            <div className="p-2.5 bg-[#005da9]/10 text-[#005da9] rounded-2xl shrink-0">
+            <div className="p-2.5 bg-[#1D3557] text-[#40E0D0] rounded-2xl shrink-0 shadow-xs">
               <ShoppingBag className="w-6 h-6" />
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h2 className="text-lg font-black text-gray-900 uppercase tracking-tight">Venta Flash</h2>
+                <h2 className="text-lg font-montserrat font-extrabold text-[#1D3557] uppercase tracking-tight">Venta Flash</h2>
                 {activeSession && (
-                  <span className="text-[10px] font-black px-2.5 py-0.5 rounded-full border bg-emerald-50 border-emerald-200 text-emerald-700">
+                  <span className="text-[10px] font-montserrat font-black px-2.5 py-0.5 rounded-full border bg-[#40E0D0]/20 border-[#40E0D0] text-[#1D3557]">
                     🟢 CAJA ABIERTA (#{activeSession.session_code || activeSession.id?.slice(0, 5)})
                   </span>
                 )}
               </div>
-              <p className="text-xs text-gray-400 font-medium">Facturación rápida, punto de venta y cobranzas</p>
+              <p className="text-xs text-[#2B2D42]/80 font-medium">Facturación rápida, punto de venta y cobranzas en caja</p>
             </div>
           </div>
 
@@ -2186,7 +2207,7 @@ export default function POSModule({
                   setAperturaEmployee(defaultEmp);
                   setShowOpenCajaModal(true);
                 }}
-                className="px-3.5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-black rounded-xl transition flex items-center gap-1.5 cursor-pointer shadow-md hover:shadow-lg"
+                className="px-3.5 py-2 bg-[#40E0D0] hover:bg-[#36cebe] text-[#1D3557] font-montserrat text-xs font-extrabold rounded-xl transition flex items-center gap-1.5 cursor-pointer shadow-md hover:shadow-lg"
                 title="Abrir Caja registradora para iniciar turno"
               >
                 <Unlock className="w-4 h-4 shrink-0" />
@@ -2196,7 +2217,7 @@ export default function POSModule({
               <button 
                 type="button"
                 onClick={prepareCloseCajaModal}
-                className="px-3.5 py-2 bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 text-xs font-black rounded-xl transition flex items-center gap-1.5 cursor-pointer shadow-2xs"
+                className="px-3.5 py-2 bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 text-xs font-bold rounded-xl transition flex items-center gap-1.5 cursor-pointer shadow-2xs"
                 title="Cerrar Caja registradora y realizar arqueo"
               >
                 <Lock className="w-3.5 h-3.5 text-rose-600 shrink-0" />
@@ -2207,14 +2228,14 @@ export default function POSModule({
             {/* Botón Facturas en Espera (Pausadas) - Siempre visible */}
             <button 
               onClick={() => setShowDraftsListModal(true)}
-              className={`px-3.5 py-2 text-xs font-black rounded-xl transition-all flex items-center gap-2 shadow-md cursor-pointer border ${
+              className={`px-3.5 py-2 text-xs font-montserrat font-extrabold rounded-xl transition-all flex items-center gap-2 shadow-md cursor-pointer border ${
                 draftInvoices.length > 0
-                  ? 'bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white border-amber-600 animate-pulse hover:shadow-lg'
-                  : 'bg-amber-50 hover:bg-amber-100 text-amber-700 border-amber-200 hover:shadow-sm'
+                  ? 'bg-[#00BFFF] hover:bg-[#00a8e0] text-white border-[#00BFFF] animate-pulse hover:shadow-lg'
+                  : 'bg-[#F8F9FA] hover:bg-gray-100 text-[#1D3557] border-gray-300 hover:shadow-sm'
               }`}
               title="Abrir pantalla flotante con ventas en espera"
             >
-              <Pause className={`w-4 h-4 shrink-0 ${draftInvoices.length > 0 ? 'fill-white' : 'fill-amber-400'}`} />
+              <Pause className={`w-4 h-4 shrink-0 ${draftInvoices.length > 0 ? 'fill-white' : 'fill-[#00BFFF]'}`} />
               <span>Facturas en Espera ({draftInvoices.length})</span>
             </button>
 
@@ -2224,10 +2245,10 @@ export default function POSModule({
                 setShowHistoryModal(true);
                 loadInvoiceData();
               }}
-              className="px-3.5 py-2 bg-white hover:bg-gray-50 text-[#005da9] border border-gray-200 text-xs font-bold rounded-xl transition flex items-center gap-1.5 cursor-pointer shadow-2xs"
+              className="px-3.5 py-2 bg-white hover:bg-[#F8F9FA] text-[#1D3557] border border-[#1D3557]/20 text-xs font-bold rounded-xl transition flex items-center gap-1.5 cursor-pointer shadow-2xs"
               title="Buscar y revisar historial de facturas y notas de entrega emitidas"
             >
-              <FileText className="w-3.5 h-3.5 text-[#005da9]" />
+              <FileText className="w-3.5 h-3.5 text-[#00BFFF]" />
               <span>Últimas Facturas</span>
             </button>
 
@@ -2240,14 +2261,14 @@ export default function POSModule({
                 setManualObservations('');
                 setShowManualModal(true);
               }}
-              className="px-3.5 py-2 bg-white hover:bg-gray-50 text-[#005da9] border border-gray-200 text-xs font-bold rounded-xl transition flex items-center gap-1.5 cursor-pointer shadow-2xs"
+              className="px-3.5 py-2 bg-white hover:bg-[#F8F9FA] text-[#1D3557] border border-[#1D3557]/20 text-xs font-bold rounded-xl transition flex items-center gap-1.5 cursor-pointer shadow-2xs"
               title="Registrar Ingreso u Egreso Financiero"
             >
-              <DollarSign className="w-3.5 h-3.5 text-[#005da9]" />
+              <DollarSign className="w-3.5 h-3.5 text-[#00BFFF]" />
               <span>ingreso/egreso</span>
             </button>
 
-            {/* Botón Crear Producto (Vinculado a pantalla + Nuevo Producto) */}
+            {/* Botón Crear Producto */}
             <button 
               onClick={() => {
                 if (onOpenProductForm) {
@@ -2256,10 +2277,10 @@ export default function POSModule({
                   setShowCreateProductModal(true);
                 }
               }}
-              className="px-3.5 py-2 bg-white hover:bg-gray-50 text-[#005da9] border border-gray-200 text-xs font-bold rounded-xl transition flex items-center gap-1.5 cursor-pointer shadow-2xs"
+              className="px-3.5 py-2 bg-white hover:bg-[#F8F9FA] text-[#1D3557] border border-[#1D3557]/20 text-xs font-bold rounded-xl transition flex items-center gap-1.5 cursor-pointer shadow-2xs"
               title="Crear un nuevo producto en el catálogo"
             >
-              <PackagePlus className="w-3.5 h-3.5 text-[#005da9]" />
+              <PackagePlus className="w-3.5 h-3.5 text-[#00BFFF]" />
               <span>+ Crear Producto</span>
             </button>
           </div>
@@ -2278,12 +2299,12 @@ export default function POSModule({
             <div className="relative mb-4 flex items-center gap-2">
               <div className="relative flex-1">
                 <div className="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-400">
-                  <Search className="w-4 h-4 text-[#005da9]" />
+                  <Search className="w-4 h-4 text-[#00BFFF]" />
                 </div>
                 <input
                   type="text"
                   placeholder="Buscar producto por SKU (ej: 99999), Nombre, Marca o escanea Código de Barras..."
-                  className="w-full pl-10 pr-12 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-xs font-bold text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#005da9] focus:bg-white transition font-bold"
+                  className="w-full pl-10 pr-12 py-2.5 bg-[#F8F9FA] border border-gray-200 rounded-xl text-xs font-bold text-[#2B2D42] focus:outline-none focus:ring-2 focus:ring-[#00BFFF] focus:bg-white transition font-bold"
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   onKeyDown={handleSearchKeyDown}
@@ -2302,10 +2323,10 @@ export default function POSModule({
                   <button
                     type="button"
                     onClick={() => setShowPosScanner(true)}
-                    className="p-1 text-[#005da9] hover:text-white hover:bg-[#005da9] rounded-md transition-all cursor-pointer flex items-center justify-center border border-[#005da9]/10 bg-[#005da9]/5"
+                    className="p-1 text-[#1D3557] hover:text-white hover:bg-[#1D3557] rounded-md transition-all cursor-pointer flex items-center justify-center border border-[#1D3557]/10 bg-[#1D3557]/5"
                     title="Escanear con cámara"
                   >
-                    <Scan className="w-4 h-4" />
+                    <Scan className="w-4 h-4 text-[#00BFFF]" />
                   </button>
                 </div>
               </div>
@@ -2326,10 +2347,10 @@ export default function POSModule({
             <div className="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none">
               <button
                 onClick={() => setSelectedCategoryId('all')}
-                className={`px-3 py-1.5 rounded-xl text-xs font-black transition shrink-0 border cursor-pointer ${
+                className={`px-3 py-1.5 rounded-xl text-xs font-montserrat font-black transition shrink-0 border cursor-pointer ${
                   selectedCategoryId === 'all'
-                    ? 'bg-[#005da9] text-white border-[#004b87] shadow-xs'
-                    : 'bg-gray-50 text-gray-600 border-gray-200 hover:bg-gray-100'
+                    ? 'bg-[#1D3557] text-white border-[#1D3557] shadow-xs'
+                    : 'bg-[#F8F9FA] text-[#2B2D42] border-gray-200 hover:bg-gray-100'
                 }`}
               >
                 Todos ({displayProductsList.length})
@@ -2340,10 +2361,10 @@ export default function POSModule({
                   <button
                     key={cat.id}
                     onClick={() => setSelectedCategoryId(cat.id)}
-                    className={`px-3 py-1.5 rounded-xl text-xs font-extrabold transition shrink-0 border cursor-pointer ${
+                    className={`px-3 py-1.5 rounded-xl text-xs font-montserrat font-extrabold transition shrink-0 border cursor-pointer ${
                       selectedCategoryId === cat.id
-                        ? 'bg-[#005da9] text-white border-[#004b87] shadow-xs'
-                        : 'bg-gray-50 text-gray-600 border-gray-200 hover:bg-gray-100'
+                        ? 'bg-[#1D3557] text-white border-[#1D3557] shadow-xs'
+                        : 'bg-[#F8F9FA] text-[#2B2D42] border-gray-200 hover:bg-gray-100'
                     }`}
                   >
                     {cat.name} ({count})
@@ -2354,7 +2375,7 @@ export default function POSModule({
           </div>
 
           {/* GRILLA DE PRODUCTOS Y SELECCIÓN RÁPIDA */}
-          <div className="bg-white border border-gray-100 rounded-2xl shadow-xs p-5">
+          <div className="bg-white border border-[#1D3557]/15 rounded-2xl shadow-xs p-5">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4 pb-3 border-b border-gray-100">
               <div className="flex items-center gap-2.5">
                 <div className="p-2 bg-amber-50 text-amber-600 rounded-xl border border-amber-200/80 shadow-3xs">
@@ -2362,13 +2383,13 @@ export default function POSModule({
                 </div>
                 <div>
                   <div className="flex items-center gap-2">
-                    <span className="text-xs font-black text-gray-800 uppercase tracking-tight">Catálogo de Productos</span>
+                    <span className="text-xs font-montserrat font-extrabold text-[#1D3557] uppercase tracking-tight">Catálogo de Productos</span>
                     <span className="bg-amber-100 text-amber-900 text-[9px] px-2 py-0.5 rounded-full font-black border border-amber-300/70 flex items-center gap-1 shadow-3xs">
                       <Flame className="w-2.5 h-2.5 text-amber-600 fill-amber-600" />
                       Top 10 Más Vendidos
                     </span>
                   </div>
-                  <p className="text-[10px] text-gray-400 font-medium mt-0.5">
+                  <p className="text-[10px] text-[#2B2D42]/70 font-medium mt-0.5">
                     {catalogShowLimit === 'top10'
                       ? 'Mostrando únicamente los 10 productos más vendidos'
                       : 'Mostrando catálogo completo de productos'
@@ -2378,14 +2399,14 @@ export default function POSModule({
               </div>
 
               <div className="flex items-center gap-2">
-                <div className="inline-flex bg-gray-100/80 p-1 rounded-xl border border-gray-200/80">
+                <div className="inline-flex bg-[#F8F9FA] p-1 rounded-xl border border-gray-200">
                   <button
                     type="button"
                     onClick={() => setCatalogShowLimit('top10')}
                     className={`px-2.5 py-1 rounded-lg text-[10px] font-black transition flex items-center gap-1 cursor-pointer ${
                       catalogShowLimit === 'top10'
                         ? 'bg-amber-500 text-white shadow-xs font-black'
-                        : 'text-gray-500 hover:text-gray-900'
+                        : 'text-[#2B2D42] hover:text-[#1D3557]'
                     }`}
                   >
                     <Flame className="w-3 h-3 text-white fill-white" />
@@ -2396,8 +2417,8 @@ export default function POSModule({
                     onClick={() => setCatalogShowLimit('all')}
                     className={`px-2.5 py-1 rounded-lg text-[10px] font-black transition flex items-center gap-1 cursor-pointer ${
                       catalogShowLimit === 'all'
-                        ? 'bg-[#005da9] text-white shadow-xs font-black'
-                        : 'text-gray-500 hover:text-gray-900'
+                        ? 'bg-[#1D3557] text-white shadow-xs font-black'
+                        : 'text-[#2B2D42] hover:text-[#1D3557]'
                     }`}
                   >
                     <Grid className="w-3 h-3 text-white" />
@@ -2405,20 +2426,20 @@ export default function POSModule({
                   </button>
                 </div>
 
-                <span className="text-[10px] font-extrabold text-gray-500 bg-gray-50 border border-gray-200 px-2.5 py-1 rounded-xl shrink-0">
+                <span className="text-[10px] font-extrabold text-[#2B2D42] bg-[#F8F9FA] border border-gray-200 px-2.5 py-1 rounded-xl shrink-0">
                   {filteredProducts.length} ítems
                 </span>
               </div>
             </div>
 
             {filteredProducts.length === 0 ? (
-              <div className="py-12 text-center text-gray-400 bg-gray-50/50 rounded-2xl border border-dashed border-gray-200">
+              <div className="py-12 text-center text-gray-400 bg-[#F8F9FA] rounded-2xl border border-dashed border-gray-200">
                 <Package className="w-9 h-9 mx-auto mb-2 text-gray-300" />
-                <p className="text-xs font-bold text-gray-500">No se encontraron productos en esta categoría o búsqueda.</p>
+                <p className="text-xs font-bold text-[#2B2D42]">No se encontraron productos en esta categoría o búsqueda.</p>
                 <button
                   type="button"
                   onClick={() => { setSelectedCategoryId('all'); setSearchTerm(''); setCatalogShowLimit('all'); }}
-                  className="mt-3 text-[11px] font-extrabold text-[#005da9] hover:underline cursor-pointer"
+                  className="mt-3 text-[11px] font-extrabold text-[#00BFFF] hover:underline cursor-pointer"
                 >
                   Ver todos los productos
                 </button>
@@ -2442,14 +2463,14 @@ export default function POSModule({
                     onClick={() => !isOutOfStock && addToCart(p)}
                     className={`p-2.5 border rounded-2xl flex flex-col justify-between transition text-left relative overflow-hidden group ${
                       isVentaLibre
-                        ? 'bg-amber-50/50 border-amber-300 hover:border-[#005da9] hover:shadow-xs cursor-pointer'
+                        ? 'bg-amber-50/50 border-amber-300 hover:border-[#00BFFF] hover:shadow-xs cursor-pointer'
                         : isOutOfStock 
-                          ? 'bg-gray-50/80 border-gray-100 opacity-50 cursor-not-allowed' 
-                          : 'bg-white border-gray-200 hover:border-[#005da9] hover:shadow-md cursor-pointer'
+                          ? 'bg-[#F8F9FA] border-gray-100 opacity-50 cursor-not-allowed' 
+                          : 'bg-white border-gray-200 hover:border-[#00BFFF] hover:shadow-md cursor-pointer'
                     }`}
                   >
                     {/* Thumbnail Image Container */}
-                    <div className="relative w-full h-24 sm:h-28 mb-2 rounded-xl bg-gray-50 border border-gray-100 overflow-hidden flex items-center justify-center shrink-0">
+                    <div className="relative w-full h-24 sm:h-28 mb-2 rounded-xl bg-[#F8F9FA] border border-gray-100 overflow-hidden flex items-center justify-center shrink-0">
                       {imgUrl ? (
                         <img 
                           src={imgUrl} 
@@ -2481,7 +2502,7 @@ export default function POSModule({
                       )}
 
                       {qtyInCart > 0 && (
-                        <span className="absolute top-1.5 right-1.5 bg-[#005da9] text-white font-extrabold text-[10px] rounded-full w-5 h-5 flex items-center justify-center shadow-md border border-white z-10 animate-bounce-short">
+                        <span className="absolute top-1.5 right-1.5 bg-[#1D3557] text-[#40E0D0] font-montserrat font-extrabold text-[10px] rounded-full w-5 h-5 flex items-center justify-center shadow-md border border-white z-10 animate-bounce-short">
                           {qtyInCart}
                         </span>
                       )}
@@ -2495,12 +2516,12 @@ export default function POSModule({
 
                     <div>
                       <div className="flex justify-between items-start gap-1">
-                        <span className="text-[11px] font-black text-gray-800 line-clamp-2 leading-snug group-hover:text-[#005da9] transition">{p.name}</span>
+                        <span className="text-[11px] font-black text-[#2B2D42] line-clamp-2 leading-snug group-hover:text-[#1D3557] transition">{p.name}</span>
                       </div>
                       <div className="flex items-center gap-1.5 mt-1 flex-wrap">
                         <span className="text-[9px] text-gray-400 font-mono font-bold">{p.sku}</span>
                         {p.barcode_qr && (
-                          <span className="text-[8px] text-[#005da9] bg-blue-50 px-1 py-0.2 rounded font-mono font-bold">
+                          <span className="text-[8px] text-[#1D3557] bg-[#1D3557]/10 px-1 py-0.2 rounded font-mono font-bold">
                             📟 {p.barcode_qr}
                           </span>
                         )}
@@ -2509,7 +2530,7 @@ export default function POSModule({
 
                     <div className="flex items-center justify-between mt-2.5 pt-2 border-t border-gray-100">
                       {isVentaLibre ? (
-                        <span className="text-xs font-black text-[#005da9]">Precio abierto</span>
+                        <span className="text-xs font-montserrat font-black text-[#1D3557]">Precio abierto</span>
                       ) : (
                         (() => {
                           const activeRate = customBcvRate > 0 ? customBcvRate : (bcvRate > 0 ? bcvRate : (currencyRates?.VES || 36.5));
@@ -2520,10 +2541,10 @@ export default function POSModule({
                           const decimalPart = standardParts[1] || '00';
 
                           return (
-                            <div className="flex items-start text-[#0F1111] select-none font-sans">
-                              <span className="text-[10px] font-black mr-0.5 mt-[1px] text-gray-900">Bs.</span>
-                              <span className="text-sm sm:text-base font-black leading-none tracking-tight text-gray-900">{integerPart}</span>
-                              <span className="text-[10px] font-bold ml-[0.5px] leading-none mt-[1px] text-gray-900">,{decimalPart}</span>
+                            <div className="flex items-start text-[#2B2D42] select-none font-sans">
+                              <span className="text-[10px] font-black mr-0.5 mt-[1px] text-[#2B2D42]">Bs.</span>
+                              <span className="text-sm sm:text-base font-black leading-none tracking-tight text-[#1D3557]">{integerPart}</span>
+                              <span className="text-[10px] font-bold ml-[0.5px] leading-none mt-[1px] text-[#1D3557]">,{decimalPart}</span>
                             </div>
                           );
                         })()
@@ -2553,11 +2574,11 @@ export default function POSModule({
         <div className="xl:col-span-5 space-y-6">
 
           {/* TABLA / LISTA DE ÍTEMS AGREGADOS (PRODUCTOS EN LA VENTA) */}
-          <div className="bg-white border border-gray-100 rounded-2xl shadow-xs p-5">
+          <div className="bg-white border border-[#1D3557]/15 rounded-2xl shadow-xs p-5">
             <div className="flex items-center justify-between mb-3">
               <div className="flex items-center gap-2">
-                <ShoppingCart className="w-4 h-4 text-[#005da9]" />
-                <span className="text-xs font-black text-gray-800 uppercase tracking-tight">
+                <ShoppingCart className="w-4 h-4 text-[#1D3557]" />
+                <span className="text-xs font-montserrat font-extrabold text-[#1D3557] uppercase tracking-tight">
                   Productos en la Venta ({cart.reduce((sum, item) => sum + item.qty, 0)} ítems)
                 </span>
               </div>
@@ -2654,7 +2675,7 @@ export default function POSModule({
                               <button
                                 type="button"
                                 onClick={() => openVentaLibreModal(item.product)}
-                                className="text-[10px] text-[#005da9] hover:underline font-bold flex items-center gap-0.5 cursor-pointer"
+                                className="text-[10px] text-[#00BFFF] hover:underline font-bold flex items-center gap-0.5 cursor-pointer"
                               >
                                 <Pencil className="w-3 h-3" />
                                 Editar
@@ -2712,34 +2733,34 @@ export default function POSModule({
           </div>
 
           {/* DATOS DE FACTURA O NOTA DE ENTREGA: 2-COLUMN MODERN CHECKOUT */}
-          <div className="bg-white border border-gray-100 rounded-3xl shadow-sm p-5 md:p-6 space-y-6">
+          <div className="bg-white border border-[#1D3557]/15 rounded-3xl shadow-xs p-5 md:p-6 space-y-6">
             
             {/* Header / Tipo de Documento & Cliente */}
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-gray-100">
               <div className="flex items-center gap-3">
-                <div className="flex bg-gray-100/90 p-1 rounded-2xl border border-gray-200/80">
+                <div className="flex bg-[#F8F9FA] p-1 rounded-2xl border border-gray-200">
                   <button
                     type="button"
                     onClick={() => setDocumentType('factura')}
-                    className={`px-4 py-2 text-xs font-black rounded-xl transition-all flex items-center gap-2 cursor-pointer ${
+                    className={`px-4 py-2 text-xs font-montserrat font-extrabold rounded-xl transition-all flex items-center gap-2 cursor-pointer ${
                       documentType === 'factura'
-                        ? 'bg-[#005da9] text-white shadow-xs'
-                        : 'text-gray-600 hover:text-gray-900'
+                        ? 'bg-[#1D3557] text-white shadow-xs'
+                        : 'text-[#2B2D42] hover:text-[#1D3557]'
                     }`}
                   >
-                    <FileText className="w-4 h-4" />
+                    <FileText className="w-4 h-4 text-[#40E0D0]" />
                     <span>Factura</span>
                   </button>
                   <button
                     type="button"
                     onClick={() => setDocumentType('nota_entrega')}
-                    className={`px-4 py-2 text-xs font-black rounded-xl transition-all flex items-center gap-2 cursor-pointer ${
+                    className={`px-4 py-2 text-xs font-montserrat font-extrabold rounded-xl transition-all flex items-center gap-2 cursor-pointer ${
                       documentType === 'nota_entrega'
-                        ? 'bg-amber-600 text-white shadow-xs'
-                        : 'text-gray-600 hover:text-gray-900'
+                        ? 'bg-[#00BFFF] text-white shadow-xs'
+                        : 'text-[#2B2D42] hover:text-[#1D3557]'
                     }`}
                   >
-                    <FileCheck className="w-4 h-4" />
+                    <FileCheck className="w-4 h-4 text-white" />
                     <span>Nota de Entrega</span>
                   </button>
                 </div>
@@ -2754,7 +2775,7 @@ export default function POSModule({
                     onChange={(e) => handleClientChange(e.target.value)}
                     onFocus={() => { if (selectedClient && selectedClient !== 'Consumidor final') setShowClientSuggestions(filteredClients.length > 0); }}
                     onBlur={() => setTimeout(() => setShowClientSuggestions(false), 200)}
-                    className="w-full px-3.5 py-2 bg-gray-50 border border-gray-200 rounded-xl text-xs font-bold text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#005da9] focus:bg-white transition"
+                    className="w-full px-3.5 py-2 bg-[#F8F9FA] border border-gray-200 rounded-xl text-xs font-bold text-[#2B2D42] focus:outline-none focus:ring-2 focus:ring-[#00BFFF] focus:bg-white transition"
                     placeholder="Consumidor final o nombre cliente"
                   />
                   {showClientSuggestions && (
@@ -2767,7 +2788,7 @@ export default function POSModule({
                             setSelectedClient(c.name);
                             setShowClientSuggestions(false);
                           }}
-                          className="w-full px-3 py-2 text-left hover:bg-blue-50 text-gray-800 font-bold transition flex justify-between"
+                          className="w-full px-3 py-2 text-left hover:bg-[#1D3557]/5 text-[#2B2D42] font-bold transition flex justify-between"
                         >
                           <span>{c.name}</span>
                           <span className="font-mono text-gray-400">{c.document}</span>
@@ -2779,10 +2800,10 @@ export default function POSModule({
                 <button
                   type="button"
                   onClick={() => setShowClientSearchModal(true)}
-                  className="p-2 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl transition cursor-pointer"
+                  className="p-2 bg-gray-100 hover:bg-gray-200 text-[#2B2D42] rounded-xl transition cursor-pointer"
                   title="Buscar cliente registrado"
                 >
-                  <Search className="w-4 h-4" />
+                  <Search className="w-4 h-4 text-[#1D3557]" />
                 </button>
                 <button
                   type="button"
@@ -2795,10 +2816,10 @@ export default function POSModule({
                     setNewClientCredit('0');
                     setShowQuickClientModal(true);
                   }}
-                  className="p-2 bg-blue-50 hover:bg-blue-100 text-[#005da9] rounded-xl transition cursor-pointer"
+                  className="p-2 bg-[#1D3557]/10 hover:bg-[#1D3557]/20 text-[#1D3557] rounded-xl transition cursor-pointer"
                   title="Crear nuevo cliente"
                 >
-                  <UserPlus className="w-4 h-4" />
+                  <UserPlus className="w-4 h-4 text-[#1D3557]" />
                 </button>
               </div>
             </div>
@@ -2808,31 +2829,31 @@ export default function POSModule({
               
               {/* LEFT COLUMN: RESUMEN (lg:col-span-5) */}
               <div className="lg:col-span-5 space-y-4">
-                <div className="border border-gray-150 rounded-3xl p-5 bg-white shadow-2xs space-y-4">
-                  <div className="text-center pb-2 border-b border-gray-100">
-                    <span className="text-sm font-black text-gray-900 tracking-tight">Resumen:</span>
+                <div className="border border-[#1D3557]/15 rounded-3xl p-5 bg-[#F8F9FA]/50 shadow-2xs space-y-4">
+                  <div className="text-center pb-2 border-b border-gray-200">
+                    <span className="text-sm font-montserrat font-extrabold text-[#1D3557] tracking-tight">Resumen de Cuenta:</span>
                   </div>
 
-                  {/* Subtotal con Acordeón desplegable (Image 4) */}
+                  {/* Subtotal con Acordeón desplegable */}
                   <div className="space-y-1.5">
                     <button
                       type="button"
                       onClick={() => setIsResumenOpen(!isResumenOpen)}
-                      className="w-full flex items-center justify-between text-xs font-bold text-gray-700 hover:text-[#005da9] transition cursor-pointer"
+                      className="w-full flex items-center justify-between text-xs font-bold text-[#2B2D42] hover:text-[#1D3557] transition cursor-pointer"
                     >
                       <div className="flex items-center gap-1.5">
                         <span>Subtotal:</span>
-                        <ChevronRight className={`w-3.5 h-3.5 text-[#005da9] transition-transform duration-200 ${isResumenOpen ? 'rotate-90' : ''}`} />
+                        <ChevronRight className={`w-3.5 h-3.5 text-[#00BFFF] transition-transform duration-200 ${isResumenOpen ? 'rotate-90' : ''}`} />
                       </div>
-                      <span className="font-mono font-black text-gray-900">${subtotal.toFixed(2)}</span>
+                      <span className="font-mono font-black text-[#1D3557]">${subtotal.toFixed(2)}</span>
                     </button>
 
                     {isResumenOpen && (
-                      <div className="pl-3 pr-2 py-2 bg-gray-50/80 rounded-2xl border border-gray-150 space-y-1.5 text-[11px] max-h-44 overflow-y-auto">
+                      <div className="pl-3 pr-2 py-2 bg-white rounded-2xl border border-gray-200 space-y-1.5 text-[11px] max-h-44 overflow-y-auto">
                         {cart.map((item, idx) => (
-                          <div key={idx} className="flex justify-between items-center text-gray-600">
+                          <div key={idx} className="flex justify-between items-center text-[#2B2D42]">
                             <span className="truncate pr-2">{item.product.name} <span className="text-gray-400 font-bold">x{item.qty}</span></span>
-                            <span className="font-mono font-bold text-gray-800 shrink-0">${(item.product.price * item.qty).toFixed(2)}</span>
+                            <span className="font-mono font-bold text-[#1D3557] shrink-0">${(item.product.price * item.qty).toFixed(2)}</span>
                           </div>
                         ))}
                       </div>
@@ -2840,39 +2861,39 @@ export default function POSModule({
                   </div>
 
                   {/* Descuento */}
-                  <div className="flex justify-between text-xs text-gray-600 font-medium">
+                  <div className="flex justify-between text-xs text-[#2B2D42] font-medium">
                     <span>Descuento:</span>
-                    <span className={`font-mono font-bold ${calculatedDiscountUsd > 0 ? 'text-emerald-600' : 'text-gray-700'}`}>
+                    <span className={`font-mono font-bold ${calculatedDiscountUsd > 0 ? 'text-[#40E0D0]' : 'text-gray-700'}`}>
                       -${calculatedDiscountUsd.toFixed(2)}
                     </span>
                   </div>
 
                   {/* Cargos extras */}
-                  <div className="flex justify-between text-xs text-gray-600 font-medium">
+                  <div className="flex justify-between text-xs text-[#2B2D42] font-medium">
                     <span>Cargos extras:</span>
-                    <span className="font-mono font-bold text-gray-800">${extraChargesTotal.toFixed(2)}</span>
+                    <span className="font-mono font-bold text-[#2B2D42]">${extraChargesTotal.toFixed(2)}</span>
                   </div>
 
                   {/* IVA 16% */}
-                  <div className="flex justify-between text-xs text-gray-600 font-medium">
+                  <div className="flex justify-between text-xs text-[#2B2D42] font-medium">
                     <span>IVA 16%:</span>
-                    <span className="font-mono font-bold text-gray-800">${applyIva ? calculatedIvaUsd.toFixed(2) : '0.00'}</span>
+                    <span className="font-mono font-bold text-[#2B2D42]">${applyIva ? calculatedIvaUsd.toFixed(2) : '0.00'}</span>
                   </div>
 
                   {/* IGTF 3% */}
-                  <div className="flex justify-between text-xs text-gray-600 font-medium">
+                  <div className="flex justify-between text-xs text-[#2B2D42] font-medium">
                     <span>IGTF 3%:</span>
-                    <span className="font-mono font-bold text-gray-800">${applyIgtf ? calculatedIgtfUsd.toFixed(2) : '0.00'}</span>
+                    <span className="font-mono font-bold text-[#2B2D42]">${applyIgtf ? calculatedIgtfUsd.toFixed(2) : '0.00'}</span>
                   </div>
 
                   {/* Divider y Total a pagar */}
-                  <div className="border-t border-gray-200/80 pt-3 flex justify-between items-baseline">
-                    <span className="text-sm font-black text-gray-900">Total a pagar:</span>
+                  <div className="border-t border-[#1D3557]/20 pt-3 flex justify-between items-baseline">
+                    <span className="text-sm font-montserrat font-extrabold text-[#1D3557]">Total a pagar:</span>
                     <div className="text-right">
-                      <div className="text-xl font-black text-gray-950 font-mono tracking-tight">
+                      <div className="text-xl font-montserrat font-black text-[#1D3557] font-mono tracking-tight">
                         ${total.toFixed(2)}
                       </div>
-                      <div className="text-xs font-bold text-[#005da9] font-mono">
+                      <div className="text-xs font-extrabold text-[#00BFFF] font-mono">
                         Bs. {(total * (customBcvRate > 0 ? customBcvRate : (currencyRates.VES || bcvRate || 45.5))).toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                       </div>
                     </div>
@@ -2881,20 +2902,20 @@ export default function POSModule({
 
                 {/* Código de descuento */}
                 <div className="space-y-1.5">
-                  <label className="block text-xs font-bold text-gray-700">Código de descuento</label>
+                  <label className="block text-xs font-bold text-[#2B2D42]">Código de descuento</label>
                   <div className="flex gap-2">
                     <input
                       type="text"
                       value={discountCode}
                       onChange={(e) => setDiscountCode(e.target.value)}
                       placeholder="XXXXXXXX"
-                      className="flex-1 px-3.5 py-2 bg-white border border-gray-200 rounded-xl text-xs font-mono font-bold text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#005da9] uppercase placeholder:text-gray-300 shadow-2xs"
+                      className="flex-1 px-3.5 py-2 bg-white border border-gray-200 rounded-xl text-xs font-mono font-bold text-[#2B2D42] focus:outline-none focus:ring-2 focus:ring-[#00BFFF] uppercase placeholder:text-gray-300 shadow-2xs"
                     />
                     {discountCode && (
                       <button
                         type="button"
                         onClick={() => handleApplyDiscountCode(discountCode)}
-                        className="px-3.5 py-2 bg-[#005da9] hover:bg-[#004b88] text-white font-black text-xs rounded-xl transition cursor-pointer shadow-xs"
+                        className="px-3.5 py-2 bg-[#1D3557] hover:bg-[#152742] text-white font-montserrat font-bold text-xs rounded-xl transition cursor-pointer shadow-xs"
                       >
                         Aplicar
                       </button>
@@ -2902,17 +2923,17 @@ export default function POSModule({
                   </div>
                 </div>
 
-                {/* Toggles (Switches estilo iOS/Tailwind) */}
+                {/* Toggles (Switches) */}
                 <div className="space-y-3 pt-1">
                   <label className="flex items-center justify-between cursor-pointer select-none group">
-                    <span className="text-xs font-bold text-gray-700 group-hover:text-gray-900">Aplicar IVA (16%)</span>
+                    <span className="text-xs font-bold text-[#2B2D42] group-hover:text-[#1D3557]">Aplicar IVA (16%)</span>
                     <button
                       type="button"
                       role="switch"
                       aria-checked={applyIva}
                       onClick={() => setApplyIva(!applyIva)}
                       className={`relative inline-flex h-5 w-10 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
-                        applyIva ? 'bg-[#005da9]' : 'bg-gray-300'
+                        applyIva ? 'bg-[#1D3557]' : 'bg-gray-300'
                       }`}
                     >
                       <span className={`pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow-sm ring-0 transition duration-200 ease-in-out ${
@@ -2922,14 +2943,14 @@ export default function POSModule({
                   </label>
 
                   <label className="flex items-center justify-between cursor-pointer select-none group">
-                    <span className="text-xs font-bold text-gray-700 group-hover:text-gray-900">Aplicar IGTF (3%)</span>
+                    <span className="text-xs font-bold text-[#2B2D42] group-hover:text-[#1D3557]">Aplicar IGTF (3%)</span>
                     <button
                       type="button"
                       role="switch"
                       aria-checked={applyIgtf}
                       onClick={() => setApplyIgtf(!applyIgtf)}
                       className={`relative inline-flex h-5 w-10 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none ${
-                        applyIgtf ? 'bg-[#005da9]' : 'bg-gray-300'
+                        applyIgtf ? 'bg-[#1D3557]' : 'bg-gray-300'
                       }`}
                     >
                       <span className={`pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow-sm ring-0 transition duration-200 ease-in-out ${
@@ -2948,21 +2969,21 @@ export default function POSModule({
                   <button
                     type="button"
                     onClick={() => setShowExtraChargeModal(true)}
-                    className="text-xs font-black text-[#005da9] hover:text-[#004b88] flex items-center gap-1 cursor-pointer hover:underline"
+                    className="text-xs font-montserrat font-bold text-[#00BFFF] hover:text-[#1D3557] flex items-center gap-1 cursor-pointer hover:underline"
                   >
                     <Plus className="w-4 h-4" />
                     <span>Agregar cargo extra</span>
                   </button>
 
                   {/* Badge Tasa de cambio */}
-                  <div className="flex items-center gap-2 bg-amber-50/90 border border-amber-200/80 px-3 py-1 rounded-full text-xs">
-                    <span className="font-bold text-gray-700">Tasa de cambio (Bs/$):</span>
+                  <div className="flex items-center gap-2 bg-[#F8F9FA] border border-[#40E0D0] px-3 py-1 rounded-full text-xs">
+                    <span className="font-bold text-[#2B2D42]">Tasa de cambio (Bs/$):</span>
                     <input
                       type="number"
                       step="0.01"
                       value={customBcvRate > 0 ? customBcvRate : (currencyRates.VES || bcvRate || 45.5)}
                       onChange={(e) => setCustomBcvRate(parseFloat(e.target.value) || 0)}
-                      className="w-20 px-2 py-0.5 bg-white border border-amber-300 rounded-lg text-xs font-mono font-black text-[#004b88] text-center focus:outline-none focus:ring-2 focus:ring-[#005da9]"
+                      className="w-20 px-2 py-0.5 bg-white border border-[#40E0D0] rounded-lg text-xs font-mono font-black text-[#1D3557] text-center focus:outline-none focus:ring-2 focus:ring-[#00BFFF]"
                     />
                   </div>
                 </div>
@@ -2974,7 +2995,7 @@ export default function POSModule({
                     const currSymbol = methodCurr === 'VES' ? 'BS' : methodCurr === 'USD' ? '$' : methodCurr === 'EUR' ? '€' : 'COP';
                     
                     return (
-                      <div key={idx} className="relative p-4 bg-gray-50/60 border border-gray-200/70 rounded-2xl space-y-2.5">
+                      <div key={idx} className="relative p-4 bg-[#F8F9FA] border border-gray-200 rounded-2xl space-y-2.5">
                         {splitPayments.length > 1 && (
                           <button
                             type="button"
@@ -2989,11 +3010,11 @@ export default function POSModule({
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 items-end pr-5">
                           {/* Selector Método de pago */}
                           <div className="space-y-1">
-                            <label className="block text-[11px] font-bold text-gray-600">Método de pago</label>
+                            <label className="block text-[11px] font-bold text-[#2B2D42]">Método de pago</label>
                             <select
                               value={p.method}
                               onChange={(e) => handleUpdateSplitMethod(idx, e.target.value)}
-                              className="w-full bg-white border border-gray-200 text-gray-800 font-bold text-xs rounded-xl px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#005da9] cursor-pointer shadow-2xs"
+                              className="w-full bg-white border border-gray-200 text-[#2B2D42] font-bold text-xs rounded-xl px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#00BFFF] cursor-pointer shadow-2xs"
                             >
                               {getActiveMethods().map((m) => (
                                 <option key={m.id} value={m.id}>
@@ -3093,26 +3114,26 @@ export default function POSModule({
                       type="button"
                       onClick={handlePostponeSale}
                       disabled={isLoading || cart.length === 0}
-                      className="px-5 py-2.5 bg-white hover:bg-gray-50 disabled:opacity-50 text-[#005da9] border border-gray-200 font-bold text-xs rounded-xl transition flex items-center gap-2 cursor-pointer shadow-xs"
+                      className="px-5 py-2.5 bg-white hover:bg-[#F8F9FA] disabled:opacity-50 text-[#1D3557] border border-gray-300 font-bold text-xs rounded-xl transition flex items-center gap-2 cursor-pointer shadow-xs"
                       title="Guardar esta venta en espera para retomar después"
                     >
-                      <div className="w-4 h-4 rounded-full border border-[#005da9] flex items-center justify-center shrink-0">
+                      <div className="w-4 h-4 rounded-full border border-[#00BFFF] flex items-center justify-center shrink-0">
                         <div className="flex gap-[2.5px]">
-                          <div className="w-[1.5px] h-1.5 bg-[#005da9] rounded-xs"></div>
-                          <div className="w-[1.5px] h-1.5 bg-[#005da9] rounded-xs"></div>
+                          <div className="w-[1.5px] h-1.5 bg-[#00BFFF] rounded-xs"></div>
+                          <div className="w-[1.5px] h-1.5 bg-[#00BFFF] rounded-xs"></div>
                         </div>
                       </div>
                       <span>Poner en espera</span>
                     </button>
 
-                    {/* ✅ Botón Facturar */}
+                    {/* ✅ Botón Facturar (CTA Principal con Turquesa Vivo #40E0D0 y Azul Profundo #1D3557) */}
                     <button
                       type="button"
                       onClick={handleFinalizeInvoice}
                       disabled={isLoading || cart.length === 0}
-                      className="px-8 py-2.5 bg-[#005da9] hover:bg-[#004b88] disabled:bg-gray-300 text-white font-black text-xs uppercase tracking-wider rounded-xl transition shadow-md flex items-center gap-2 cursor-pointer"
+                      className="px-8 py-2.5 bg-[#40E0D0] hover:bg-[#36cebe] disabled:bg-gray-300 text-[#1D3557] font-montserrat font-black text-xs uppercase tracking-wider rounded-xl transition shadow-md flex items-center gap-2 cursor-pointer border-b-2 border-[#1D3557]/20"
                     >
-                      {isLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : null}
+                      {isLoading ? <Loader2 className="w-4 h-4 animate-spin text-[#1D3557]" /> : null}
                       <span>Facturar</span>
                     </button>
                   </div>
@@ -3297,31 +3318,31 @@ export default function POSModule({
             </div>
 
             {/* Footer con controles de Impresión: Carta, 58mm, 80mm, Aceptar (Image 5) */}
-            <div className="p-4 bg-gray-50 border-t border-gray-100 flex flex-wrap gap-2 justify-center items-center shrink-0">
+            <div className="p-4 bg-[#F8F9FA] border-t border-gray-100 flex flex-wrap gap-2 justify-center items-center shrink-0">
               <button
                 type="button"
                 onClick={() => printInvoiceDocument(completedInvoice, businessInfo, 'carta', customBcvRate || bcvRate)}
-                className="px-4 py-2.5 bg-white hover:bg-blue-50 text-[#005da9] border border-[#005da9]/30 font-bold text-xs rounded-xl transition flex items-center gap-1.5 cursor-pointer shadow-2xs"
+                className="px-4 py-2.5 bg-white hover:bg-[#F8F9FA] text-[#1D3557] border border-[#1D3557]/30 font-bold text-xs rounded-xl transition flex items-center gap-1.5 cursor-pointer shadow-2xs"
               >
-                <Printer className="w-4 h-4" />
+                <Printer className="w-4 h-4 text-[#00BFFF]" />
                 <span>Imprimir (carta)</span>
               </button>
 
               <button
                 type="button"
                 onClick={() => printInvoiceDocument(completedInvoice, businessInfo, '58mm', customBcvRate || bcvRate)}
-                className="px-4 py-2.5 bg-white hover:bg-blue-50 text-[#005da9] border border-[#005da9]/30 font-bold text-xs rounded-xl transition flex items-center gap-1.5 cursor-pointer shadow-2xs"
+                className="px-4 py-2.5 bg-white hover:bg-[#F8F9FA] text-[#1D3557] border border-[#1D3557]/30 font-bold text-xs rounded-xl transition flex items-center gap-1.5 cursor-pointer shadow-2xs"
               >
-                <Printer className="w-4 h-4" />
+                <Printer className="w-4 h-4 text-[#00BFFF]" />
                 <span>Imprimir (58mm)</span>
               </button>
 
               <button
                 type="button"
                 onClick={() => printInvoiceDocument(completedInvoice, businessInfo, '80mm', customBcvRate || bcvRate)}
-                className="px-4 py-2.5 bg-white hover:bg-blue-50 text-[#005da9] border border-[#005da9]/30 font-bold text-xs rounded-xl transition flex items-center gap-1.5 cursor-pointer shadow-2xs"
+                className="px-4 py-2.5 bg-white hover:bg-[#F8F9FA] text-[#1D3557] border border-[#1D3557]/30 font-bold text-xs rounded-xl transition flex items-center gap-1.5 cursor-pointer shadow-2xs"
               >
-                <Printer className="w-4 h-4" />
+                <Printer className="w-4 h-4 text-[#00BFFF]" />
                 <span>Imprimir (80mm)</span>
               </button>
 
@@ -3331,7 +3352,7 @@ export default function POSModule({
                   setCompletedInvoice(null);
                   resetVentaFlash();
                 }}
-                className="px-8 py-2.5 bg-[#005da9] hover:bg-[#004b88] text-white font-black text-xs uppercase tracking-wider rounded-xl transition shadow-md cursor-pointer"
+                className="px-8 py-2.5 bg-[#40E0D0] hover:bg-[#36cebe] text-[#1D3557] font-montserrat font-black text-xs uppercase tracking-wider rounded-xl transition shadow-md cursor-pointer border-b-2 border-[#1D3557]/20"
               >
                 Aceptar
               </button>
@@ -3345,10 +3366,10 @@ export default function POSModule({
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/65 backdrop-blur-xs p-4">
           <div className="bg-white rounded-3xl border border-gray-100 w-full max-w-lg shadow-2xl overflow-hidden text-left flex flex-col max-h-[85vh]">
             {/* Header */}
-            <div className="p-5 bg-gray-50 border-b border-gray-100 flex justify-between items-center shrink-0">
+            <div className="p-5 bg-[#F8F9FA] border-b border-gray-100 flex justify-between items-center shrink-0">
               <div className="flex items-center gap-2">
-                <Users className="w-5 h-5 text-[#005da9]" />
-                <h3 className="text-sm font-black text-gray-800 uppercase tracking-tight">Buscar Cliente Registrado</h3>
+                <Users className="w-5 h-5 text-[#1D3557]" />
+                <h3 className="text-sm font-montserrat font-extrabold text-[#1D3557] uppercase tracking-tight">Buscar Cliente Registrado</h3>
               </div>
               <button 
                 onClick={() => setShowClientSearchModal(false)}
@@ -3361,20 +3382,20 @@ export default function POSModule({
             {/* Search Input */}
             <div className="p-4 bg-white border-b border-gray-50 shrink-0">
               <div className="relative">
-                <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-[#00BFFF]" />
                 <input
                   type="text"
                   value={clientSearchQuery}
                   onChange={(e) => setClientSearchQuery(e.target.value)}
                   placeholder="Buscar por nombre, cédula/RIF, teléfono o correo..."
-                  className="w-full pl-10 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-xs font-bold text-gray-800 focus:outline-none focus:ring-2 focus:ring-[#005da9] focus:bg-white transition"
+                  className="w-full pl-10 pr-4 py-2.5 bg-[#F8F9FA] border border-gray-200 rounded-xl text-xs font-bold text-[#2B2D42] focus:outline-none focus:ring-2 focus:ring-[#00BFFF] focus:bg-white transition"
                   autoFocus
                 />
               </div>
             </div>
 
             {/* Clients List */}
-            <div className="p-4 overflow-y-auto flex-1 bg-gray-50/50 space-y-2 max-h-[45vh]">
+            <div className="p-4 overflow-y-auto flex-1 bg-[#F8F9FA]/50 space-y-2 max-h-[45vh]">
               {clients.filter(c => {
                 const q = clientSearchQuery.toLowerCase();
                 return (
@@ -3421,10 +3442,10 @@ export default function POSModule({
                       setSelectedClient(c.name);
                       setShowClientSearchModal(false);
                     }}
-                    className="w-full text-left p-3.5 bg-white border border-gray-100 hover:border-[#005da9] hover:bg-blue-50/30 rounded-2xl transition flex items-center justify-between gap-4 group"
+                    className="w-full text-left p-3.5 bg-white border border-gray-100 hover:border-[#00BFFF] hover:bg-[#1D3557]/5 rounded-2xl transition flex items-center justify-between gap-4 group"
                   >
                     <div className="min-w-0">
-                      <div className="font-extrabold text-gray-900 text-xs truncate group-hover:text-[#005da9] transition-colors">{c.name}</div>
+                      <div className="font-extrabold text-[#2B2D42] text-xs truncate group-hover:text-[#1D3557] transition-colors">{c.name}</div>
                       <div className="flex flex-wrap gap-x-3 gap-y-0.5 mt-1 text-[10px] text-gray-400 font-bold">
                         <span className="font-mono text-gray-500">Doc: {c.document}</span>
                         {c.phone && <span>Tel: {c.phone}</span>}
@@ -3437,7 +3458,7 @@ export default function POSModule({
                           Crédito: ${Number(c.credit_usd).toFixed(2)}
                         </span>
                       )}
-                      <span className="text-[10px] text-[#005da9] font-black uppercase opacity-0 group-hover:opacity-100 transition-opacity">
+                      <span className="text-[10px] text-[#1D3557] font-black uppercase opacity-0 group-hover:opacity-100 transition-opacity">
                         Seleccionar
                       </span>
                     </div>
@@ -3447,7 +3468,7 @@ export default function POSModule({
             </div>
 
             {/* Footer */}
-            <div className="p-4 bg-gray-50 border-t border-gray-100 flex justify-between items-center shrink-0">
+            <div className="p-4 bg-[#F8F9FA] border-t border-gray-100 flex justify-between items-center shrink-0">
               <button
                 type="button"
                 onClick={() => {
@@ -3462,7 +3483,7 @@ export default function POSModule({
                 <button
                   type="button"
                   onClick={() => setShowClientSearchModal(false)}
-                  className="py-2 px-4 bg-gray-100 hover:bg-gray-200 text-gray-600 font-bold text-xs rounded-xl transition"
+                  className="py-2 px-4 bg-gray-100 hover:bg-gray-200 text-[#2B2D42] font-bold text-xs rounded-xl transition"
                 >
                   Cerrar
                 </button>
@@ -3478,9 +3499,9 @@ export default function POSModule({
                     setNewClientCredit('0');
                     setShowQuickClientModal(true);
                   }}
-                  className="py-2 px-4 bg-[#005da9] hover:bg-[#004b88] text-white font-black text-xs uppercase rounded-xl transition flex items-center gap-1"
+                  className="py-2 px-4 bg-[#1D3557] hover:bg-[#152742] text-white font-montserrat font-bold text-xs uppercase rounded-xl transition flex items-center gap-1"
                 >
-                  <UserPlus className="w-3.5 h-3.5" />
+                  <UserPlus className="w-3.5 h-3.5 text-[#40E0D0]" />
                   <span>Nuevo Cliente</span>
                 </button>
               </div>
@@ -3621,16 +3642,16 @@ export default function POSModule({
         <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4 animate-fadeIn">
           <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full overflow-hidden border border-gray-100 flex flex-col">
             {/* Modal Header */}
-            <div className="bg-[#005da9] text-white p-4 flex items-center justify-between">
+            <div className="bg-[#1D3557] text-white p-4 flex items-center justify-between">
               <div className="flex items-center gap-2.5">
-                <div className="w-8 h-8 rounded-lg bg-amber-400/20 text-amber-300 flex items-center justify-center font-mono font-black text-xs border border-amber-300/30 shrink-0">
+                <div className="w-8 h-8 rounded-lg bg-[#40E0D0]/20 text-[#40E0D0] flex items-center justify-center font-mono font-black text-xs border border-[#40E0D0]/30 shrink-0">
                   99999
                 </div>
                 <div>
-                  <h3 className="font-extrabold text-sm tracking-tight text-white">
+                  <h3 className="font-montserrat font-extrabold text-sm tracking-tight text-white">
                     Venta Libre / Ítem Genérico (Código 99999)
                   </h3>
-                  <p className="text-[10px] text-blue-100 font-medium">
+                  <p className="text-[10px] text-gray-200 font-medium">
                     Ingrese el nombre y precio personalizado para esta factura.
                   </p>
                 </div>
@@ -3647,7 +3668,7 @@ export default function POSModule({
             {/* Modal Body Form */}
             <form onSubmit={handleConfirmVentaLibre} className="p-5 space-y-4">
               <div>
-                <label className="block text-xs font-black text-gray-700 uppercase tracking-wider mb-1">
+                <label className="block text-xs font-montserrat font-extrabold text-[#1D3557] uppercase tracking-wider mb-1">
                   Nombre o Descripción del Producto / Servicio <span className="text-red-500">*</span>
                 </label>
                 <input
@@ -3656,14 +3677,14 @@ export default function POSModule({
                   placeholder="Ej: Servicio de Copia Especial, Trabajo Técnico..."
                   value={vlName}
                   onChange={(e) => setVlName(e.target.value)}
-                  className="w-full px-3.5 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-xs font-bold text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#005da9] focus:bg-white transition"
+                  className="w-full px-3.5 py-2.5 bg-[#F8F9FA] border border-gray-200 rounded-xl text-xs font-bold text-[#2B2D42] focus:outline-none focus:ring-2 focus:ring-[#00BFFF] focus:bg-white transition"
                   autoFocus
                 />
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-black text-gray-700 uppercase tracking-wider mb-1">
+                  <label className="block text-xs font-montserrat font-extrabold text-[#1D3557] uppercase tracking-wider mb-1">
                     Precio ($ USD) <span className="text-red-500">*</span>
                   </label>
                   <div className="relative">
@@ -3676,7 +3697,7 @@ export default function POSModule({
                       placeholder="0.00"
                       value={vlPrice}
                       onChange={(e) => setVlPrice(e.target.value)}
-                      className="w-full pl-7 pr-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-xs font-extrabold text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#005da9] focus:bg-white transition"
+                      className="w-full pl-7 pr-3 py-2 bg-[#F8F9FA] border border-gray-200 rounded-xl text-xs font-extrabold text-[#2B2D42] focus:outline-none focus:ring-2 focus:ring-[#00BFFF] focus:bg-white transition"
                     />
                   </div>
                   {vlPrice && !isNaN(parseFloat(vlPrice)) && parseFloat(vlPrice) > 0 && (
@@ -3687,7 +3708,7 @@ export default function POSModule({
                 </div>
 
                 <div>
-                  <label className="block text-xs font-black text-gray-700 uppercase tracking-wider mb-1">
+                  <label className="block text-xs font-montserrat font-extrabold text-[#1D3557] uppercase tracking-wider mb-1">
                     Cantidad
                   </label>
                   <input
@@ -3696,13 +3717,13 @@ export default function POSModule({
                     required
                     value={vlQty}
                     onChange={(e) => setVlQty(e.target.value)}
-                    className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-xs font-extrabold text-gray-900 text-center focus:outline-none focus:ring-2 focus:ring-[#005da9] focus:bg-white transition"
+                    className="w-full px-3 py-2 bg-[#F8F9FA] border border-gray-200 rounded-xl text-xs font-extrabold text-[#2B2D42] text-center focus:outline-none focus:ring-2 focus:ring-[#00BFFF] focus:bg-white transition"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-black text-gray-700 uppercase tracking-wider mb-1">
+                <label className="block text-xs font-montserrat font-extrabold text-[#1D3557] uppercase tracking-wider mb-1">
                   Impuesto del Artículo
                 </label>
                 <select
@@ -3717,7 +3738,7 @@ export default function POSModule({
                       setVlTaxRate(found ? found.rate : 0);
                     }
                   }}
-                  className="w-full px-3 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-xs font-bold text-gray-900 focus:outline-none focus:ring-2 focus:ring-[#005da9] focus:bg-white transition"
+                  className="w-full px-3 py-2.5 bg-[#F8F9FA] border border-gray-200 rounded-xl text-xs font-bold text-[#2B2D42] focus:outline-none focus:ring-2 focus:ring-[#00BFFF] focus:bg-white transition"
                 >
                   <option value="exento">Exento / Sin Impuesto (0%)</option>
                   {taxes.filter(t => t.is_active !== false).map((t) => (
@@ -3729,15 +3750,15 @@ export default function POSModule({
               </div>
 
               {!editingVlId && (
-                <div className="flex items-start gap-2.5 p-3 bg-blue-50/70 border border-blue-100/90 rounded-2xl">
+                <div className="flex items-start gap-2.5 p-3 bg-[#1D3557]/5 border border-[#1D3557]/10 rounded-2xl">
                   <input
                     type="checkbox"
                     id="vlSaveDbCheckbox"
                     checked={vlSaveDb}
                     onChange={(e) => setVlSaveDb(e.target.checked)}
-                    className="w-4 h-4 mt-0.5 text-[#005da9] rounded focus:ring-[#005da9] cursor-pointer shrink-0"
+                    className="w-4 h-4 mt-0.5 text-[#1D3557] rounded focus:ring-[#00BFFF] cursor-pointer shrink-0"
                   />
-                  <label htmlFor="vlSaveDbCheckbox" className="text-xs font-bold text-gray-800 cursor-pointer select-none">
+                  <label htmlFor="vlSaveDbCheckbox" className="text-xs font-bold text-[#2B2D42] cursor-pointer select-none">
                     Guardar en el catálogo de productos de ventas
                     <span className="block text-[10px] text-gray-500 font-normal mt-0.5">
                       Al activar, el producto o servicio quedará registrado en la lista de productos para ser usado en ventas futuras.
@@ -3752,14 +3773,14 @@ export default function POSModule({
                   type="button"
                   onClick={() => setShowVentaLibreModal(false)}
                   disabled={isSavingVl}
-                  className="px-4 py-2 border border-gray-200 text-gray-600 font-bold text-xs rounded-xl hover:bg-gray-50 transition cursor-pointer"
+                  className="px-4 py-2 border border-gray-200 text-[#2B2D42] font-bold text-xs rounded-xl hover:bg-gray-50 transition cursor-pointer"
                 >
                   Cancelar
                 </button>
                 <button
                   type="submit"
                   disabled={isSavingVl}
-                  className="px-4 py-2 bg-[#005da9] hover:bg-[#004b87] text-white font-extrabold text-xs rounded-xl shadow-md transition flex items-center gap-1.5 cursor-pointer"
+                  className="px-4 py-2 bg-[#1D3557] hover:bg-[#152742] text-white font-montserrat font-bold text-xs rounded-xl shadow-md transition flex items-center gap-1.5 cursor-pointer"
                 >
                   {isSavingVl ? (
                     <>
@@ -3768,7 +3789,7 @@ export default function POSModule({
                     </>
                   ) : (
                     <>
-                      <CheckCircle className="w-3.5 h-3.5 text-amber-300" />
+                      <CheckCircle className="w-3.5 h-3.5 text-[#40E0D0]" />
                       <span>Agregar a Facturación</span>
                     </>
                   )}
@@ -4244,7 +4265,7 @@ export default function POSModule({
       {showCreateProductModal && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4 animate-fadeIn">
           <div className="bg-white rounded-3xl border border-gray-100 max-w-lg w-full overflow-hidden shadow-2xl text-left flex flex-col">
-            <div className="p-5 bg-[#005da9] text-white flex justify-between items-center shrink-0">
+            <div className="p-5 bg-[#1D3557] text-white flex justify-between items-center shrink-0">
               <div className="flex items-center gap-3">
                 <div className="p-2.5 bg-white/20 rounded-2xl shrink-0">
                   <PackagePlus className="w-6 h-6 text-white" />
@@ -4385,12 +4406,12 @@ export default function POSModule({
                 <button
                   type="submit"
                   disabled={isSavingProduct}
-                  className="px-4 py-2 bg-[#005da9] hover:bg-[#004b87] text-white font-extrabold text-xs rounded-xl shadow-md transition flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
+                  className="px-4 py-2 bg-gradient-to-r from-[#40E0D0] to-[#00BFFF] hover:from-[#36cebe] hover:to-[#00a3da] text-[#1D3557] font-extrabold text-xs rounded-xl shadow-md transition flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
                 >
                   {isSavingProduct ? (
-                    <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                    <Loader2 className="w-3.5 h-3.5 animate-spin text-[#1D3557]" />
                   ) : (
-                    <CheckCircle className="w-3.5 h-3.5 text-amber-300" />
+                    <CheckCircle className="w-3.5 h-3.5 text-[#1D3557]" />
                   )}
                   <span>Guardar y Agregar a Venta</span>
                 </button>
@@ -4405,7 +4426,7 @@ export default function POSModule({
           <div className="bg-white rounded-3xl border border-gray-100 max-w-4xl w-full max-h-[90vh] overflow-hidden shadow-2xl text-left flex flex-col">
             
             {/* Header del Modal */}
-            <div className="p-4 md:p-5 bg-gradient-to-r from-[#005da9] via-blue-700 to-blue-800 text-white flex justify-between items-center shrink-0 shadow-md">
+            <div className="p-4 md:p-5 bg-gradient-to-r from-[#1D3557] to-[#122238] text-white flex justify-between items-center shrink-0 shadow-md">
               <div className="flex items-center gap-3">
                 <div className="p-2.5 bg-white/20 rounded-2xl shrink-0 backdrop-blur-xs">
                   <FileText className="w-6 h-6 text-white" />
@@ -4475,7 +4496,7 @@ export default function POSModule({
                     onClick={() => setHistoryTypeFilter('todos')}
                     className={`px-3 py-1.5 rounded-lg text-xs font-extrabold transition-all cursor-pointer flex items-center gap-1.5 ${
                       historyTypeFilter === 'todos'
-                        ? 'bg-[#005da9] text-white shadow-xs'
+                        ? 'bg-gradient-to-r from-[#40E0D0] to-[#00BFFF] text-[#1D3557] shadow-xs'
                         : 'text-gray-600 hover:bg-gray-100'
                     }`}
                   >
@@ -4581,7 +4602,7 @@ export default function POSModule({
                         setHistorySearchQuery('');
                         setHistoryTypeFilter('todos');
                       }}
-                      className="mt-2 px-4 py-2 bg-[#005da9] hover:bg-[#004b87] text-white font-extrabold text-xs rounded-xl shadow-xs transition cursor-pointer"
+                      className="mt-2 px-4 py-2 bg-gradient-to-r from-[#40E0D0] to-[#00BFFF] hover:from-[#36cebe] hover:to-[#00a3da] text-[#1D3557] font-extrabold text-xs rounded-xl shadow-xs transition cursor-pointer"
                     >
                       Mostrar Todos los Comprobantes
                     </button>
@@ -4607,8 +4628,8 @@ export default function POSModule({
                         const docRef = inv.customer_id || inv.customer_document || inv.rif || inv.document || '';
                         
                         return (
-                          <tr key={inv.id || inv.control_number} className="hover:bg-blue-50/30 transition-colors">
-                            <td className="p-3 font-mono font-black text-[#005da9] text-xs">
+                          <tr key={inv.id || inv.control_number} className="hover:bg-cyan-50/30 transition-colors">
+                            <td className="p-3 font-mono font-black text-[#1D3557] text-xs">
                               {inv.control_number || 'S/N'}
                             </td>
                             <td className="p-3">

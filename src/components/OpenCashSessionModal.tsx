@@ -136,19 +136,19 @@ export default function OpenCashSessionModal({
   };
 
   return (
-    <div className="fixed inset-0 bg-black/65 z-50 flex items-center justify-center p-4 backdrop-blur-xs select-none animate-fadeIn">
+    <div className="fixed inset-0 bg-black/65 z-50 flex items-center justify-center p-4 backdrop-blur-xs select-none animate-fadeIn font-poppins">
       <div className="bg-white rounded-2xl max-w-md w-full shadow-2xl overflow-hidden border border-gray-100 text-left">
-        {/* GREEN HEADER matching Image 2 */}
-        <div className="bg-[#00a650] px-5 py-4 flex items-center justify-between text-white">
+        {/* HEADER matching corporate identity */}
+        <div className="bg-[#1D3557] px-5 py-4 flex items-center justify-between text-white">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-white/20 backdrop-blur-md flex items-center justify-center shadow-inner">
-              <Unlock className="w-5 h-5 text-white" />
+            <div className="w-10 h-10 rounded-xl bg-[#40E0D0]/20 backdrop-blur-md flex items-center justify-center shadow-inner">
+              <Unlock className="w-5 h-5 text-[#40E0D0] stroke-[2.5]" />
             </div>
             <div>
-              <h3 className="text-base font-black tracking-tight leading-tight">
+              <h3 className="text-base font-montserrat font-extrabold tracking-tight leading-tight text-white uppercase">
                 Apertura de Caja Registradora
               </h3>
-              <p className="text-[11px] text-emerald-100 font-medium">
+              <p className="text-[11px] text-gray-200 font-medium">
                 Asigne el fondo inicial para iniciar operaciones de venta.
               </p>
             </div>
@@ -156,7 +156,7 @@ export default function OpenCashSessionModal({
           <button
             type="button"
             onClick={onClose}
-            className="text-white/80 hover:text-white hover:bg-white/20 p-1.5 rounded-lg transition cursor-pointer"
+            className="text-white/80 hover:text-white hover:bg-white/10 p-1.5 rounded-xl transition cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
@@ -167,10 +167,10 @@ export default function OpenCashSessionModal({
           {/* Empleado responsable */}
           <div>
             <div className="flex items-center justify-between mb-1.5">
-              <label className="text-xs font-black text-gray-700 uppercase tracking-wider">
+              <label className="text-xs font-montserrat font-extrabold text-[#1D3557] uppercase tracking-wider">
                 Empleado Responsable del Turno *
               </label>
-              <span className="text-[10px] font-extrabold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200/80">
+              <span className="text-[10px] font-montserrat font-extrabold text-[#1D3557] bg-[#40E0D0]/20 px-2 py-0.5 rounded-md border border-[#40E0D0]/40">
                 {authorizedCajaUsers.length} Habilitados
               </span>
             </div>
@@ -181,7 +181,7 @@ export default function OpenCashSessionModal({
                   <select
                     value={selectedEmployee}
                     onChange={(e) => setSelectedEmployee(e.target.value)}
-                    className="w-full pl-9 pr-8 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-xs font-bold text-gray-900 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white transition cursor-pointer appearance-none"
+                    className="w-full pl-9 pr-8 py-2.5 bg-[#F8F9FA] border border-gray-200 rounded-xl text-xs font-bold text-[#2B2D42] focus:outline-none focus:border-[#1D3557] focus:bg-white transition cursor-pointer appearance-none"
                   >
                     {employeeOptions.map((opt) => (
                       <option key={opt.value} value={opt.value}>
@@ -197,23 +197,23 @@ export default function OpenCashSessionModal({
                   value={selectedEmployee}
                   onChange={(e) => setSelectedEmployee(e.target.value)}
                   placeholder="Nombre del Cajero / Empleado Responsable"
-                  className="w-full pl-9 pr-3 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-xs font-bold text-gray-900 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white transition"
+                  className="w-full pl-9 pr-3 py-2.5 bg-[#F8F9FA] border border-gray-200 rounded-xl text-xs font-bold text-[#2B2D42] focus:outline-none focus:border-[#1D3557] focus:bg-white transition"
                 />
               )}
-              <User className="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />
+              <User className="w-4 h-4 text-[#00BFFF] absolute left-3 top-1/2 -translate-y-1/2" />
             </div>
-            <p className="text-[10px] text-gray-400 mt-1 font-medium">
+            <p className="text-[10px] text-[#2B2D42]/60 mt-1 font-medium">
               Se muestran exclusivamente los usuarios registrados activos con permisos de caja/venta.
             </p>
           </div>
 
           {/* Fondo inicial Bs */}
           <div>
-            <label className="block text-xs font-black text-gray-700 uppercase tracking-wider mb-1">
+            <label className="block text-xs font-montserrat font-extrabold text-[#1D3557] uppercase tracking-wider mb-1">
               Fondo Inicial en Efectivo (Bs) *
             </label>
             <div className="relative">
-              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-xs font-black text-gray-400">
+              <span className="absolute left-3 top-1/2 -translate-y-1/2 text-xs font-black text-[#1D3557]">
                 Bs
               </span>
               <input
@@ -224,17 +224,17 @@ export default function OpenCashSessionModal({
                 value={aperturaBsInput}
                 onChange={(e) => setAperturaBsInput(e.target.value)}
                 placeholder="10,00"
-                className="w-full pl-9 pr-3 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-xs font-bold text-gray-900 font-mono focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white transition"
+                className="w-full pl-9 pr-3 py-2.5 bg-[#F8F9FA] border border-gray-200 rounded-xl text-xs font-bold text-[#2B2D42] font-mono focus:outline-none focus:border-[#1D3557] focus:bg-white transition"
               />
             </div>
-            <p className="text-[10px] text-emerald-700 font-bold mt-1">
-              Equivalente aprox: ${approxUsd.toFixed(2)} USD (Tasa BCV: {rateToUse.toFixed(2)} Bs/$)
+            <p className="text-[10px] text-[#1D3557] font-bold mt-1">
+              Equivalente aprox: <span className="font-mono">${approxUsd.toFixed(2)} USD</span> (Tasa BCV: <span className="font-mono">{rateToUse.toFixed(2)} Bs/$</span>)
             </p>
           </div>
 
           {/* Observaciones */}
           <div>
-            <label className="block text-xs font-black text-gray-700 uppercase tracking-wider mb-1">
+            <label className="block text-xs font-montserrat font-extrabold text-[#1D3557] uppercase tracking-wider mb-1">
               Observaciones / Notas de Apertura
             </label>
             <input
@@ -242,7 +242,7 @@ export default function OpenCashSessionModal({
               value={aperturaObsInput}
               onChange={(e) => setAperturaObsInput(e.target.value)}
               placeholder="Ej: Billetes sencillos para cambio..."
-              className="w-full px-3 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-xs font-medium text-gray-900 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:bg-white transition"
+              className="w-full px-3 py-2.5 bg-[#F8F9FA] border border-gray-200 rounded-xl text-xs font-medium text-[#2B2D42] focus:outline-none focus:border-[#1D3557] focus:bg-white transition"
             />
           </div>
 
@@ -252,19 +252,19 @@ export default function OpenCashSessionModal({
               type="button"
               onClick={onClose}
               disabled={isSaving}
-              className="px-5 py-2.5 border border-gray-200 text-gray-600 font-bold text-xs rounded-xl hover:bg-gray-50 transition cursor-pointer"
+              className="px-5 py-2.5 border border-gray-200 text-[#2B2D42] font-montserrat font-bold text-xs rounded-xl hover:bg-[#F8F9FA] transition cursor-pointer"
             >
               Cancelar
             </button>
             <button
               type="submit"
               disabled={isSaving}
-              className="px-5 py-2.5 bg-[#00a650] hover:bg-[#008d43] text-white text-xs font-black rounded-xl transition flex items-center gap-2 cursor-pointer shadow-md shadow-emerald-600/20 active:scale-[0.98] disabled:opacity-50"
+              className="px-5 py-2.5 bg-[#40E0D0] hover:bg-[#36cebf] text-[#1D3557] text-xs font-montserrat font-extrabold uppercase tracking-wider rounded-xl transition flex items-center gap-2 cursor-pointer shadow-xs active:scale-95 disabled:opacity-50"
             >
               {isSaving ? (
                 <Loader2 className="w-4 h-4 animate-spin" />
               ) : (
-                <Unlock className="w-4 h-4" />
+                <Unlock className="w-4 h-4 stroke-[2.5]" />
               )}
               <span>Confirmar y Abrir Caja</span>
             </button>
