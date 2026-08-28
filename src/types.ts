@@ -106,6 +106,9 @@ export interface SplitPaymentDetail {
   amount_cop?: number;
   rate?: number;
   reference?: string;
+  bank_account_id?: string;
+  bankAccountId?: string;
+  bank_account_name?: string;
 }
 
 export interface Order {
