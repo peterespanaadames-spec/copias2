@@ -5139,21 +5139,25 @@ export const dbService = {
     splitPayments?: Array<{
       method: string;
       currency?: string;
-      amount: number;
-      amount_usd: number;
-      amount_ves: number;
+      amount?: number;
+      amount_usd?: number;
+      amount_ves?: number;
       rate?: number;
+      bankAccountId?: string;
+      bank_account_id?: string;
+      bank_account_name?: string;
     }>;
     singlePaymentMethod?: string;
-    totalUsd: number;
-    totalVes: number;
-    bcvRate: number;
+    totalUsd?: number;
+    totalVes?: number;
+    bcvRate?: number;
     createdBy?: string;
+    bankAccountId?: string;
   }): Promise<void> {
     try {
       let bankAccounts = await this.getBankAccounts();
       const paymentMethods = await this.getPaymentMethods();
-      const bcvRate = params.bcvRate || 45.5;
+      const bcvRate = params.bcvRate || params.invoice?.bcv_rate || 45.5;
 
       // If no bank accounts exist in DB, create initial seed accounts so money gets tracked
       if (bankAccounts.length === 0) {
@@ -5195,56 +5199,108 @@ export const dbService = {
       // Build payment items list
       const paymentEntries: Array<{
         method: string;
+        amount: number;
         amountUsd: number;
         amountVes: number;
         currency: string;
         rate: number;
+        bankAccountId?: string;
       }> = [];
 
-      if (params.splitPayments && params.splitPayments.length > 0) {
-        params.splitPayments.forEach(sp => {
+      const rawSplit = params.splitPayments || (params.invoice as any)?.split_payments;
+
+      if (rawSplit && rawSplit.length > 0) {
+        rawSplit.forEach((sp: any) => {
+          const spMethod = sp.method || 'Pago';
+          const spRate = sp.rate || bcvRate || 1;
+          const spCurr = sp.currency || (sp.amount_ves && !sp.amount_usd ? 'VES' : 'USD');
+          const amt = Number(sp.amount || 0);
+          let amtUsd = Number(sp.amount_usd || 0);
+          let amtVes = Number(sp.amount_ves || 0);
+
+          if (amtUsd === 0 && amtVes === 0 && amt > 0) {
+            if (spCurr === 'VES') {
+              amtVes = amt;
+              amtUsd = amt / (spRate || 1);
+            } else {
+              amtUsd = amt;
+              amtVes = amt * (spRate || bcvRate);
+            }
+          } else if (amtUsd > 0 && amtVes === 0) {
+            amtVes = amtUsd * (spRate || bcvRate);
+          } else if (amtVes > 0 && amtUsd === 0) {
+            amtUsd = amtVes / (spRate || 1);
+          }
+
           paymentEntries.push({
-            method: sp.method,
-            amountUsd: Number(sp.amount_usd || 0),
-            amountVes: Number(sp.amount_ves || (sp.amount_usd * bcvRate)),
-            currency: sp.currency || (sp.amount_ves > 0 ? 'VES' : 'USD'),
-            rate: sp.rate || bcvRate
+            method: spMethod,
+            amount: amt || (spCurr === 'VES' ? amtVes : amtUsd),
+            amountUsd: amtUsd,
+            amountVes: amtVes,
+            currency: spCurr,
+            rate: spRate,
+            bankAccountId: sp.bankAccountId || sp.bank_account_id || params.bankAccountId || params.invoice?.bank_account_id
           });
         });
       } else {
-        const methodStr = params.singlePaymentMethod || params.invoice.payment_method || 'Efectivo';
+        const methodStr = params.singlePaymentMethod || params.invoice?.payment_method || 'Efectivo';
         const isVes = methodStr.toLowerCase().includes('bs') || 
                       methodStr.toLowerCase().includes('bolivar') || 
                       methodStr.toLowerCase().includes('pago movil') || 
                       methodStr.toLowerCase().includes('punto') || 
                       methodStr.toLowerCase().includes('transferencia');
+        const totUsd = Number(params.totalUsd !== undefined ? params.totalUsd : params.invoice?.total || 0);
+        const totVes = Number(params.totalVes !== undefined ? params.totalVes : totUsd * bcvRate);
+
         paymentEntries.push({
           method: methodStr,
-          amountUsd: Number(params.totalUsd || 0),
-          amountVes: Number(params.totalVes || (params.totalUsd * bcvRate)),
+          amount: isVes ? totVes : totUsd,
+          amountUsd: totUsd,
+          amountVes: totVes,
           currency: isVes ? 'VES' : 'USD',
-          rate: bcvRate
+          rate: bcvRate,
+          bankAccountId: params.bankAccountId || params.invoice?.bank_account_id
         });
       }
 
       const transfersToInsert: BankTransfer[] = [];
 
       for (const entry of paymentEntries) {
-        if (entry.amountUsd <= 0 && entry.amountVes <= 0) continue;
+        if (entry.amountUsd <= 0 && entry.amountVes <= 0 && entry.amount <= 0) continue;
 
         const rawMethod = entry.method || '';
         const normMethod = clean(rawMethod);
         
+        let targetBank: BankAccount | undefined;
+
+        // 🏦 STEP 0: Direct bank account ID assigned to this entry (HIGHEST PRIORITY)
+        if (entry.bankAccountId) {
+          targetBank = bankAccounts.find(a => a.id === entry.bankAccountId);
+        }
+
+        // 🏦 STEP 0.5: Fallback to invoice-level / params bank account ID
+        if (!targetBank && params.bankAccountId) {
+          targetBank = bankAccounts.find(a => a.id === params.bankAccountId);
+        }
+        if (!targetBank && params.invoice?.bank_account_id) {
+          targetBank = bankAccounts.find(a => a.id === params.invoice.bank_account_id);
+        }
+
         // Find configured payment method
         const pmConfig = paymentMethods.find(p => {
           const normPName = clean(p.name);
-          return normPName === normMethod || p.id === rawMethod || (normPName.length > 3 && normMethod.includes(normPName));
+          const normPId = clean(p.id);
+          const normPCode = clean(p.code || '');
+          return normPName === normMethod || 
+                 p.id === rawMethod || 
+                 normPId === normMethod ||
+                 normPCode === normMethod ||
+                 (normPName.length > 3 && (normMethod.includes(normPName) || normPName.includes(normMethod))) ||
+                 (normMethod.length > 3 && (normMethod.includes(normPName) || normPName.includes(normMethod)));
         });
 
-        let targetBank: BankAccount | undefined;
-
-        // 🏦 STEP 1: Direct link in PaymentMethodConfig (bank_account_id takes top priority!)
-        if (pmConfig && pmConfig.bank_account_id) {
+        // 🏦 STEP 1: Direct link in PaymentMethodConfig
+        if (!targetBank && pmConfig && pmConfig.bank_account_id) {
           targetBank = bankAccounts.find(a => a.id === pmConfig.bank_account_id);
         }
 
@@ -5257,7 +5313,11 @@ export const dbService = {
               if (Array.isArray(parsed)) {
                 return parsed.some(m => {
                   const mNorm = clean(m.name || '');
-                  return mNorm === normMethod || (mNorm.length > 3 && normMethod.includes(mNorm)) || m.id === pmConfig?.id;
+                  const mIdNorm = clean(m.id || '');
+                  return mNorm === normMethod || 
+                         mIdNorm === normMethod ||
+                         (mNorm.length > 3 && (normMethod.includes(mNorm) || mNorm.includes(normMethod))) ||
+                         m.id === pmConfig?.id;
                 });
               }
             } catch (e) {}
@@ -5269,7 +5329,7 @@ export const dbService = {
         if (!targetBank) {
           const isBanesco = normMethod.includes('banesco');
           const isVenezuela = normMethod.includes('venezuela') || normMethod.includes('bdv') || normMethod.includes('vzla');
-          const isBNC = normMethod.includes('bnc') || normMethod.includes('nacional de credito') || (normMethod.includes('credito') && !normMethod.includes('tarjeta'));
+          const isBNC = normMethod.includes('bnc') || normMethod.includes('nacional de credito') || (normMethod.includes('credito') && !normMethod.includes('tarjeta')) || normMethod.includes('pagomovil') || normMethod.includes('pago movil') || normMethod.includes('punto');
           const isMercantil = normMethod.includes('mercantil');
           const isProvincial = normMethod.includes('provincial') || normMethod.includes('bbva');
           const isBofA = normMethod.includes('bofa') || normMethod.includes('bank of america') || normMethod.includes('america');
@@ -5360,7 +5420,6 @@ export const dbService = {
             targetBank = bankAccounts.find(a => a.currency === (isUsdMethod ? 'USD' : 'VES') && (clean(a.name).includes('efectivo') || clean(a.name).includes('caja')))
                       || bankAccounts.find(a => a.currency === (isUsdMethod ? 'USD' : 'VES'));
           } else {
-            // Non-cash digital/bank payment method: PREFER a non-cash bank account over cash/box!
             targetBank = bankAccounts.find(a => a.currency === (isUsdMethod ? 'USD' : 'VES') && !clean(a.name).includes('efectivo') && !clean(a.name).includes('caja'))
                       || bankAccounts.find(a => a.currency === (isUsdMethod ? 'USD' : 'VES'));
           }
@@ -5371,7 +5430,13 @@ export const dbService = {
 
         if (targetBank) {
           const isBankVES = targetBank.currency === 'VES';
-          let creditAmount = isBankVES ? entry.amountVes : entry.amountUsd;
+          let creditAmount = 0;
+
+          if (isBankVES) {
+            creditAmount = Number(entry.amountVes) || (Number(entry.amountUsd) * bcvRate) || (Number(entry.amount) * (entry.currency === 'VES' ? 1 : bcvRate));
+          } else {
+            creditAmount = Number(entry.amountUsd) || (entry.currency === 'VES' ? (Number(entry.amount) / bcvRate) : Number(entry.amount));
+          }
 
           // Deduct incoming commission if configured
           const commissionPercent = pmConfig?.incoming_commission || 0;
@@ -5381,15 +5446,15 @@ export const dbService = {
 
           creditAmount = parseFloat(creditAmount.toFixed(2));
 
-          // 1. Update bank account balance
+          // 1. Update bank account balance directly
           targetBank.balance = Number(targetBank.balance || 0) + creditAmount;
           targetBank.updated_at = new Date().toISOString();
           await this.saveBankAccount(targetBank);
 
           // 2. Prepare movement record for bank_transfers
-          const docTypeLabel = params.invoice.document_type === 'nota_entrega' ? 'Nota de Entrega' : 'Factura';
-          const docNum = params.invoice.control_number || params.invoice.invoice_number || '';
-          const clientName = params.invoice.customer_name || 'Consumidor Final';
+          const docTypeLabel = params.invoice?.document_type === 'nota_entrega' ? 'Nota de Entrega' : 'Factura';
+          const docNum = params.invoice?.control_number || params.invoice?.invoice_number || '';
+          const clientName = params.invoice?.customer_name || 'Consumidor Final';
 
           const transferItem: BankTransfer = {
             id: crypto.randomUUID(),
@@ -5397,12 +5462,12 @@ export const dbService = {
             to_account_name: targetBank.name || targetBank.bank_name,
             amount: creditAmount,
             currency: targetBank.currency,
-            exchange_rate: isBankVES ? entry.rate : undefined,
+            exchange_rate: isBankVES ? (entry.rate || bcvRate) : undefined,
             converted_amount: creditAmount,
-            reference: docNum ? `POS-${docNum}` : `VENTA-${Date.now().toString().slice(-6)}`,
-            notes: `Ingreso Venta Flash (${entry.method}) - ${docTypeLabel} #${docNum} (${clientName})`,
-            created_by: params.createdBy || params.invoice.created_by || 'Cajero POS',
-            created_at: params.invoice.created_at || new Date().toISOString()
+            reference: docNum ? `${params.invoice?.document_type === 'nota_entrega' ? 'NE' : 'FAC'}-${docNum}` : `VENTA-${Date.now().toString().slice(-6)}`,
+            notes: `Ingreso Venta Flash (${targetBank.name || entry.method}) - ${docTypeLabel} #${docNum} (${clientName})`,
+            created_by: params.createdBy || params.invoice?.created_by || 'Cajero POS',
+            created_at: params.invoice?.created_at || new Date().toISOString()
           };
 
           transfersToInsert.push(transferItem);

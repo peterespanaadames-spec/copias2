@@ -184,10 +184,10 @@ export function exportBalanceToPdf(data: BalancePdfData) {
   doc.setFontSize(8);
   doc.text('TOTAL INGRESOS / VENTAS', 18, currentY + 6);
   doc.setFontSize(12);
-  doc.text(`$${data.incomesUsd.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`, 18, currentY + 13);
+  doc.text(`$${(data.incomesUsd || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`, 18, currentY + 13);
   doc.setFontSize(7.5);
   doc.setFont('helvetica', 'normal');
-  doc.text(`Bs. ${data.incomesBs.toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`, 18, currentY + 18);
+  doc.text(`Bs. ${(data.incomesBs || 0).toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`, 18, currentY + 18);
 
   // 2. Total Egresos
   const card2X = 14 + cardWidth + 4;
@@ -199,14 +199,14 @@ export function exportBalanceToPdf(data: BalancePdfData) {
   doc.setFontSize(8);
   doc.text('TOTAL EGRESOS / GASTOS', card2X + 4, currentY + 6);
   doc.setFontSize(12);
-  doc.text(`$${data.egressesUsd.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`, card2X + 4, currentY + 13);
+  doc.text(`$${(data.egressesUsd || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`, card2X + 4, currentY + 13);
   doc.setFontSize(7.5);
   doc.setFont('helvetica', 'normal');
-  doc.text(`Bs. ${data.egressesBs.toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`, card2X + 4, currentY + 18);
+  doc.text(`Bs. ${(data.egressesBs || 0).toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`, card2X + 4, currentY + 18);
 
   // 3. Balance Neto
   const card3X = card2X + cardWidth + 4;
-  const isNetPositive = data.balanceUsd >= 0;
+  const isNetPositive = (data.balanceUsd || 0) >= 0;
   doc.setFillColor(isNetPositive ? 239 : 255, isNetPositive ? 246 : 241, isNetPositive ? 255 : 242); // Light blue or rose
   doc.setDrawColor(isNetPositive ? 191 : 254, isNetPositive ? 219 : 205, isNetPositive ? 254 : 211);
   doc.roundedRect(card3X, currentY, cardWidth, cardHeight, 2, 2, 'FD');
@@ -215,10 +215,10 @@ export function exportBalanceToPdf(data: BalancePdfData) {
   doc.setFontSize(8);
   doc.text('BALANCE NETO OPERATIVO', card3X + 4, currentY + 6);
   doc.setFontSize(12);
-  doc.text(`${isNetPositive ? '+' : ''}$${data.balanceUsd.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`, card3X + 4, currentY + 13);
+  doc.text(`${isNetPositive ? '+' : ''}$${(data.balanceUsd || 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`, card3X + 4, currentY + 13);
   doc.setFontSize(7.5);
   doc.setFont('helvetica', 'normal');
-  doc.text(`Bs. ${data.balanceBs.toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`, card3X + 4, currentY + 18);
+  doc.text(`Bs. ${(data.balanceBs || 0).toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`, card3X + 4, currentY + 18);
 
   currentY += cardHeight + 6;
 
@@ -235,7 +235,7 @@ export function exportBalanceToPdf(data: BalancePdfData) {
       `$${pm.incomes.toFixed(2)}`,
       `$${pm.egresses.toFixed(2)}`,
       `${pm.net >= 0 ? '+' : ''}$${pm.net.toFixed(2)}`,
-      `Bs. ${(pm.net * data.bcvRate).toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
+      `Bs. ${((Number(pm.net) || 0) * (Number(data.bcvRate) || 1)).toLocaleString('es-VE', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`
     ]);
 
     autoTable(doc, {
